@@ -1,37 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SADSAT
 
-## Getting Started
+Site e-commerce regroupant trois univers créatifs : taxidermie, bijoux en mailles, bougies.
 
-First, run the development server:
+## Stack
+- **Framework** : Next.js 15 (App Router) + TypeScript
+- **Styling** : Tailwind CSS + Framer Motion
+- **State** : Zustand (panier persistant)
+- **Hébergement** : Hostinger Node.js Hosting
+- **CI/CD** : auto-deploy depuis GitHub `main`
+
+## Développement local
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Site accessible sur http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+/app
+  page.tsx                 # Accueil avec 3 portails
+  /taxidermie/page.tsx     # Univers blanc minimaliste
+  /bijoux/page.tsx         # Univers dark/destroy
+  /bougies/page.tsx        # Univers Matrix
+  /a-propos/page.tsx       # Histoire
+  /panier/page.tsx
+  /contact/page.tsx
+  layout.tsx
+  globals.css
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+/components
+  /shared                  # Header, Footer, MatrixRain
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+/lib
+  /store/cart.ts           # Panier Zustand persistant
+```
 
-## Deploy on Vercel
+## Déploiement Hostinger
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push sur `main` → déploiement automatique
+2. Build command : `npm run build`
+3. Start command : `npm start`
+4. Output : `.next`
+5. Node version : 20.x ou 22.x
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Sadsat
+## Variables d'environnement
+
+Voir `.env.example`. À renseigner dans hPanel.
