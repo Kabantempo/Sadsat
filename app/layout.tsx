@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
+import RandomPieceButton from "@/components/shared/RandomPieceButton";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -49,6 +50,7 @@ export default function RootLayout({
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />
+        <RandomPieceButton />
       </body>
     </html>
   );

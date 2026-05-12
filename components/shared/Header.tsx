@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, User, ShoppingBag, ChevronDown, Menu, X } from "lucide-react";
 
@@ -57,13 +57,25 @@ export default function Header() {
   const [openMenu, setOpenMenu]     = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSub, setMobileSub]   = useState<string | null>(null);
+  const [hidden, setHidden]         = useState(false);
+  const lastScrollY                 = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      setHidden(currentY > lastScrollY.current && currentY > 80);
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
       <motion.header
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, ease }}
+        animate={{ opacity: hidden ? 0 : 1, y: hidden ? "-100%" : 0 }}
+        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="sticky top-0 z-50 bg-white border-b border-neutral-200 text-neutral-900"
       >
         {/* ── Barre principale ── */}

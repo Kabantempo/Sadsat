@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type ReactElement } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Music2 } from "lucide-react";
 
 function InstagramIcon() {
   return (
@@ -15,33 +14,7 @@ function InstagramIcon() {
   );
 }
 
-function FacebookIcon() {
-  return (
-    <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  );
-}
-
-function TwitterIcon() {
-  return (
-    <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
-    </svg>
-  );
-}
-
-function YoutubeIcon() {
-  return (
-    <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
-      <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
 type LinkItem = { label: string; href: string };
-type SocialEntry = { label: string; href: string; render: () => ReactElement };
 
 const SADSAT_LINKS: LinkItem[] = [
   { label: "Sale", href: "/sale" },
@@ -56,6 +29,7 @@ const AIDE_LINKS: LinkItem[] = [
   { label: "Retours", href: "/retours" },
   { label: "Guide des tailles", href: "/guide-tailles" },
   { label: "FAQ", href: "/faq" },
+  { label: "Confidentialité", href: "/confidentialite" },
 ];
 
 const CONTACT_LINKS: LinkItem[] = [
@@ -64,12 +38,12 @@ const CONTACT_LINKS: LinkItem[] = [
 ];
 
 
-const SOCIALS: SocialEntry[] = [
-  { label: "Instagram", href: "#", render: () => <InstagramIcon /> },
-  { label: "TikTok", href: "#", render: () => <Music2 size={17} strokeWidth={1.5} /> },
-  { label: "Facebook", href: "#", render: () => <FacebookIcon /> },
-  { label: "Twitter", href: "#", render: () => <TwitterIcon /> },
-  { label: "Youtube", href: "#", render: () => <YoutubeIcon /> },
+type InstagramEntry = { label: string; href: string; accent: string };
+
+const INSTAGRAM_ACCOUNTS: InstagramEntry[] = [
+  { label: "Taxidermie", href: "#", accent: "#6b5c4a" },
+  { label: "Bijoux",     href: "#", accent: "#8b0000" },
+  { label: "Bougies",    href: "#", accent: "#00ff41" },
 ];
 
 // Variants réutilisables
@@ -138,20 +112,28 @@ export default function Footer() {
             <p className="text-[0.65rem] tracking-[0.15em] text-neutral-500 leading-relaxed uppercase">
               Taxidermie · Bijoux · Bougies
             </p>
-            <div className="flex items-center gap-5">
-              {SOCIALS.map(({ label, href, render }) => (
+            {/* Comptes Instagram par univers */}
+            <div className="flex flex-col gap-3">
+              <p className="text-[0.55rem] tracking-[0.3em] uppercase text-neutral-500 font-semibold">
+                Instagram
+              </p>
+              {INSTAGRAM_ACCOUNTS.map(({ label, href, accent }) => (
                 <motion.a
                   key={label}
                   href={href}
-                  aria-label={label}
-                  className="text-neutral-500 hover:text-neutral-900 transition-colors"
-                  whileHover={{ scale: 1.18, y: -2 }}
+                  aria-label={`Instagram ${label}`}
+                  className="group flex items-center gap-3 text-neutral-600 hover:text-neutral-900 transition-colors"
+                  whileHover={{ x: 3 }}
                   transition={{ duration: 0.15 }}
                 >
-                  {render()}
+                  <span style={{ color: accent }}>
+                    <InstagramIcon />
+                  </span>
+                  <span className="text-[0.72rem] tracking-wide">{label}</span>
                 </motion.a>
               ))}
             </div>
+
           </motion.div>
 
           {/* Col 2 — SADSAT */}

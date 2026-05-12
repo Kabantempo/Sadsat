@@ -42,42 +42,28 @@ export default function BougiesPage() {
           </p>
         </div>
 
-        <div className="max-w-2xl mx-auto text-center mb-24">
-          <p className="text-base md:text-lg leading-relaxed opacity-80">
-            <span style={{ color: "#008f11" }}>$</span> echo &quot;la lumière comme un protocole&quot;
+        {/* En cours */}
+        <div className="flex flex-col items-center justify-center py-24 gap-10">
+          <div
+            className="border px-16 py-12 flex flex-col items-center gap-6 max-w-md w-full"
+            style={{ borderColor: "rgba(0, 255, 65, 0.25)" }}
+          >
+            <span className="w-2.5 h-2.5 rounded-full bg-[#00ff41] animate-pulse" />
+            <div className="text-4xl md:text-5xl font-mono" style={{ textShadow: "0 0 20px #00ff41" }}>
+              En cours
+            </div>
+            <p className="text-[0.7rem] tracking-[0.2em] uppercase text-center opacity-60">
+              &gt; collection.build :: in_progress
+            </p>
+          </div>
+          <p className="font-mono text-[0.68rem] tracking-wide opacity-50 text-center max-w-sm leading-relaxed">
+            La collection Bougies est en cours de création.<br />
+            Elle sera disponible très prochainement.
           </p>
         </div>
 
-        {/* Grille produits */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className="group cursor-pointer border p-4 hover:bg-[#00ff41]/5 transition-colors"
-              style={{ borderColor: "rgba(0, 255, 65, 0.2)" }}
-            >
-              <div
-                className="aspect-square bg-black mb-4 overflow-hidden border"
-                style={{ borderColor: "rgba(0, 255, 65, 0.1)" }}
-              >
-                <div className="w-full h-full group-hover:opacity-80 transition-opacity duration-500 flex items-center justify-center">
-                  <span className="text-[#008f11] text-4xl opacity-30">[ ]</span>
-                </div>
-              </div>
-              <div>
-                <div className="text-sm mb-1">
-                  candle_{String(i).padStart(3, "0")}.exe
-                </div>
-                <div className="text-[0.65rem] tracking-widest opacity-50" style={{ color: "#008f11" }}>
-                  status: standby
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
         <div
-          className="mt-32 text-center border-t pt-12"
+          className="mt-8 text-center border-t pt-12"
           style={{ borderColor: "rgba(0, 255, 65, 0.15)" }}
         >
           <div className="text-[0.7rem] tracking-[0.2em] opacity-70">

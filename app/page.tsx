@@ -99,8 +99,10 @@ export default function Home() {
             <div className="font-mono text-[0.7rem] tracking-[0.2em] uppercase opacity-70">
               &gt; system.boot
             </div>
-            <div className="inline-block mt-8 font-mono text-[0.65rem] tracking-[0.3em] uppercase pb-1 border-b border-current opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-              &gt; access_console
+            {/* Badge en cours */}
+            <div className="inline-flex items-center gap-2 mt-6 border px-4 py-2" style={{ borderColor: "rgba(0,255,65,0.4)" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+              <span className="font-mono text-[0.6rem] tracking-[0.3em] uppercase">En cours</span>
             </div>
           </div>
         </Link>
