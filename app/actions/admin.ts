@@ -6,13 +6,14 @@ import { createUser, getUserByEmail, deleteUser, getUsers } from '@/lib/db'
 import { verifyAdmin } from '@/lib/dal'
 
 const CreateAdminSchema = z.object({
-  name: z.string().min(2, { message: 'Le nom doit faire au moins 2 caractères.' }).trim(),
+  prenom: z.string().min(2, { message: 'Le prénom doit faire au moins 2 caractères.' }).trim(),
+  nom: z.string().min(2, { message: 'Le nom doit faire au moins 2 caractères.' }).trim(),
   email: z.string().email({ message: 'Email invalide.' }).trim(),
   password: z.string().min(6, { message: 'Au moins 6 caractères.' }),
 })
 
 export type AdminFormState =
-  | { errors?: { name?: string[]; email?: string[]; password?: string[] }; message?: string }
+  | { errors?: { prenom?: string[]; nom?: string[]; email?: string[]; password?: string[] }; message?: string }
   | undefined
 
 async function createAccountAction(
@@ -22,7 +23,8 @@ async function createAccountAction(
   await verifyAdmin()
 
   const validated = CreateAdminSchema.safeParse({
-    name: formData.get('name'),
+    prenom: formData.get('prenom'),
+    nom: formData.get('nom'),
     email: formData.get('email'),
     password: formData.get('password'),
   })
@@ -31,7 +33,8 @@ async function createAccountAction(
     return { errors: validated.error.flatten().fieldErrors }
   }
 
-  const { name, email, password } = validated.data
+  const { prenom, nom, email, password } = validated.data
+  const name = `${prenom} ${nom}`
 
   if (getUserByEmail(email)) {
     return { message: 'Cet email est déjà utilisé.' }

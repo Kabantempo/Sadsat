@@ -14,20 +14,37 @@ export default function CreateAdminForm() {
         <p className="text-[0.72rem] text-red-600 tracking-wide">{state.message}</p>
       )}
 
-      <div>
-        <label className="block text-[0.6rem] tracking-[0.16em] uppercase text-neutral-500 mb-1.5">
-          Nom
-        </label>
-        <input
-          name="name"
-          type="text"
-          required
-          className="w-full border border-neutral-200 px-3 py-2 text-[0.83rem] text-neutral-900 outline-none focus:border-neutral-900 transition-colors bg-white"
-          placeholder="Prénom Nom"
-        />
-        {state?.errors?.name && (
-          <p className="mt-1 text-[0.65rem] text-red-500">{state.errors.name[0]}</p>
-        )}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-[0.6rem] tracking-[0.16em] uppercase text-neutral-500 mb-1.5">
+            Prénom
+          </label>
+          <input
+            name="prenom"
+            type="text"
+            required
+            className="w-full border border-neutral-200 px-3 py-2 text-[0.83rem] text-neutral-900 outline-none focus:border-neutral-900 transition-colors bg-white"
+            placeholder="Marie"
+          />
+          {state?.errors?.prenom && (
+            <p className="mt-1 text-[0.65rem] text-red-500">{state.errors.prenom[0]}</p>
+          )}
+        </div>
+        <div>
+          <label className="block text-[0.6rem] tracking-[0.16em] uppercase text-neutral-500 mb-1.5">
+            Nom
+          </label>
+          <input
+            name="nom"
+            type="text"
+            required
+            className="w-full border border-neutral-200 px-3 py-2 text-[0.83rem] text-neutral-900 outline-none focus:border-neutral-900 transition-colors bg-white"
+            placeholder="Dupont"
+          />
+          {state?.errors?.nom && (
+            <p className="mt-1 text-[0.65rem] text-red-500">{state.errors.nom[0]}</p>
+          )}
+        </div>
       </div>
 
       <div>

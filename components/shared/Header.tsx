@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, User, ShoppingBag, ChevronDown, Menu, X, LayoutDashboard, LogOut } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import ThemeToggle from "@/components/shared/ThemeToggle";
+import { useCart } from "@/components/shared/CartProvider";
 
 type SubItem = { label: string; href: string };
 
@@ -57,6 +58,7 @@ type UserProp = { name: string; role: 'admin' | 'client' | 'créateur' } | null
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Header({ user }: { user?: UserProp }) {
+  const { count, openDrawer } = useCart();
   const [openMenu, setOpenMenu]       = useState<string | null>(null);
   const [mobileOpen, setMobileOpen]   = useState(false);
   const [mobileSub, setMobileSub]     = useState<string | null>(null);
@@ -119,12 +121,15 @@ export default function Header({ user }: { user?: UserProp }) {
           {/* Droite mobile : panier uniquement */}
           <button
             aria-label="Panier"
-            className="md:hidden relative text-neutral-600 hover:text-neutral-900 transition-colors"
+            onClick={openDrawer}
+            className="md:hidden relative text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
           >
             <ShoppingBag size={20} strokeWidth={1.5} />
-            <span className="absolute -top-1.5 -right-2 bg-neutral-900 text-white text-[0.42rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
-              0
-            </span>
+            {count > 0 && (
+              <span className="absolute -top-1.5 -right-2 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.42rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
+                {count}
+              </span>
+            )}
           </button>
 
           {/* Actions desktop — absolues à droite */}
@@ -200,12 +205,15 @@ export default function Header({ user }: { user?: UserProp }) {
               whileHover={{ scale: 1.12 }}
               transition={{ duration: 0.15 }}
               aria-label="Panier"
-              className="relative hover:text-neutral-900 transition-colors"
+              onClick={openDrawer}
+              className="relative hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
             >
               <ShoppingBag size={16} strokeWidth={1.5} />
-              <span className="absolute -top-2 -right-2.5 bg-neutral-900 text-white text-[0.45rem] leading-none rounded-full w-[16px] h-[16px] flex items-center justify-center font-bold">
-                0
-              </span>
+              {count > 0 && (
+                <span className="absolute -top-2 -right-2.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.45rem] leading-none rounded-full w-[16px] h-[16px] flex items-center justify-center font-bold">
+                  {count}
+                </span>
+              )}
             </motion.button>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { getProductById } from "@/lib/products";
 import { getUserById } from "@/lib/db";
 import { UNIVERSE_LABELS } from "@/lib/definitions";
 import ProductAccordion from "@/components/shared/ProductAccordion";
+import AddToCartButton from "@/components/shared/AddToCartButton";
 
 export default async function FicheProduitPage({
   params,
@@ -128,6 +129,19 @@ export default async function FicheProduitPage({
               <p className="text-[0.9rem] leading-relaxed text-neutral-400 whitespace-pre-line">
                 {product.description}
               </p>
+            </div>
+
+            {/* Bouton panier */}
+            <div className="mb-8">
+              <AddToCartButton
+                id={product.id}
+                name={product.name}
+                price={product.price}
+                image={product.images[0]}
+                universe={product.universe}
+                category={product.category}
+                disabled={product.status === "vendu"}
+              />
             </div>
 
             {/* Accordéon détails / dimensions / créateur */}
