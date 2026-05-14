@@ -5,12 +5,13 @@ import { UNIVERSE_LABELS } from "@/lib/definitions";
 import ProductGrid from "@/components/shared/ProductGrid";
 import { SlidersHorizontal } from "lucide-react";
 
-const UNIVERSES: Array<Universe | "tous"> = ["tous", "taxidermie", "bijoux", "bougies"];
+const UNIVERSES: Array<Universe | "tous"> = ["tous", "taxidermie", "bijoux", "bougies", "pieces-uniques"];
 const UNIVERS_LABELS: Record<Universe | "tous", string> = {
   tous: "Tous",
   taxidermie: "Taxidermie",
   bijoux: "Bijoux",
   bougies: "Bougies",
+  "pieces-uniques": "Pièces uniques",
 };
 
 type Props = {

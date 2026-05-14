@@ -3,9 +3,7 @@ import { getUsers } from "@/lib/db";
 import { getProducts } from "@/lib/products";
 import HeroSection from "@/components/shared/HeroSection";
 import CreateurCarousel, { type CreateurCard } from "@/components/shared/CreateurCarousel";
-import type { Universe } from "@/lib/definitions";
-
-const UNIVERSES: Universe[] = ["taxidermie", "bijoux", "bougies"];
+import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 
 export default function Home() {
   const users = getUsers();
@@ -19,10 +17,7 @@ export default function Home() {
       );
       const universes = UNIVERSES.filter((uv) =>
         myProducts.some((p) => p.universe === uv)
-      ).map((uv) =>
-        uv === "taxidermie" ? "Taxidermie" :
-        uv === "bijoux" ? "Bijoux" : "Bougies"
-      );
+      ).map((uv) => UNIVERSE_LABELS[uv]);
       return {
         id: u.id,
         name: u.name,

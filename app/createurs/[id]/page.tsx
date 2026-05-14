@@ -3,10 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { getUserById } from "@/lib/db";
 import { getProducts } from "@/lib/products";
-import { UNIVERSE_LABELS } from "@/lib/definitions";
+import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 import type { Universe, Product } from "@/lib/definitions";
-
-const UNIVERSES: Universe[] = ["taxidermie", "bijoux", "bougies"];
 
 function ProductCard({ p }: { p: Product }) {
   return (

@@ -50,19 +50,21 @@ export type SafeUser = Omit<User, 'passwordHash'>
 
 // ── Produits ────────────────────────────────────────────────
 
-export const UNIVERSES = ['taxidermie', 'bijoux', 'bougies'] as const
+export const UNIVERSES = ['taxidermie', 'bijoux', 'bougies', 'pieces-uniques'] as const
 export type Universe = (typeof UNIVERSES)[number]
 
 export const UNIVERSE_LABELS: Record<Universe, string> = {
   taxidermie: 'Taxidermie',
   bijoux: 'Bijoux',
   bougies: 'Bougies',
+  'pieces-uniques': 'Pièces uniques',
 }
 
 export const CATEGORIES: Record<Universe, string[]> = {
   taxidermie: ['Oiseaux', 'Mammifères', 'Insectes', 'Crânes', 'Reptiles'],
   bijoux: ['Bagues', 'Colliers', 'Bracelets', "Boucles d'oreilles"],
   bougies: ['Cire de soja', "Cire d'abeille", 'Piliers', 'Fondants'],
+  'pieces-uniques': ['Sculptures', 'Céramiques', 'Tableaux', 'Textiles', 'Mixed media', 'Autre'],
 }
 
 export const STATUS_LABELS = {
