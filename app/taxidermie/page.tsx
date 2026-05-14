@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import Accordion, { type AccordionItem } from "@/components/shared/Accordion";
 import ScrollReveal from "@/components/shared/ScrollReveal";
 import ProductCarousel, { type CarouselItem } from "@/components/shared/ProductCarousel";
+import TaxidermieDetails from "@/components/pages/TaxidermieDetails";
 import { getProducts } from "@/lib/products";
+import type { AccordionItem } from "@/components/shared/Accordion";
 
 const CATEGORIES = [
   { slug: "oiseaux",    label: "Oiseaux",    latin: "Aves",      description: "Passereaux, rapaces, exotiques",    primaryImage: "/images/taxidermie/oiseaux-1.jpg",    hoverImage: "/images/taxidermie/oiseaux-2.jpg"    },
@@ -97,39 +98,10 @@ export default function TaxidermiePage() {
         </ScrollReveal>
       </div>
 
-      {/* ── Processus ── */}
-      <div className="max-w-3xl mx-auto px-8 mb-16">
-        <ScrollReveal delay={0.05}>
-          <p className="font-mono text-[0.62rem] tracking-[0.28em] uppercase text-neutral-400 mb-6">
-            Notre processus
-          </p>
-          <Accordion items={PROCESS} theme="light" />
-        </ScrollReveal>
-      </div>
-
-      {/* ── FAQ + bouton ── */}
-      <div className="max-w-3xl mx-auto px-8 mb-24" id="faq">
-        <ScrollReveal delay={0.05}>
-          <p className="font-mono text-[0.62rem] tracking-[0.28em] uppercase text-neutral-400 mb-6">
-            Questions fréquentes
-          </p>
-          <Accordion items={FAQ} theme="light" />
-          <div className="mt-10 flex items-center gap-6">
-            <Link
-              href="/contact"
-              className="inline-block text-[0.62rem] tracking-[0.22em] uppercase px-7 py-3.5 bg-neutral-900 text-white hover:bg-neutral-700 transition-colors"
-            >
-              Poser une question
-            </Link>
-            <Link
-              href="/a-propos"
-              className="text-[0.62rem] tracking-[0.16em] uppercase text-neutral-500 hover:text-neutral-900 transition-colors underline underline-offset-4"
-            >
-              En savoir plus sur SADSAT →
-            </Link>
-          </div>
-        </ScrollReveal>
-      </div>
+      {/* ── Processus + FAQ masqués ── */}
+      <ScrollReveal delay={0.05}>
+        <TaxidermieDetails process={PROCESS} faq={FAQ} />
+      </ScrollReveal>
 
       {/* ── Carousel produits ── */}
       <div className="max-w-6xl mx-auto px-8 mb-24">
