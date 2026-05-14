@@ -4,6 +4,13 @@ import { useEffect, useState } from "react";
 import MatrixRain from "@/components/shared/MatrixRain";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
+import ProductCarousel, { type CarouselItem } from "@/components/shared/ProductCarousel";
+
+const CAROUSEL_ITEMS: CarouselItem[] = [1, 2, 3, 4, 5, 6].map((i) => ({
+  id: i,
+  title: `> bougie_${String(i).padStart(2, "0")}`,
+  subtitle: "// bientôt disponible",
+}));
 
 type FaqItem = { q: string; a: string; cmd: string }
 
@@ -149,6 +156,14 @@ export default function BougiesPage() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* ── Carousel produits ── */}
+        <div className="mb-20">
+          <p className="text-[0.6rem] tracking-[0.28em] uppercase mb-8" style={{ color: "#008f11" }}>
+            &gt; collection.preview
+          </p>
+          <ProductCarousel items={CAROUSEL_ITEMS} theme="dark" aspectRatio="square" />
         </div>
 
         {/* ── En cours ── */}

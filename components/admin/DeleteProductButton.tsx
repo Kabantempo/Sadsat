@@ -6,12 +6,15 @@ type Props = {
   id: string
   name: string
   variant?: 'icon' | 'full'
+  deleteAction?: (formData: FormData) => Promise<void>
 }
 
-export default function DeleteProductButton({ id, name, variant = 'icon' }: Props) {
+export default function DeleteProductButton({ id, name, variant = 'icon', deleteAction }: Props) {
+  const action = deleteAction ?? deleteProductAction
+
   async function handleDelete(formData: FormData) {
     if (!confirm(`Supprimer "${name}" ? Cette action est irréversible.`)) return
-    await deleteProductAction(formData)
+    await action(formData)
   }
 
   return (

@@ -49,10 +49,9 @@ const NAV: NavItem[] = [
     ],
   },
   { label: "À propos", href: "/a-propos" },
-  { label: "Sale", href: "/sale" },
 ];
 
-type UserProp = { name: string; role: 'admin' | 'client' } | null
+type UserProp = { name: string; role: 'admin' | 'client' | 'créateur' } | null
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -137,7 +136,6 @@ export default function Header({ user }: { user?: UserProp }) {
             >
               <Search size={16} strokeWidth={1.5} />
             </motion.button>
-            <span className="text-[0.6rem] tracking-[0.2em] font-medium text-neutral-500">EUR</span>
             {user ? (
               <div ref={userMenuRef} className="relative">
                 <motion.button
@@ -166,12 +164,14 @@ export default function Header({ user }: { user?: UserProp }) {
                         <p className="text-[0.82rem] text-neutral-800 font-medium truncate">{user.name}</p>
                       </div>
                       <Link
-                        href={user.role === 'admin' ? '/admin' : '/compte'}
+                        href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur' : '/compte'}
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-2.5 px-5 py-3 text-[0.64rem] tracking-[0.14em] uppercase text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 transition-colors"
                       >
                         {user.role === 'admin'
                           ? <><LayoutDashboard size={12} strokeWidth={1.5} />Administration</>
+                          : user.role === 'créateur'
+                          ? <><LayoutDashboard size={12} strokeWidth={1.5} />Espace créateur</>
                           : <><User size={12} strokeWidth={1.5} />Mon compte</>}
                       </Link>
                       <form action={logout}>
@@ -384,12 +384,14 @@ export default function Header({ user }: { user?: UserProp }) {
                       <p className="text-[0.82rem] text-neutral-700 font-medium">{user.name}</p>
                     </div>
                     <Link
-                      href={user.role === 'admin' ? '/admin' : '/compte'}
+                      href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur' : '/compte'}
                       onClick={() => setMobileOpen(false)}
                       className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-600 hover:text-neutral-900 transition-colors"
                     >
                       {user.role === 'admin'
                         ? <><LayoutDashboard size={14} strokeWidth={1.5} />Administration</>
+                        : user.role === 'créateur'
+                        ? <><LayoutDashboard size={14} strokeWidth={1.5} />Espace créateur</>
                         : <><User size={14} strokeWidth={1.5} />Mon compte</>}
                     </Link>
                     <form action={logout}>

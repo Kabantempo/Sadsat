@@ -29,7 +29,7 @@ export type FormState =
 
 export type SessionPayload = {
   userId: string
-  role: 'admin' | 'client'
+  role: 'admin' | 'client' | 'créateur'
   expiresAt: Date
 }
 
@@ -38,7 +38,7 @@ export type User = {
   email: string
   passwordHash: string
   name: string
-  role: 'admin' | 'client'
+  role: 'admin' | 'client' | 'créateur'
   createdAt: string
 }
 
@@ -79,6 +79,7 @@ export type Product = {
   images: string[]
   stock: number
   status: ProductStatus
+  createdBy?: string
   createdAt: string
   updatedAt: string
 }

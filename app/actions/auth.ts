@@ -58,7 +58,8 @@ export async function login(state: FormState, formData: FormData): Promise<FormS
   }
 
   await createSession(user.id, user.role)
-  redirect(user.role === 'admin' ? '/admin' : '/compte')
+  const dest = user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur' : '/compte'
+  redirect(dest)
 }
 
 export async function logout(): Promise<void> {

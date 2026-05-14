@@ -47,3 +47,11 @@ export function updateUserRole(id: string, role: 'admin' | 'client'): boolean {
   fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8')
   return true
 }
+
+export function deleteUser(id: string): boolean {
+  const users = getUsers()
+  const filtered = users.filter((u) => u.id !== id)
+  if (filtered.length === users.length) return false
+  fs.writeFileSync(USERS_FILE, JSON.stringify(filtered, null, 2), 'utf-8')
+  return true
+}

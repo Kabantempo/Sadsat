@@ -23,8 +23,18 @@ export default async function proxy(req: NextRequest) {
   }
 
   if (authRoutes.includes(path) && session?.userId) {
-    const dest = session.role === 'admin' ? '/admin' : '/compte'
+    const dest =
+      session.role === 'admin' ? '/admin' :
+      session.role === 'créateur' ? '/createur' :
+      '/compte'
     return NextResponse.redirect(new URL(dest, req.nextUrl))
+  }
+
+  const createurRoutes = ['/createur']
+  if (createurRoutes.some((r) => path.startsWith(r))) {
+    if (!session?.userId || (session.role !== 'créateur' && session.role !== 'admin')) {
+      return NextResponse.redirect(new URL('/connexion', req.nextUrl))
+    }
   }
 
   return NextResponse.next()

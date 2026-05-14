@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import Accordion, { type AccordionItem } from "@/components/shared/Accordion";
 import ScrollReveal from "@/components/shared/ScrollReveal";
+import ProductCarousel, { type CarouselItem } from "@/components/shared/ProductCarousel";
+import { getProducts } from "@/lib/products";
 
 const CATEGORIES = [
   { slug: "oiseaux",    label: "Oiseaux",    latin: "Aves",      description: "Passereaux, rapaces, exotiques",    primaryImage: "/images/taxidermie/oiseaux-1.jpg",    hoverImage: "/images/taxidermie/oiseaux-2.jpg"    },
@@ -27,6 +29,25 @@ const FAQ: AccordionItem[] = [
 ];
 
 export default function TaxidermiePage() {
+  const products = getProducts().filter(
+    (p) => p.universe === "taxidermie" && p.status !== "masqué"
+  );
+  const carouselItems: CarouselItem[] =
+    products.length > 0
+      ? products.map((p) => ({
+          id: p.id,
+          title: p.name,
+          subtitle: p.category,
+          price: `${p.price} €`,
+          image: p.images[0],
+          href: "/pieces-uniques",
+        }))
+      : [1, 2, 3, 4, 5, 6].map((i) => ({
+          id: i,
+          title: `Pièce ${String(i).padStart(2, "0")}`,
+          subtitle: "Bientôt disponible",
+        }));
+
   return (
     <div style={{ background: "#fafaf7", color: "#1a1a1a" }} className="min-h-screen pb-24">
 
@@ -107,6 +128,16 @@ export default function TaxidermiePage() {
               En savoir plus sur SADSAT →
             </Link>
           </div>
+        </ScrollReveal>
+      </div>
+
+      {/* ── Carousel produits ── */}
+      <div className="max-w-6xl mx-auto px-8 mb-24">
+        <ScrollReveal>
+          <p className="font-mono text-[0.62rem] tracking-[0.28em] uppercase text-neutral-400 mb-10">
+            Nos pièces
+          </p>
+          <ProductCarousel items={carouselItems} theme="light" aspectRatio="portrait" />
         </ScrollReveal>
       </div>
 
