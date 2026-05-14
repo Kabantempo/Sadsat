@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { verifyCreateur } from '@/lib/dal'
 import { updateUser } from '@/lib/db'
 import { createProduct, updateProduct, deleteProduct, getProductById } from '@/lib/products'
-import type { ProductFormState, Universe, ProductStatus } from '@/lib/definitions'
+import type { ProductFormState, Universe, ProductStatus, Dimensions } from '@/lib/definitions'
 import { UNIVERSES } from '@/lib/definitions'
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'products')
@@ -70,6 +70,21 @@ function parseProduct(formData: FormData) {
   const stock = parseInt(String(formData.get('stock') ?? '1'), 10)
   const status = String(formData.get('status') ?? 'disponible') as ProductStatus
   const serialNumber = String(formData.get('serialNumber') ?? '').trim() || undefined
+  const materials = String(formData.get('materials') ?? '').trim() || undefined
+
+  const parseDim = (key: string) => {
+    const v = parseFloat(String(formData.get(key) ?? '').replace(',', '.'))
+    return isNaN(v) || v <= 0 ? undefined : v
+  }
+  const dimensions: Dimensions = {
+    hauteur: parseDim('dim_hauteur'),
+    largeur: parseDim('dim_largeur'),
+    profondeur: parseDim('dim_profondeur'),
+    diametre: parseDim('dim_diametre'),
+    longueur: parseDim('dim_longueur'),
+    poids: parseDim('dim_poids'),
+  }
+  const hasDimensions = Object.values(dimensions).some((v) => v !== undefined)
 
   const errors: ProductFormState = { errors: {} }
   if (!name || name.length < 2) errors.errors!.name = ['Le nom est requis (min. 2 caractères).']
@@ -82,7 +97,13 @@ function parseProduct(formData: FormData) {
   const hasErrors = Object.values(errors.errors!).some((v) => v && v.length > 0)
   if (hasErrors) return { valid: false, errors, data: null }
 
-  return { valid: true, errors: null, data: { name, description, price, universe, category, stock, status, serialNumber } }
+  return {
+    valid: true, errors: null,
+    data: {
+      name, description, price, universe, category, stock, status, serialNumber, materials,
+      ...(hasDimensions ? { dimensions } : {}),
+    },
+  }
 }
 
 export async function createCreateurProductAction(

@@ -151,7 +151,60 @@ export default async function FicheProduitPage({
                   {product.status === "vendu" ? "Vendu" : product.stock === 1 ? "Pièce unique" : `${product.stock} disponibles`}
                 </span>
               </div>
+              {product.materials && (
+                <div className="flex justify-between border-b border-neutral-900 pb-2">
+                  <span className="text-[0.75rem] text-neutral-600 font-mono tracking-wider uppercase">Matériaux</span>
+                  <span className="text-[0.8rem] text-neutral-300 text-right max-w-[55%]">{product.materials}</span>
+                </div>
+              )}
             </div>
+
+            {/* Dimensions */}
+            {product.dimensions && Object.values(product.dimensions).some((v) => v !== undefined) && (
+              <div className="mb-8">
+                <p className="font-mono text-[0.58rem] tracking-[0.22em] uppercase text-neutral-500 mb-3">
+                  Dimensions
+                </p>
+                <div className="grid grid-cols-3 gap-3">
+                  {product.dimensions.hauteur !== undefined && (
+                    <div className="bg-neutral-900 px-3 py-3 text-center">
+                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.hauteur}</p>
+                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Hauteur cm</p>
+                    </div>
+                  )}
+                  {product.dimensions.largeur !== undefined && (
+                    <div className="bg-neutral-900 px-3 py-3 text-center">
+                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.largeur}</p>
+                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Largeur cm</p>
+                    </div>
+                  )}
+                  {product.dimensions.profondeur !== undefined && (
+                    <div className="bg-neutral-900 px-3 py-3 text-center">
+                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.profondeur}</p>
+                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Profondeur cm</p>
+                    </div>
+                  )}
+                  {product.dimensions.diametre !== undefined && (
+                    <div className="bg-neutral-900 px-3 py-3 text-center">
+                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.diametre}</p>
+                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Diamètre cm</p>
+                    </div>
+                  )}
+                  {product.dimensions.longueur !== undefined && (
+                    <div className="bg-neutral-900 px-3 py-3 text-center">
+                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.longueur}</p>
+                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Longueur cm</p>
+                    </div>
+                  )}
+                  {product.dimensions.poids !== undefined && (
+                    <div className="bg-neutral-900 px-3 py-3 text-center">
+                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.poids}</p>
+                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Poids g</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Créateur */}
             {creator && (

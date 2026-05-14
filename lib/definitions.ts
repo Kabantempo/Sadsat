@@ -71,6 +71,15 @@ export const STATUS_LABELS = {
 
 export type ProductStatus = keyof typeof STATUS_LABELS
 
+export type Dimensions = {
+  hauteur?: number
+  largeur?: number
+  profondeur?: number
+  diametre?: number
+  longueur?: number
+  poids?: number
+}
+
 export type Product = {
   id: string
   name: string
@@ -82,6 +91,8 @@ export type Product = {
   stock: number
   status: ProductStatus
   serialNumber?: string
+  dimensions?: Dimensions
+  materials?: string
   createdBy?: string
   createdAt: string
   updatedAt: string

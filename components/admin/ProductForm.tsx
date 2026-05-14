@@ -98,6 +98,107 @@ export default function ProductForm({ action, product }: Props) {
         </div>
       </div>
 
+      {/* Dimensions & matériaux */}
+      <div className="bg-white border border-neutral-200 p-6 space-y-5">
+        <p className="text-[0.6rem] tracking-[0.2em] uppercase text-neutral-400 pb-2 border-b border-neutral-100">
+          Dimensions & matériaux
+        </p>
+        <p className="text-[0.64rem] text-neutral-400">Tous les champs sont facultatifs. Dimensions en cm, poids en g.</p>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div>
+            <label htmlFor="dim_hauteur" className={labelClass}>Hauteur (cm)</label>
+            <input
+              id="dim_hauteur"
+              name="dim_hauteur"
+              type="number"
+              step="0.1"
+              min="0"
+              defaultValue={product?.dimensions?.hauteur ?? ''}
+              placeholder="—"
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="dim_largeur" className={labelClass}>Largeur (cm)</label>
+            <input
+              id="dim_largeur"
+              name="dim_largeur"
+              type="number"
+              step="0.1"
+              min="0"
+              defaultValue={product?.dimensions?.largeur ?? ''}
+              placeholder="—"
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="dim_profondeur" className={labelClass}>Profondeur (cm)</label>
+            <input
+              id="dim_profondeur"
+              name="dim_profondeur"
+              type="number"
+              step="0.1"
+              min="0"
+              defaultValue={product?.dimensions?.profondeur ?? ''}
+              placeholder="—"
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="dim_diametre" className={labelClass}>Diamètre (cm)</label>
+            <input
+              id="dim_diametre"
+              name="dim_diametre"
+              type="number"
+              step="0.1"
+              min="0"
+              defaultValue={product?.dimensions?.diametre ?? ''}
+              placeholder="—"
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="dim_longueur" className={labelClass}>Longueur (cm)</label>
+            <input
+              id="dim_longueur"
+              name="dim_longueur"
+              type="number"
+              step="0.1"
+              min="0"
+              defaultValue={product?.dimensions?.longueur ?? ''}
+              placeholder="—"
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="dim_poids" className={labelClass}>Poids (g)</label>
+            <input
+              id="dim_poids"
+              name="dim_poids"
+              type="number"
+              step="1"
+              min="0"
+              defaultValue={product?.dimensions?.poids ?? ''}
+              placeholder="—"
+              className={fieldClass}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="materials" className={labelClass}>Matériaux / composition</label>
+          <input
+            id="materials"
+            name="materials"
+            type="text"
+            defaultValue={product?.materials ?? ''}
+            placeholder="Ex : Cuivre, résine époxy, plumes naturelles..."
+            className={fieldClass}
+          />
+        </div>
+      </div>
+
       {/* Classement */}
       <div className="bg-white border border-neutral-200 p-6 space-y-5">
         <p className="text-[0.6rem] tracking-[0.2em] uppercase text-neutral-400 pb-2 border-b border-neutral-100">
