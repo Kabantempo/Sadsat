@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import RandomPieceButton from "@/components/shared/RandomPieceButton";
+import { getCurrentUser } from "@/lib/dal";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -39,15 +40,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const user = await getCurrentUser();
+
   return (
     <html lang="fr">
       <body
         className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable} antialiased bg-black text-neutral-200`}
       >
-        <Header />
+        <Header user={user ? { name: user.name, role: user.role } : null} />
         <main className="min-h-screen">{children}</main>
         <Footer />
         <RandomPieceButton />

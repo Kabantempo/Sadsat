@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import ProductCarousel, { type CarouselItem } from "@/components/shared/ProductCarousel";
+import { getProducts } from "@/lib/products";
+import ProductGrid from "@/components/shared/ProductGrid";
 
 const CATEGORIES: Record<string, { label: string; latin: string; description: string }> = {
   oiseaux: {
@@ -30,6 +31,14 @@ const CATEGORIES: Record<string, { label: string; latin: string; description: st
   },
 };
 
+const SLUG_TO_CATEGORY: Record<string, string> = {
+  oiseaux: "Oiseaux",
+  mammiferes: "Mammifères",
+  insectes: "Insectes",
+  cranes: "Crânes",
+  reptiles: "Reptiles",
+};
+
 type Props = { params: Promise<{ categorie: string }> };
 
 export async function generateStaticParams() {
@@ -41,11 +50,13 @@ export default async function CategoriePage({ params }: Props) {
   const cat = CATEGORIES[categorie];
   if (!cat) notFound();
 
-  const items: CarouselItem[] = [1, 2, 3, 4, 5, 6].map((i) => ({
-    id: i,
-    title: `${cat.label} — pièce ${i}`,
-    subtitle: "Bientôt disponible",
-  }));
+  const allProducts = getProducts();
+  const categoryProducts = allProducts.filter(
+    (p) =>
+      p.universe === "taxidermie" &&
+      p.category === SLUG_TO_CATEGORY[categorie] &&
+      p.status !== "masqué"
+  );
 
   return (
     <div style={{ background: "#fafaf7", color: "#1a1a1a" }} className="min-h-screen pt-32 pb-24">
@@ -58,18 +69,20 @@ export default async function CategoriePage({ params }: Props) {
           <span className="text-neutral-700">{cat.label}</span>
         </div>
 
-        {/* En-tête catégorie */}
-        <div className="mb-20">
-          <div className="font-mono text-[0.7rem] tracking-[0.3em] mb-4 text-neutral-400">
-            {cat.latin}
-          </div>
+        {/* En-tête */}
+        <div className="mb-16">
+          <div className="font-mono text-[0.7rem] tracking-[0.3em] mb-4 text-neutral-400">{cat.latin}</div>
           <h1 className="font-serif font-light text-6xl md:text-7xl italic mb-6">{cat.label}</h1>
           <p className="max-w-xl text-sm leading-relaxed tracking-wide text-neutral-500">
             {cat.description}
           </p>
         </div>
 
-        <ProductCarousel items={items} theme="light" aspectRatio="portrait" />
+        <ProductGrid
+          products={categoryProducts}
+          theme="light"
+          emptyMessage="Aucune pièce disponible dans cette catégorie pour le moment."
+        />
 
         <div className="mt-20 text-center">
           <div className="font-mono text-[0.65rem] tracking-[0.3em] uppercase opacity-50">
