@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, User, ShoppingBag, ChevronDown, Menu, X, LayoutDashboard, LogOut } from "lucide-react";
 import { logout } from "@/app/actions/auth";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 
 type SubItem = { label: string; href: string };
 
@@ -90,7 +91,7 @@ export default function Header({ user }: { user?: UserProp }) {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: hidden ? 0 : 1, y: hidden ? "-100%" : 0 }}
         transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="sticky top-0 z-50 bg-white border-b border-neutral-200 text-neutral-900"
+        className="sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors duration-300"
       >
         {/* ── Barre principale ── */}
         <div className="relative flex items-center px-5 py-4 md:justify-center md:px-12 md:py-10">
@@ -127,12 +128,13 @@ export default function Header({ user }: { user?: UserProp }) {
           </button>
 
           {/* Actions desktop — absolues à droite */}
-          <div className="hidden md:flex absolute right-12 items-center gap-7 text-neutral-600">
+          <div className="hidden md:flex absolute right-12 items-center gap-7 text-neutral-600 dark:text-neutral-400">
+            <ThemeToggle />
             <motion.button
               whileHover={{ scale: 1.12 }}
               transition={{ duration: 0.15 }}
               aria-label="Rechercher"
-              className="hover:text-neutral-900 transition-colors"
+              className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
             >
               <Search size={16} strokeWidth={1.5} />
             </motion.button>
@@ -157,7 +159,7 @@ export default function Header({ user }: { user?: UserProp }) {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
                       transition={{ duration: 0.18, ease: 'easeOut' }}
-                      className="absolute top-full right-0 mt-4 bg-white border border-neutral-200 min-w-[200px] py-2 z-50 shadow-lg"
+                      className="absolute top-full right-0 mt-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 min-w-[200px] py-2 z-50 shadow-lg"
                     >
                       <div className="px-5 py-3 border-b border-neutral-100">
                         <p className="text-[0.6rem] tracking-[0.16em] uppercase text-neutral-400 mb-0.5">Connecté en tant que</p>
@@ -250,7 +252,7 @@ export default function Header({ user }: { user?: UserProp }) {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
                       transition={{ duration: 0.18, ease: "easeOut" }}
-                      className="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-white border border-neutral-200 min-w-[190px] py-4 z-50 shadow-lg"
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 min-w-[190px] py-4 z-50 shadow-lg"
                     >
                       {item.dropdown.map((sub, i) => (
                         <motion.div
@@ -296,7 +298,7 @@ export default function Header({ user }: { user?: UserProp }) {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ duration: 0.35, ease }}
-              className="fixed top-0 left-0 bottom-0 z-[70] w-[82vw] max-w-[340px] bg-white text-neutral-900 flex flex-col md:hidden overflow-y-auto shadow-2xl"
+              className="fixed top-0 left-0 bottom-0 z-[70] w-[82vw] max-w-[340px] bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col md:hidden overflow-y-auto shadow-2xl"
             >
               {/* Header du drawer */}
               <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100">
