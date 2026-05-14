@@ -38,9 +38,9 @@ export default function TaxidermiePage() {
           id: p.id,
           title: p.name,
           subtitle: p.category,
-          price: `${p.price} €`,
+          price: `${(p.price / 100).toFixed(2)} €`,
           image: p.images[0],
-          href: "/pieces-uniques",
+          href: `/produits/${p.id}`,
         }))
       : [1, 2, 3, 4, 5, 6].map((i) => ({
           id: i,

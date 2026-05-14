@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 
 export type CarouselItem = {
   id: string | number;
@@ -45,6 +45,7 @@ export default function ProductCarousel({
   aspectRatio = "portrait",
 }: Props) {
   const [current, setCurrent] = useState(0);
+  const router = useRouter();
   const n = items.length;
   const dark = theme === "dark";
 
@@ -72,7 +73,7 @@ export default function ProductCarousel({
             <motion.div
               key={item.id}
               className={`absolute top-0 left-1/2 -translate-x-1/2 w-[38%] ${
-                isLeft || isRight ? "cursor-pointer" : ""
+                isLeft || isRight || (isCenter && item.href) ? "cursor-pointer" : ""
               }`}
               animate={VARS[pos]}
               transition={{ duration: 0.55, ease }}
@@ -80,6 +81,7 @@ export default function ProductCarousel({
               onClick={() => {
                 if (isLeft)  go(-1);
                 if (isRight) go(1);
+                if (isCenter && item.href) router.push(item.href);
               }}
             >
               {/* Image */}
@@ -109,22 +111,9 @@ export default function ProductCarousel({
               {/* Texte — seulement sur la carte centrale */}
               {isCenter && (
                 <div className="text-center mt-5">
-                  {item.href ? (
-                    <Link
-                      href={item.href}
-                      className={`block mb-1 hover:opacity-60 transition-opacity ${
-                        dark
-                          ? "font-sans uppercase text-sm tracking-wider text-neutral-200"
-                          : "font-serif italic text-xl text-neutral-900"
-                      }`}
-                    >
-                      {item.title}
-                    </Link>
-                  ) : (
-                    <div className={`mb-1 ${dark ? "font-sans uppercase text-sm tracking-wider text-neutral-200" : "font-serif italic text-xl text-neutral-900"}`}>
-                      {item.title}
-                    </div>
-                  )}
+                  <div className={`mb-1 ${item.href ? "hover:opacity-60 transition-opacity" : ""} ${dark ? "font-sans uppercase text-sm tracking-wider text-neutral-200" : "font-serif italic text-xl text-neutral-900"}`}>
+                    {item.title}
+                  </div>
                   {item.subtitle && (
                     <div className={`text-[0.65rem] tracking-widest uppercase opacity-50 ${dark ? "font-mono text-[#8b0000]" : ""}`}>
                       {item.subtitle}

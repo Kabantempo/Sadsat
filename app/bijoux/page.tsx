@@ -3,12 +3,7 @@ import MaterialTabs from "@/components/shared/MaterialTabs";
 import ScrollReveal from "@/components/shared/ScrollReveal";
 import ProductCarousel, { type CarouselItem } from "@/components/shared/ProductCarousel";
 import Link from "next/link";
-
-const ITEMS: CarouselItem[] = [1, 2, 3, 4, 5, 6].map((i) => ({
-  id: i,
-  title: `Pièce ${String(i).padStart(2, "0")}`,
-  subtitle: "// bientôt disponible",
-}));
+import { getProducts } from "@/lib/products";
 
 const FAQ: AccordionItem[] = [
   { question: "Comment nettoyer mes bijoux en maille métallique ?", answer: "Pour l'argent : utilisez un chiffon doux et sec, ou une solution d'eau tiède et de liquide vaisselle doux. Séchez immédiatement. Pour le laiton et le cuivre, du bicarbonate de soude humidifié ravive l'éclat. Évitez les produits chimiques agressifs qui altèrent la patine naturelle." },
@@ -19,6 +14,25 @@ const FAQ: AccordionItem[] = [
 ];
 
 export default function BijouxPage() {
+  const products = getProducts().filter(
+    (p) => p.universe === "bijoux" && p.status !== "masqué"
+  );
+  const carouselItems: CarouselItem[] =
+    products.length > 0
+      ? products.map((p) => ({
+          id: p.id,
+          title: p.name,
+          subtitle: p.category,
+          price: `${(p.price / 100).toFixed(2)} €`,
+          image: p.images[0],
+          href: `/produits/${p.id}`,
+        }))
+      : [1, 2, 3, 4, 5, 6].map((i) => ({
+          id: i,
+          title: `Pièce ${String(i).padStart(2, "0")}`,
+          subtitle: "// bientôt disponible",
+        }));
+
   return (
     <div className="min-h-screen pb-24 bg-[#0a0a0a] text-neutral-200 relative overflow-hidden">
       <div className="absolute inset-0 opacity-30 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg, transparent 0 6px, rgba(139,0,0,0.04) 6px 7px), radial-gradient(circle at 30% 70%, rgba(139,0,0,0.15), transparent 60%)" }} />
@@ -105,7 +119,7 @@ export default function BijouxPage() {
 
         {/* ── Carrousel ── */}
         <ScrollReveal>
-          <ProductCarousel items={ITEMS} theme="dark" aspectRatio="square" />
+          <ProductCarousel items={carouselItems} theme="dark" aspectRatio="square" />
         </ScrollReveal>
 
         <div className="mt-24 text-center border-t border-neutral-900 pt-12">
