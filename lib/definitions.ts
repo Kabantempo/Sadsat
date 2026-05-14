@@ -42,6 +42,8 @@ export type User = {
   bio?: string
   avatar?: string
   createdAt: string
+  setPasswordToken?: string
+  setPasswordTokenExpiry?: string
 }
 
 export type SafeUser = Omit<User, 'passwordHash'>

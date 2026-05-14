@@ -1,12 +1,47 @@
 'use client'
 import { useActionState } from 'react'
 import { createCreateurAccountAction, type AdminFormState } from '@/app/actions/admin'
+import { CheckCircle, Copy } from 'lucide-react'
+import { useState } from 'react'
 
 export default function CreateCreateurForm() {
   const [state, action, pending] = useActionState<AdminFormState, FormData>(
     createCreateurAccountAction,
     undefined
   )
+  const [copied, setCopied] = useState(false)
+
+  function copyLink() {
+    if (!state?.setupLink) return
+    navigator.clipboard.writeText(state.setupLink)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  if (state?.success) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-start gap-2.5 text-green-700">
+          <CheckCircle size={15} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+          <p className="text-[0.72rem] leading-relaxed">
+            Compte créé.{' '}
+            {state.setupLink
+              ? 'Aucun service mail configuré — envoyez ce lien manuellement :'
+              : <>Un email a été envoyé à <strong>{state.recipientEmail}</strong> pour créer son mot de passe.</>}
+          </p>
+        </div>
+        {state.setupLink && (
+          <div className="bg-neutral-50 border border-neutral-200 px-3 py-2.5 flex items-center gap-2">
+            <span className="flex-1 text-[0.62rem] text-neutral-600 break-all font-mono">{state.setupLink}</span>
+            <button onClick={copyLink} className="shrink-0 text-neutral-400 hover:text-neutral-900 transition-colors">
+              <Copy size={13} strokeWidth={1.5} />
+            </button>
+            {copied && <span className="text-[0.6rem] text-green-600">Copié</span>}
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <form action={action} className="space-y-5">
@@ -63,21 +98,9 @@ export default function CreateCreateurForm() {
         )}
       </div>
 
-      <div>
-        <label className="block text-[0.6rem] tracking-[0.16em] uppercase text-neutral-500 mb-1.5">
-          Mot de passe
-        </label>
-        <input
-          name="password"
-          type="password"
-          required
-          className="w-full border border-neutral-200 px-3 py-2 text-[0.83rem] text-neutral-900 outline-none focus:border-neutral-900 transition-colors bg-white"
-          placeholder="••••••••"
-        />
-        {state?.errors?.password && (
-          <p className="mt-1 text-[0.65rem] text-red-500">{state.errors.password[0]}</p>
-        )}
-      </div>
+      <p className="text-[0.62rem] text-neutral-400 leading-relaxed">
+        Un email sera envoyé au créateur pour qu'il crée lui-même son mot de passe.
+      </p>
 
       <button
         type="submit"

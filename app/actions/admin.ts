@@ -1,19 +1,24 @@
 'use server'
 import { redirect } from 'next/navigation'
-import bcrypt from 'bcryptjs'
 import { z } from 'zod'
-import { createUser, getUserByEmail, deleteUser, getUsers } from '@/lib/db'
+import { createUser, getUserByEmail, deleteUser } from '@/lib/db'
 import { verifyAdmin } from '@/lib/dal'
+import { sendSetPasswordEmail } from '@/lib/email'
 
 const CreateAdminSchema = z.object({
   prenom: z.string().min(2, { message: 'Le prénom doit faire au moins 2 caractères.' }).trim(),
   nom: z.string().min(2, { message: 'Le nom doit faire au moins 2 caractères.' }).trim(),
   email: z.string().email({ message: 'Email invalide.' }).trim(),
-  password: z.string().min(6, { message: 'Au moins 6 caractères.' }),
 })
 
 export type AdminFormState =
-  | { errors?: { prenom?: string[]; nom?: string[]; email?: string[]; password?: string[] }; message?: string }
+  | {
+      errors?: { prenom?: string[]; nom?: string[]; email?: string[] }
+      message?: string
+      success?: boolean
+      setupLink?: string
+      recipientEmail?: string
+    }
   | undefined
 
 async function createAccountAction(
@@ -26,31 +31,42 @@ async function createAccountAction(
     prenom: formData.get('prenom'),
     nom: formData.get('nom'),
     email: formData.get('email'),
-    password: formData.get('password'),
   })
 
   if (!validated.success) {
     return { errors: validated.error.flatten().fieldErrors }
   }
 
-  const { prenom, nom, email, password } = validated.data
+  const { prenom, nom, email } = validated.data
   const name = `${prenom} ${nom}`
 
   if (getUserByEmail(email)) {
     return { message: 'Cet email est déjà utilisé.' }
   }
 
-  const passwordHash = await bcrypt.hash(password, 12)
+  const token = crypto.randomUUID() + '-' + crypto.randomUUID()
+  const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+  const setupLink = `${baseUrl}/set-password?token=${token}`
+
   createUser({
     id: crypto.randomUUID(),
     email,
-    passwordHash,
+    passwordHash: '',
     name,
     role,
+    setPasswordToken: token,
+    setPasswordTokenExpiry: expiry,
     createdAt: new Date().toISOString(),
   })
 
-  redirect(`/admin/comptes?ok=${role}`)
+  const emailSent = await sendSetPasswordEmail(email, name, token)
+
+  return {
+    success: true,
+    recipientEmail: email,
+    setupLink: emailSent ? undefined : setupLink,
+  }
 }
 
 export async function createAdminAction(

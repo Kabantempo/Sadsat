@@ -2,7 +2,7 @@
 import { redirect } from 'next/navigation'
 import bcrypt from 'bcryptjs'
 import { SignupFormSchema, LoginFormSchema, type FormState } from '@/lib/definitions'
-import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword } from '@/lib/db'
+import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword, getUserByPasswordToken, clearPasswordToken } from '@/lib/db'
 import { verifySession } from '@/lib/dal'
 import { createSession, deleteSession } from '@/lib/session'
 
@@ -92,6 +92,34 @@ export async function changePasswordAction(
   updateUserPassword(user.id, passwordHash)
 
   return { success: true, message: 'Mot de passe mis à jour.' }
+}
+
+export type SetPasswordState = { message?: string; success?: boolean } | undefined
+
+export async function setPasswordAction(
+  _state: SetPasswordState,
+  formData: FormData
+): Promise<SetPasswordState> {
+  const token = String(formData.get('token') ?? '')
+  const password = String(formData.get('password') ?? '')
+  const confirm = String(formData.get('confirmPassword') ?? '')
+
+  const user = getUserByPasswordToken(token)
+  if (!user || !user.setPasswordTokenExpiry || new Date(user.setPasswordTokenExpiry) < new Date()) {
+    return { message: 'Lien invalide ou expiré.' }
+  }
+
+  if (password.length < 8) return { message: 'Au moins 8 caractères requis.' }
+  if (!/[a-zA-Z]/.test(password)) return { message: 'Au moins une lettre requise.' }
+  if (!/[0-9]/.test(password)) return { message: 'Au moins un chiffre requis.' }
+  if (password !== confirm) return { message: 'Les mots de passe ne correspondent pas.' }
+
+  const passwordHash = await bcrypt.hash(password, 12)
+  updateUserPassword(user.id, passwordHash)
+  clearPasswordToken(user.id)
+
+  await createSession(user.id, user.role)
+  redirect(user.role === 'admin' ? '/admin' : '/createur')
 }
 
 export async function setupAdmin(state: FormState, formData: FormData): Promise<FormState> {

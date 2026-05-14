@@ -75,3 +75,27 @@ export function deleteUser(id: string): boolean {
   fs.writeFileSync(USERS_FILE, JSON.stringify(filtered, null, 2), 'utf-8')
   return true
 }
+
+export function getUserByPasswordToken(token: string): import('./definitions').User | undefined {
+  return getUsers().find((u) => u.setPasswordToken === token)
+}
+
+export function savePasswordToken(id: string, token: string, expiry: string): boolean {
+  const users = getUsers()
+  const idx = users.findIndex((u) => u.id === id)
+  if (idx === -1) return false
+  users[idx].setPasswordToken = token
+  users[idx].setPasswordTokenExpiry = expiry
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8')
+  return true
+}
+
+export function clearPasswordToken(id: string): boolean {
+  const users = getUsers()
+  const idx = users.findIndex((u) => u.id === id)
+  if (idx === -1) return false
+  delete users[idx].setPasswordToken
+  delete users[idx].setPasswordTokenExpiry
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8')
+  return true
+}
