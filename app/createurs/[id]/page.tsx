@@ -10,7 +10,7 @@ const UNIVERSES: Universe[] = ["taxidermie", "bijoux", "bougies"];
 
 function ProductCard({ p }: { p: Product }) {
   return (
-    <div className="group relative overflow-hidden bg-neutral-900">
+    <Link href={`/produits/${p.id}`} className="group relative overflow-hidden bg-neutral-900 block">
       <div className="relative aspect-[3/4] overflow-hidden">
         {p.images[0] ? (
           <Image
@@ -40,7 +40,7 @@ function ProductCard({ p }: { p: Product }) {
           </div>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
 
