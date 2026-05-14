@@ -109,7 +109,7 @@ export default function TaxidermiePage() {
           <p className="font-mono text-[0.62rem] tracking-[0.28em] uppercase text-neutral-400 mb-10">
             Nos pièces
           </p>
-          <ProductCarousel items={carouselItems} theme="light" aspectRatio="portrait" />
+          <ProductCarousel items={carouselItems} theme="dark" aspectRatio="square" />
         </ScrollReveal>
       </div>
 
