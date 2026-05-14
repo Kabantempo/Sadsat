@@ -6,6 +6,7 @@ import { getUserById } from "@/lib/db";
 import { UNIVERSE_LABELS } from "@/lib/definitions";
 import ProductAccordion from "@/components/shared/ProductAccordion";
 import AddToCartButton from "@/components/shared/AddToCartButton";
+import FavoriteButton from "@/components/shared/FavoriteButton";
 
 export default async function FicheProduitPage({
   params,
@@ -97,10 +98,13 @@ export default async function FicheProduitPage({
               </span>
             </div>
 
-            {/* Nom */}
-            <h1 className="font-serif font-light text-4xl md:text-5xl italic text-neutral-100 leading-tight mb-6">
-              {product.name}
-            </h1>
+            {/* Nom + Favori */}
+            <div className="flex items-start gap-3 mb-6">
+              <h1 className="font-serif font-light text-4xl md:text-5xl italic text-neutral-100 leading-tight flex-1">
+                {product.name}
+              </h1>
+              <FavoriteButton productId={product.id} className="mt-2 shrink-0" size={20} />
+            </div>
 
             {/* Prix */}
             <div className="mb-8">

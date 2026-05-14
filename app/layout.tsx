@@ -6,6 +6,7 @@ import Footer from "@/components/shared/Footer";
 import RandomPieceButton from "@/components/shared/RandomPieceButton";
 import CartProvider from "@/components/shared/CartProvider";
 import CartDrawer from "@/components/shared/CartDrawer";
+import FavoritesProvider from "@/components/shared/FavoritesProvider";
 import { getCurrentUser } from "@/lib/dal";
 
 const cormorant = Cormorant_Garamond({
@@ -52,6 +53,7 @@ export default async function RootLayout({
       <body
         className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable} antialiased bg-black text-neutral-200`}
       >
+        <FavoritesProvider>
         <CartProvider>
           <Header user={user ? { name: user.name, role: user.role } : null} />
           <main className="min-h-screen">{children}</main>
@@ -59,6 +61,7 @@ export default async function RootLayout({
           <RandomPieceButton />
           <CartDrawer />
         </CartProvider>
+        </FavoritesProvider>
       </body>
     </html>
   );

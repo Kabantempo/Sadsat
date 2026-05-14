@@ -36,6 +36,41 @@ export async function sendSetPasswordEmail(
   }
 }
 
+type ContactPayload = { name: string; email: string; subject: string; message: string }
+
+export async function sendContactEmail(payload: ContactPayload): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY
+  const to = process.env.CONTACT_EMAIL ?? 'contact@sadsat.fr'
+  const from = process.env.RESEND_FROM_EMAIL ?? 'SADSAT <noreply@sadsat.fr>'
+
+  if (!apiKey) {
+    console.log(`[SADSAT] Contact de ${payload.name} <${payload.email}>\nSujet: ${payload.subject}\n${payload.message}`)
+    return
+  }
+
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      reply_to: payload.email,
+      subject: `[SADSAT Contact] ${payload.subject}`,
+      html: `<div style="font-family:sans-serif;max-width:600px;padding:32px 20px;">
+        <p style="color:#999;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;margin:0 0 20px;">Message de contact — SADSAT</p>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+          <tr><td style="padding:8px 0;color:#777;font-size:0.8rem;width:80px;">Nom</td><td style="padding:8px 0;font-size:0.88rem;color:#333;">${payload.name}</td></tr>
+          <tr><td style="padding:8px 0;color:#777;font-size:0.8rem;">Email</td><td style="padding:8px 0;font-size:0.88rem;color:#333;"><a href="mailto:${payload.email}" style="color:#333;">${payload.email}</a></td></tr>
+          <tr><td style="padding:8px 0;color:#777;font-size:0.8rem;">Sujet</td><td style="padding:8px 0;font-size:0.88rem;color:#333;">${payload.subject}</td></tr>
+        </table>
+        <div style="background:#f5f5f5;padding:20px;border-left:3px solid #ddd;">
+          <p style="font-size:0.88rem;color:#444;line-height:1.7;white-space:pre-wrap;margin:0;">${payload.message}</p>
+        </div>
+      </div>`,
+    }),
+  }).catch(() => null)
+}
+
 function buildHtml(name: string, link: string): string {
   return `<!DOCTYPE html>
 <html lang="fr">

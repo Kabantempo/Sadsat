@@ -1,9 +1,8 @@
 import { getProducts } from "@/lib/products";
-import ProductGrid from "@/components/shared/ProductGrid";
+import PiecesUniquesContent from "@/components/pages/PiecesUniquesContent";
 
 export default function PiecesUniquesPage() {
-  const allProducts = getProducts();
-  const available = allProducts.filter((p) => p.status !== "masqué");
+  const allProducts = getProducts().filter((p) => p.status !== "masqué");
 
   return (
     <div className="min-h-screen bg-white pt-32 pb-24">
@@ -18,18 +17,9 @@ export default function PiecesUniquesPage() {
           <p className="text-sm tracking-[0.2em] uppercase text-neutral-400">
             Taxidermie · Bijoux · Bougies
           </p>
-          {available.length > 0 && (
-            <p className="mt-4 text-[0.72rem] text-neutral-400">
-              {available.length} pièce{available.length > 1 ? "s" : ""} disponible{available.length > 1 ? "s" : ""}
-            </p>
-          )}
         </div>
 
-        <ProductGrid
-          products={available}
-          theme="light"
-          emptyMessage="La collection arrive bientôt. Revenez nous voir."
-        />
+        <PiecesUniquesContent products={allProducts} totalCount={allProducts.length} />
       </div>
     </div>
   );

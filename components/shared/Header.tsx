@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, User, ShoppingBag, ChevronDown, Menu, X, LayoutDashboard, LogOut } from "lucide-react";
+import { Search, User, ShoppingBag, ChevronDown, Menu, X, LayoutDashboard, LogOut, Heart } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import { useCart } from "@/components/shared/CartProvider";
+import { useFavorites } from "@/components/shared/FavoritesProvider";
 
 type SubItem = { label: string; href: string };
 
@@ -50,7 +51,8 @@ const NAV: NavItem[] = [
       { label: "Fondants", href: "/bougies/fondants" },
     ],
   },
-  { label: "À propos", href: "/a-propos" },
+  { label: "Créateurs", href: "/createurs" },
+  { label: "Contact", href: "/contact" },
 ];
 
 type UserProp = { name: string; role: 'admin' | 'client' | 'créateur' } | null
@@ -59,6 +61,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Header({ user }: { user?: UserProp }) {
   const { count, openDrawer } = useCart();
+  const { count: favCount } = useFavorites();
   const [openMenu, setOpenMenu]       = useState<string | null>(null);
   const [mobileOpen, setMobileOpen]   = useState(false);
   const [mobileSub, setMobileSub]     = useState<string | null>(null);
@@ -201,6 +204,20 @@ export default function Header({ user }: { user?: UserProp }) {
                 </Link>
               </motion.div>
             )}
+            <Link href="/favoris">
+              <motion.div
+                whileHover={{ scale: 1.12 }}
+                transition={{ duration: 0.15 }}
+                className="relative cursor-pointer hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+              >
+                <Heart size={16} strokeWidth={1.5} />
+                {favCount > 0 && (
+                  <span className="absolute -top-2 -right-2.5 bg-red-500 text-white text-[0.45rem] leading-none rounded-full w-[16px] h-[16px] flex items-center justify-center font-bold">
+                    {favCount}
+                  </span>
+                )}
+              </motion.div>
+            </Link>
             <motion.button
               whileHover={{ scale: 1.12 }}
               transition={{ duration: 0.15 }}
