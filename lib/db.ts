@@ -48,6 +48,15 @@ export function updateUserRole(id: string, role: 'admin' | 'client'): boolean {
   return true
 }
 
+export function updateUser(id: string, data: Partial<Pick<User, 'name' | 'bio' | 'avatar'>>): boolean {
+  const users = getUsers()
+  const idx = users.findIndex((u) => u.id === id)
+  if (idx === -1) return false
+  users[idx] = { ...users[idx], ...data }
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8')
+  return true
+}
+
 export function deleteUser(id: string): boolean {
   const users = getUsers()
   const filtered = users.filter((u) => u.id !== id)

@@ -3,11 +3,48 @@ import { mkdir, writeFile, unlink } from 'fs/promises'
 import path from 'path'
 import { redirect } from 'next/navigation'
 import { verifyCreateur } from '@/lib/dal'
+import { updateUser } from '@/lib/db'
 import { createProduct, updateProduct, deleteProduct, getProductById } from '@/lib/products'
 import type { ProductFormState, Universe, ProductStatus } from '@/lib/definitions'
 import { UNIVERSES } from '@/lib/definitions'
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'products')
+const AVATAR_DIR = path.join(process.cwd(), 'public', 'uploads', 'avatars')
+
+export type ProfileFormState = { message?: string; success?: boolean } | undefined
+
+export async function updateProfileAction(
+  _state: ProfileFormState,
+  formData: FormData
+): Promise<ProfileFormState> {
+  const session = await verifyCreateur()
+
+  const name = String(formData.get('name') ?? '').trim()
+  const bio = String(formData.get('bio') ?? '').trim()
+  const avatarFile = formData.get('avatar') as File | null
+
+  if (!name || name.length < 2) {
+    return { message: 'Le nom doit faire au moins 2 caractères.' }
+  }
+
+  let avatarPath: string | undefined
+  if (avatarFile && avatarFile.size > 0) {
+    await mkdir(AVATAR_DIR, { recursive: true })
+    const ext = avatarFile.name.split('.').pop()?.toLowerCase() ?? 'jpg'
+    const filename = `${session.userId}.${ext}`
+    const buffer = Buffer.from(await avatarFile.arrayBuffer())
+    await writeFile(path.join(AVATAR_DIR, filename), buffer)
+    avatarPath = `/uploads/avatars/${filename}`
+  }
+
+  updateUser(session.userId, {
+    name,
+    bio: bio || undefined,
+    ...(avatarPath ? { avatar: avatarPath } : {}),
+  })
+
+  return { success: true, message: 'Profil mis à jour.' }
+}
 
 async function saveFiles(files: File[]): Promise<string[]> {
   await mkdir(UPLOAD_DIR, { recursive: true })
