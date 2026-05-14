@@ -3,7 +3,9 @@ import fs from 'fs'
 import path from 'path'
 import type { User } from './definitions'
 
-const DATA_DIR = path.join(process.cwd(), 'data')
+const DATA_DIR = process.env.VERCEL
+  ? '/tmp/sadsat-data'
+  : path.join(process.cwd(), 'data')
 const USERS_FILE = path.join(DATA_DIR, 'users.json')
 
 function ensureDataDir() {
