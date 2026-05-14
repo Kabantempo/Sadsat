@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getProductById } from "@/lib/products";
 import { getUserById } from "@/lib/db";
 import { UNIVERSE_LABELS } from "@/lib/definitions";
+import ProductAccordion from "@/components/shared/ProductAccordion";
 
 export default async function FicheProduitPage({
   params,
@@ -15,6 +16,9 @@ export default async function FicheProduitPage({
   if (!product || product.status === "masqué") notFound();
 
   const creator = product.createdBy ? getUserById(product.createdBy) : null;
+  const creatorData = creator
+    ? { id: creator.id, name: creator.name, avatar: creator.avatar }
+    : null;
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-200">
@@ -116,7 +120,7 @@ export default async function FicheProduitPage({
             {/* Séparateur */}
             <div className="h-px bg-neutral-800 mb-8" />
 
-            {/* Description */}
+            {/* Description — toujours visible */}
             <div className="mb-8">
               <p className="font-mono text-[0.58rem] tracking-[0.22em] uppercase text-neutral-500 mb-3">
                 Description
@@ -126,117 +130,10 @@ export default async function FicheProduitPage({
               </p>
             </div>
 
-            {/* Détails */}
-            <div className="space-y-3 mb-8">
-              <p className="font-mono text-[0.58rem] tracking-[0.22em] uppercase text-neutral-500 mb-3">
-                Détails
-              </p>
-              <div className="flex justify-between border-b border-neutral-900 pb-2">
-                <span className="text-[0.75rem] text-neutral-600 font-mono tracking-wider uppercase">Univers</span>
-                <span className="text-[0.8rem] text-neutral-300">{UNIVERSE_LABELS[product.universe]}</span>
-              </div>
-              <div className="flex justify-between border-b border-neutral-900 pb-2">
-                <span className="text-[0.75rem] text-neutral-600 font-mono tracking-wider uppercase">Catégorie</span>
-                <span className="text-[0.8rem] text-neutral-300">{product.category}</span>
-              </div>
-              {product.serialNumber && (
-                <div className="flex justify-between border-b border-neutral-900 pb-2">
-                  <span className="text-[0.75rem] text-neutral-600 font-mono tracking-wider uppercase">N° de série</span>
-                  <span className="text-[0.8rem] text-neutral-300 font-mono">{product.serialNumber}</span>
-                </div>
-              )}
-              <div className="flex justify-between border-b border-neutral-900 pb-2">
-                <span className="text-[0.75rem] text-neutral-600 font-mono tracking-wider uppercase">Disponibilité</span>
-                <span className={`text-[0.8rem] ${product.status === "vendu" ? "text-neutral-600" : "text-neutral-300"}`}>
-                  {product.status === "vendu" ? "Vendu" : product.stock === 1 ? "Pièce unique" : `${product.stock} disponibles`}
-                </span>
-              </div>
-              {product.materials && (
-                <div className="flex justify-between border-b border-neutral-900 pb-2">
-                  <span className="text-[0.75rem] text-neutral-600 font-mono tracking-wider uppercase">Matériaux</span>
-                  <span className="text-[0.8rem] text-neutral-300 text-right max-w-[55%]">{product.materials}</span>
-                </div>
-              )}
-            </div>
+            {/* Accordéon détails / dimensions / créateur */}
+            <ProductAccordion product={product} creator={creatorData} />
 
-            {/* Dimensions */}
-            {product.dimensions && Object.values(product.dimensions).some((v) => v !== undefined) && (
-              <div className="mb-8">
-                <p className="font-mono text-[0.58rem] tracking-[0.22em] uppercase text-neutral-500 mb-3">
-                  Dimensions
-                </p>
-                <div className="grid grid-cols-3 gap-3">
-                  {product.dimensions.hauteur !== undefined && (
-                    <div className="bg-neutral-900 px-3 py-3 text-center">
-                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.hauteur}</p>
-                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Hauteur cm</p>
-                    </div>
-                  )}
-                  {product.dimensions.largeur !== undefined && (
-                    <div className="bg-neutral-900 px-3 py-3 text-center">
-                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.largeur}</p>
-                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Largeur cm</p>
-                    </div>
-                  )}
-                  {product.dimensions.profondeur !== undefined && (
-                    <div className="bg-neutral-900 px-3 py-3 text-center">
-                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.profondeur}</p>
-                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Profondeur cm</p>
-                    </div>
-                  )}
-                  {product.dimensions.diametre !== undefined && (
-                    <div className="bg-neutral-900 px-3 py-3 text-center">
-                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.diametre}</p>
-                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Diamètre cm</p>
-                    </div>
-                  )}
-                  {product.dimensions.longueur !== undefined && (
-                    <div className="bg-neutral-900 px-3 py-3 text-center">
-                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.longueur}</p>
-                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Longueur cm</p>
-                    </div>
-                  )}
-                  {product.dimensions.poids !== undefined && (
-                    <div className="bg-neutral-900 px-3 py-3 text-center">
-                      <p className="font-serif text-lg text-neutral-200">{product.dimensions.poids}</p>
-                      <p className="font-mono text-[0.52rem] tracking-[0.18em] uppercase text-neutral-600 mt-0.5">Poids g</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Créateur */}
-            {creator && (
-              <>
-                <div className="h-px bg-neutral-800 mb-6" />
-                <Link
-                  href={`/createurs/${creator.id}`}
-                  className="flex items-center gap-4 group"
-                >
-                  <div className="w-12 h-12 rounded-full overflow-hidden bg-neutral-800 shrink-0">
-                    {creator.avatar ? (
-                      <Image src={creator.avatar} alt={creator.name} width={48} height={48} className="object-cover w-full h-full" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="font-serif text-xl text-neutral-500">{creator.name.charAt(0).toUpperCase()}</span>
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <p className="font-mono text-[0.52rem] tracking-[0.24em] uppercase text-neutral-600 mb-0.5">Créateur</p>
-                    <p className="font-serif italic text-lg text-neutral-300 group-hover:text-neutral-100 transition-colors">
-                      {creator.name}
-                    </p>
-                  </div>
-                  <span className="ml-auto text-[0.56rem] tracking-[0.2em] uppercase text-neutral-600 group-hover:text-neutral-300 transition-colors">
-                    Voir le portfolio →
-                  </span>
-                </Link>
-              </>
-            )}
-
-            {/* CTA contact */}
+            {/* CTA contact — toujours visible */}
             {product.status !== "vendu" && (
               <div className="mt-8">
                 <a
