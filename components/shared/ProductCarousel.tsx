@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 export type CarouselItem = {
   id: string | number;
@@ -79,26 +80,30 @@ export default function ProductCarousel({
               onClick={() => {
                 if (isLeft)  go(-1);
                 if (isRight) go(1);
-                if (isCenter && item.href) router.push(item.href);
               }}
             >
-              {/* Image */}
-              <div className={`relative overflow-hidden ${aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"} ${
-                dark ? "bg-neutral-800" : "bg-neutral-200"
-              } ${isCenter ? "group" : ""}`}>
-                {item.image ? (
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className={`object-cover ${isCenter ? "group-hover:scale-105 transition-transform duration-500" : ""}`}
-                  />
-                ) : (
-                  <div className={`w-full h-full flex items-center justify-center ${dark ? "text-neutral-600" : "text-neutral-400"}`}>
-                    <span className="text-4xl">✦</span>
-                  </div>
-                )}
-              </div>
+              {/* Image — cliquable via Link sur la carte centrale */}
+              {isCenter && item.href ? (
+                <Link href={item.href} className={`block relative overflow-hidden group ${aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"} ${dark ? "bg-neutral-800" : "bg-neutral-200"}`}>
+                  {item.image ? (
+                    <Image src={item.image} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                  ) : (
+                    <div className={`w-full h-full flex items-center justify-center ${dark ? "text-neutral-600" : "text-neutral-400"}`}>
+                      <span className="text-4xl">✦</span>
+                    </div>
+                  )}
+                </Link>
+              ) : (
+                <div className={`relative overflow-hidden ${aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"} ${dark ? "bg-neutral-800" : "bg-neutral-200"}`}>
+                  {item.image ? (
+                    <Image src={item.image} alt={item.title} fill className="object-cover" />
+                  ) : (
+                    <div className={`w-full h-full flex items-center justify-center ${dark ? "text-neutral-600" : "text-neutral-400"}`}>
+                      <span className="text-4xl">✦</span>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Infos — seulement sur la carte centrale */}
               {isCenter && (

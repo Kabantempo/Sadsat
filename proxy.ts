@@ -30,8 +30,7 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL(dest, req.nextUrl))
   }
 
-  const createurRoutes = ['/createur']
-  if (createurRoutes.some((r) => path.startsWith(r))) {
+  if (path === '/createur' || path.startsWith('/createur/')) {
     if (!session?.userId || (session.role !== 'créateur' && session.role !== 'admin')) {
       return NextResponse.redirect(new URL('/connexion', req.nextUrl))
     }
