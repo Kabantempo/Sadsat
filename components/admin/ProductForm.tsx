@@ -1,25 +1,37 @@
 'use client'
 import { useActionState, useState, useRef } from 'react'
-import { X, ImagePlus } from 'lucide-react'
+import { X, ImagePlus, VideoIcon, Eye, Upload } from 'lucide-react'
 import { UNIVERSES, UNIVERSE_LABELS, CATEGORIES, STATUS_LABELS } from '@/lib/definitions'
 import type { Universe, Product, ProductFormState } from '@/lib/definitions'
 
 type Props = {
   action: (state: ProductFormState, formData: FormData) => Promise<ProductFormState>
   product?: Product
+  variant?: 'admin' | 'createur'
+  cancelHref?: string
 }
 
-export default function ProductForm({ action, product }: Props) {
+export default function ProductForm({ action, product, variant = 'admin', cancelHref }: Props) {
   const [state, formAction, pending] = useActionState(action, undefined)
   const [universe, setUniverse] = useState<Universe>(product?.universe ?? 'taxidermie')
   const [existingImages, setExistingImages] = useState<string[]>(product?.images ?? [])
   const [previews, setPreviews] = useState<string[]>([])
+  const [existingVideo, setExistingVideo] = useState<string | null>(product?.video ?? null)
+  const [videoPreview, setVideoPreview] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  const videoRef = useRef<HTMLInputElement>(null)
+
+  const resolvedCancelHref = cancelHref ?? (variant === 'createur' ? '/createur/produits' : '/admin/produits')
 
   function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? [])
     const urls = files.map((f) => URL.createObjectURL(f))
     setPreviews(urls)
+  }
+
+  function handleVideo(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (file) setVideoPreview(URL.createObjectURL(file))
   }
 
   function removeExisting(src: string) {
@@ -29,6 +41,12 @@ export default function ProductForm({ action, product }: Props) {
   function clearNewFiles() {
     if (fileRef.current) fileRef.current.value = ''
     setPreviews([])
+  }
+
+  function removeVideo() {
+    setExistingVideo(null)
+    setVideoPreview(null)
+    if (videoRef.current) videoRef.current.value = ''
   }
 
   const fieldClass =
@@ -377,22 +395,135 @@ export default function ProductForm({ action, product }: Props) {
         )}
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-4">
-        <button
-          type="submit"
-          disabled={pending}
-          className="px-8 py-3 bg-neutral-900 text-white text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-neutral-700 transition-colors disabled:opacity-50"
-        >
-          {pending ? 'Enregistrement...' : product ? 'Mettre à jour' : 'Créer le produit'}
-        </button>
-        <a
-          href="/admin/produits"
-          className="text-[0.6rem] tracking-[0.16em] uppercase text-neutral-400 hover:text-neutral-900 transition-colors"
-        >
-          Annuler
-        </a>
+      {/* Vidéo de présentation */}
+      <div className="bg-white border border-neutral-200 p-6 space-y-5">
+        <p className="text-[0.6rem] tracking-[0.2em] uppercase text-neutral-400 pb-2 border-b border-neutral-100">
+          Vidéo de présentation
+        </p>
+        <p className="text-[0.62rem] text-neutral-400 leading-relaxed">
+          Courte vidéo jouée en boucle sur la fiche produit. <strong>3 à 5 secondes recommandées.</strong> Formats acceptés : MP4, WebM, MOV.
+        </p>
+
+        {/* Vidéo existante */}
+        {existingVideo && !videoPreview && (
+          <div>
+            <p className={labelClass}>Vidéo actuelle</p>
+            <div className="relative inline-block group">
+              <video
+                src={existingVideo}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-40 h-28 object-cover border border-neutral-200"
+              />
+              <button
+                type="button"
+                onClick={removeVideo}
+                className="absolute top-1 right-1 bg-white/90 hover:bg-red-50 border border-neutral-200 rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                aria-label="Supprimer la vidéo"
+              >
+                <X size={12} strokeWidth={2} className="text-neutral-700" />
+              </button>
+            </div>
+            <input type="hidden" name="existingVideo" value={existingVideo} />
+          </div>
+        )}
+
+        {/* Nouvelle vidéo */}
+        <div>
+          <label
+            htmlFor="video"
+            className="flex flex-col items-center justify-center border-2 border-dashed border-neutral-200 p-8 cursor-pointer hover:border-neutral-400 hover:bg-neutral-50 transition-colors"
+          >
+            <VideoIcon size={22} strokeWidth={1.2} className="text-neutral-400 mb-2" />
+            <span className="text-[0.68rem] tracking-[0.1em] text-neutral-400">
+              {existingVideo && !videoPreview ? 'Remplacer la vidéo' : 'Sélectionner une vidéo'}
+            </span>
+            <input
+              id="video"
+              name="video"
+              type="file"
+              ref={videoRef}
+              accept="video/mp4,video/webm,video/quicktime"
+              onChange={handleVideo}
+              className="sr-only"
+            />
+          </label>
+        </div>
+
+        {/* Aperçu nouvelle vidéo */}
+        {videoPreview && (
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <p className={labelClass}>Aperçu</p>
+              <button
+                type="button"
+                onClick={removeVideo}
+                className="text-[0.58rem] tracking-[0.12em] uppercase text-neutral-400 hover:text-red-500 transition-colors"
+              >
+                Supprimer
+              </button>
+            </div>
+            <video
+              src={videoPreview}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-40 h-28 object-cover border border-neutral-200"
+            />
+          </div>
+        )}
       </div>
+
+      {/* Actions */}
+      {variant === 'createur' ? (
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="submit"
+            name="_intent"
+            value="preview"
+            disabled={pending}
+            className="flex items-center gap-2 px-6 py-3 border border-neutral-300 text-neutral-700 text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:border-neutral-600 hover:text-neutral-900 transition-colors disabled:opacity-50"
+          >
+            <Eye size={13} strokeWidth={1.5} />
+            {pending ? '...' : 'Prévisualiser'}
+          </button>
+          <button
+            type="submit"
+            name="_intent"
+            value="publish"
+            disabled={pending}
+            className="flex items-center gap-2 px-8 py-3 bg-neutral-900 text-white text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-neutral-700 transition-colors disabled:opacity-50"
+          >
+            <Upload size={13} strokeWidth={1.5} />
+            {pending ? 'Enregistrement...' : product ? 'Mettre à jour' : 'Publier'}
+          </button>
+          <a
+            href={resolvedCancelHref}
+            className="text-[0.6rem] tracking-[0.16em] uppercase text-neutral-400 hover:text-neutral-900 transition-colors"
+          >
+            Annuler
+          </a>
+        </div>
+      ) : (
+        <div className="flex items-center gap-4">
+          <button
+            type="submit"
+            disabled={pending}
+            className="px-8 py-3 bg-neutral-900 text-white text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-neutral-700 transition-colors disabled:opacity-50"
+          >
+            {pending ? 'Enregistrement...' : product ? 'Mettre à jour' : 'Créer le produit'}
+          </button>
+          <a
+            href={resolvedCancelHref}
+            className="text-[0.6rem] tracking-[0.16em] uppercase text-neutral-400 hover:text-neutral-900 transition-colors"
+          >
+            Annuler
+          </a>
+        </div>
+      )}
     </form>
   )
 }

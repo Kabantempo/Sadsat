@@ -21,7 +21,7 @@ export default async function NouveauProduitCreateurPage() {
         Nouveau produit
       </h1>
 
-      <ProductForm action={createCreateurProductAction} />
+      <ProductForm action={createCreateurProductAction} variant="createur" />
     </div>
   )
 }

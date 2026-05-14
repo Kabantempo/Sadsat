@@ -38,7 +38,7 @@ export default async function ModifierProduitCreateurPage({
         <DeleteProductButton id={product.id} name={product.name} variant="full" deleteAction={deleteCreateurProductAction} />
       </div>
 
-      <ProductForm action={updateCreateurProductAction} product={product} />
+      <ProductForm action={updateCreateurProductAction} product={product} variant="createur" />
     </div>
   )
 }

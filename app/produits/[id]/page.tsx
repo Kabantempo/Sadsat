@@ -7,15 +7,22 @@ import { UNIVERSE_LABELS } from "@/lib/definitions";
 import ProductAccordion from "@/components/shared/ProductAccordion";
 import AddToCartButton from "@/components/shared/AddToCartButton";
 import FavoriteButton from "@/components/shared/FavoriteButton";
+import ProductVideo from "@/components/shared/ProductVideo";
+import PreviewBanner from "@/components/shared/PreviewBanner";
 
 export default async function FicheProduitPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }) {
   const { id } = await params;
+  const { preview } = await searchParams;
+  const isPreview = preview === "1";
   const product = getProductById(id);
-  if (!product || product.status === "masqué") notFound();
+  if (!product) notFound();
+  if (product.status === "masqué" && !isPreview) notFound();
 
   const creator = product.createdBy ? getUserById(product.createdBy) : null;
   const creatorData = creator
@@ -24,7 +31,10 @@ export default async function FicheProduitPage({
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-200">
-      <div className="max-w-6xl mx-auto px-6 py-16">
+      {isPreview && product.status === "masqué" && (
+        <PreviewBanner productId={product.id} />
+      )}
+      <div className={`max-w-6xl mx-auto px-6 py-16 ${isPreview && product.status === "masqué" ? "pt-28" : ""}`}>
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-12 font-mono text-[0.55rem] tracking-[0.28em] uppercase text-neutral-600">
@@ -49,16 +59,20 @@ export default async function FicheProduitPage({
 
           {/* ── Galerie photos ── */}
           <div className="space-y-3">
-            {product.images.length > 0 ? (
+            {product.video || product.images.length > 0 ? (
               <>
                 <div className="relative aspect-[3/4] overflow-hidden bg-neutral-900">
-                  <Image
-                    src={product.images[0]}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
+                  {product.video ? (
+                    <ProductVideo src={product.video} />
+                  ) : (
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  )}
                   {product.status === "vendu" && (
                     <div className="absolute top-4 left-4">
                       <span className="text-[0.58rem] tracking-[0.2em] uppercase bg-black/80 text-neutral-400 px-3 py-1.5 border border-neutral-700">
@@ -67,11 +81,11 @@ export default async function FicheProduitPage({
                     </div>
                   )}
                 </div>
-                {product.images.length > 1 && (
+                {product.images.length > (product.video ? 0 : 1) && (
                   <div className="grid grid-cols-4 gap-2">
-                    {product.images.slice(1).map((img, i) => (
+                    {(product.video ? product.images : product.images.slice(1)).map((img, i) => (
                       <div key={i} className="relative aspect-square overflow-hidden bg-neutral-900">
-                        <Image src={img} alt={`${product.name} ${i + 2}`} fill className="object-cover" />
+                        <Image src={img} alt={`${product.name} ${i + (product.video ? 1 : 2)}`} fill className="object-cover" />
                       </div>
                     ))}
                   </div>
@@ -82,6 +96,7 @@ export default async function FicheProduitPage({
                 <span className="text-neutral-700 text-5xl">✦</span>
               </div>
             )}
+
           </div>
 
           {/* ── Infos produit ── */}

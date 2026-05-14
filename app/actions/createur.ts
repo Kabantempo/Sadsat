@@ -64,6 +64,16 @@ async function saveFiles(files: File[]): Promise<string[]> {
   return paths
 }
 
+async function saveVideoFile(file: File | null): Promise<string | null> {
+  if (!file || file.size === 0) return null
+  await mkdir(UPLOAD_DIR, { recursive: true })
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'mp4'
+  const filename = `${crypto.randomUUID()}.${ext}`
+  const buffer = Buffer.from(await file.arrayBuffer())
+  await writeFile(path.join(UPLOAD_DIR, filename), buffer)
+  return `/uploads/products/${filename}`
+}
+
 function parseProduct(formData: FormData) {
   const name = String(formData.get('name') ?? '').trim()
   const description = String(formData.get('description') ?? '').trim()
@@ -115,20 +125,30 @@ export async function createCreateurProductAction(
   formData: FormData
 ): Promise<ProductFormState> {
   const session = await verifyCreateur()
+  const intent = String(formData.get('_intent') ?? 'publish')
   const parsed = parseProduct(formData)
   if (!parsed.valid || !parsed.data) return parsed.errors ?? undefined
 
   const newFiles = formData.getAll('newImages') as File[]
   const imagePaths = await saveFiles(newFiles)
+  const videoFile = formData.get('video') as File | null
+  const videoPath = await saveVideoFile(videoFile)
+
+  const productId = crypto.randomUUID()
+  const status = intent === 'preview' ? 'masqué' : parsed.data.status
 
   createProduct({
-    id: crypto.randomUUID(),
+    id: productId,
     ...parsed.data,
+    status,
     images: imagePaths,
+    ...(videoPath ? { video: videoPath } : {}),
     createdBy: session.userId,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   })
+
+  if (intent === 'preview') redirect(`/produits/${productId}?preview=1`)
   redirect('/createur/produits')
 }
 
@@ -137,6 +157,7 @@ export async function updateCreateurProductAction(
   formData: FormData
 ): Promise<ProductFormState> {
   const session = await verifyCreateur()
+  const intent = String(formData.get('_intent') ?? 'publish')
   const id = String(formData.get('productId') ?? '')
   if (!id) return { message: 'Produit introuvable.' }
 
@@ -154,11 +175,31 @@ export async function updateCreateurProductAction(
   const newFiles = formData.getAll('newImages') as File[]
   const newPaths = await saveFiles(newFiles)
 
+  const videoFile = formData.get('video') as File | null
+  const existingVideo = String(formData.get('existingVideo') ?? '')
+  const newVideoPath = await saveVideoFile(videoFile)
+  const finalVideo = newVideoPath ?? (existingVideo || undefined)
+
   updateProduct(id, {
     ...parsed.data,
     images: [...existingImages, ...newPaths],
+    video: finalVideo,
   })
+
+  if (intent === 'preview') redirect(`/produits/${id}?preview=1`)
   redirect('/createur/produits')
+}
+
+export async function publishProductAction(formData: FormData): Promise<void> {
+  const session = await verifyCreateur()
+  const id = String(formData.get('productId') ?? '')
+  const product = getProductById(id)
+  if (!product) return
+  if (product.createdBy && product.createdBy !== session.userId && session.role !== 'admin') {
+    throw new Error('Non autorisé.')
+  }
+  updateProduct(id, { status: 'disponible' })
+  redirect(`/produits/${id}`)
 }
 
 export async function deleteCreateurProductAction(formData: FormData): Promise<void> {

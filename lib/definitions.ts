@@ -95,6 +95,7 @@ export type Product = {
   serialNumber?: string
   dimensions?: Dimensions
   materials?: string
+  video?: string
   createdBy?: string
   createdAt: string
   updatedAt: string
