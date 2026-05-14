@@ -84,6 +84,18 @@ export default function ProductForm({ action, product }: Props) {
           />
           {state?.errors?.description && <p className={errorClass}>{state.errors.description[0]}</p>}
         </div>
+
+        <div>
+          <label htmlFor="serialNumber" className={labelClass}>Numéro de série</label>
+          <input
+            id="serialNumber"
+            name="serialNumber"
+            type="text"
+            defaultValue={product?.serialNumber ?? ''}
+            placeholder="Ex : SADSAT-2024-001"
+            className={fieldClass}
+          />
+        </div>
       </div>
 
       {/* Classement */}

@@ -117,9 +117,11 @@ export default async function AdminPage() {
               </div>
               <div className="flex items-center gap-3">
                 <span className={`text-[0.56rem] tracking-[0.16em] uppercase px-2 py-0.5 border ${
-                  u.role === 'admin' ? 'border-neutral-900 text-neutral-900' : 'border-neutral-200 text-neutral-400'
+                  u.role === 'admin' ? 'border-neutral-900 text-neutral-900'
+                  : u.role === 'créateur' ? 'border-neutral-500 text-neutral-500'
+                  : 'border-neutral-200 text-neutral-400'
                 }`}>
-                  {u.role === 'admin' ? 'Admin' : 'Client'}
+                  {u.role === 'admin' ? 'Admin' : u.role === 'créateur' ? 'Créateur' : 'Client'}
                 </span>
                 {u.id === session.userId && (
                   <span className="text-[0.6rem] text-neutral-300">(vous)</span>

@@ -32,6 +32,7 @@ function parseProduct(formData: FormData) {
   const category = String(formData.get('category') ?? '').trim()
   const stock = parseInt(String(formData.get('stock') ?? '1'), 10)
   const status = String(formData.get('status') ?? 'disponible') as ProductStatus
+  const serialNumber = String(formData.get('serialNumber') ?? '').trim() || undefined
 
   const errors: ProductFormState = { errors: {} }
   if (!name || name.length < 2) errors.errors!.name = ['Le nom est requis (min. 2 caractères).']
@@ -44,7 +45,7 @@ function parseProduct(formData: FormData) {
   const hasErrors = Object.values(errors.errors!).some((v) => v && v.length > 0)
   if (hasErrors) return { valid: false, errors, data: null }
 
-  return { valid: true, errors: null, data: { name, description, price, universe, category, stock, status } }
+  return { valid: true, errors: null, data: { name, description, price, universe, category, stock, status, serialNumber } }
 }
 
 export async function createProductAction(

@@ -39,6 +39,8 @@ export type User = {
   passwordHash: string
   name: string
   role: 'admin' | 'client' | 'créateur'
+  bio?: string
+  avatar?: string
   createdAt: string
 }
 
@@ -79,6 +81,7 @@ export type Product = {
   images: string[]
   stock: number
   status: ProductStatus
+  serialNumber?: string
   createdBy?: string
   createdAt: string
   updatedAt: string
