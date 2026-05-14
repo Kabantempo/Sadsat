@@ -1,9 +1,8 @@
-import Accordion, { type AccordionItem } from "@/components/shared/Accordion";
-import MaterialTabs from "@/components/shared/MaterialTabs";
 import ScrollReveal from "@/components/shared/ScrollReveal";
 import ProductCarousel, { type CarouselItem } from "@/components/shared/ProductCarousel";
-import Link from "next/link";
+import BijouxDetails from "@/components/pages/BijouxDetails";
 import { getProducts } from "@/lib/products";
+import type { AccordionItem } from "@/components/shared/Accordion";
 
 const FAQ: AccordionItem[] = [
   { question: "Comment nettoyer mes bijoux en maille métallique ?", answer: "Pour l'argent : utilisez un chiffon doux et sec, ou une solution d'eau tiède et de liquide vaisselle doux. Séchez immédiatement. Pour le laiton et le cuivre, du bicarbonate de soude humidifié ravive l'éclat. Évitez les produits chimiques agressifs qui altèrent la patine naturelle." },
@@ -87,35 +86,10 @@ export default function BijouxPage() {
           </ScrollReveal>
         </div>
 
-        {/* ── Matériaux ── */}
-        <div className="max-w-3xl mx-auto mb-16">
-          <ScrollReveal delay={0.05}>
-            <p className="font-mono text-[0.62rem] tracking-[0.28em] uppercase text-neutral-600 mb-6">Les matériaux</p>
-            <MaterialTabs />
-          </ScrollReveal>
-        </div>
-
-        {/* ── FAQ + bouton ── */}
-        <div className="max-w-3xl mx-auto mb-24" id="faq">
-          <ScrollReveal delay={0.05}>
-            <p className="font-mono text-[0.62rem] tracking-[0.28em] uppercase text-neutral-600 mb-6">Questions fréquentes</p>
-            <Accordion items={FAQ} theme="dark" />
-            <div className="mt-10 flex items-center gap-6">
-              <Link
-                href="/contact"
-                className="inline-block text-[0.62rem] tracking-[0.22em] uppercase px-7 py-3.5 border border-neutral-700 text-neutral-200 hover:bg-neutral-800 transition-colors"
-              >
-                Poser une question
-              </Link>
-              <Link
-                href="/a-propos"
-                className="text-[0.62rem] tracking-[0.16em] uppercase text-neutral-600 hover:text-neutral-200 transition-colors underline underline-offset-4"
-              >
-                En savoir plus sur SADSAT →
-              </Link>
-            </div>
-          </ScrollReveal>
-        </div>
+        {/* ── Matériaux + FAQ masqués ── */}
+        <ScrollReveal delay={0.05}>
+          <BijouxDetails faq={FAQ} />
+        </ScrollReveal>
 
         {/* ── Carrousel ── */}
         <ScrollReveal>
