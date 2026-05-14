@@ -57,6 +57,15 @@ export function updateUser(id: string, data: Partial<Pick<User, 'name' | 'bio' |
   return true
 }
 
+export function updateUserPassword(id: string, passwordHash: string): boolean {
+  const users = getUsers()
+  const idx = users.findIndex((u) => u.id === id)
+  if (idx === -1) return false
+  users[idx].passwordHash = passwordHash
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8')
+  return true
+}
+
 export function deleteUser(id: string): boolean {
   const users = getUsers()
   const filtered = users.filter((u) => u.id !== id)

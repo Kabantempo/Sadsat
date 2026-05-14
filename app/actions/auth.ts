@@ -2,7 +2,8 @@
 import { redirect } from 'next/navigation'
 import bcrypt from 'bcryptjs'
 import { SignupFormSchema, LoginFormSchema, type FormState } from '@/lib/definitions'
-import { createUser, getUserByEmail, adminExists } from '@/lib/db'
+import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword } from '@/lib/db'
+import { verifySession } from '@/lib/dal'
 import { createSession, deleteSession } from '@/lib/session'
 
 export async function signup(state: FormState, formData: FormData): Promise<FormState> {
@@ -65,6 +66,32 @@ export async function login(state: FormState, formData: FormData): Promise<FormS
 export async function logout(): Promise<void> {
   await deleteSession()
   redirect('/')
+}
+
+export type ChangePasswordState = { message?: string; success?: boolean } | undefined
+
+export async function changePasswordAction(
+  _state: ChangePasswordState,
+  formData: FormData
+): Promise<ChangePasswordState> {
+  const session = await verifySession()
+  const user = getUserById(session.userId)
+  if (!user) return { message: 'Utilisateur introuvable.' }
+
+  const current = String(formData.get('currentPassword') ?? '')
+  const next = String(formData.get('newPassword') ?? '')
+  const confirm = String(formData.get('confirmPassword') ?? '')
+
+  const match = await bcrypt.compare(current, user.passwordHash)
+  if (!match) return { message: 'Mot de passe actuel incorrect.' }
+
+  if (next.length < 8) return { message: 'Le nouveau mot de passe doit faire au moins 8 caractères.' }
+  if (next !== confirm) return { message: 'Les mots de passe ne correspondent pas.' }
+
+  const passwordHash = await bcrypt.hash(next, 12)
+  updateUserPassword(user.id, passwordHash)
+
+  return { success: true, message: 'Mot de passe mis à jour.' }
 }
 
 export async function setupAdmin(state: FormState, formData: FormData): Promise<FormState> {

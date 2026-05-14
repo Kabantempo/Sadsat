@@ -2,6 +2,7 @@
 import { useActionState, useRef, useState } from 'react'
 import { updateProfileAction, type ProfileFormState } from '@/app/actions/createur'
 import { ImagePlus, X } from 'lucide-react'
+import ChangePasswordForm from '@/components/shared/ChangePasswordForm'
 
 export default function ProfilCreateurPage() {
   const [state, action, pending] = useActionState<ProfileFormState, FormData>(
@@ -121,6 +122,10 @@ export default function ProfilCreateurPage() {
           {pending ? 'Enregistrement...' : 'Mettre à jour mon profil'}
         </button>
       </form>
+
+      <div className="mt-10">
+        <ChangePasswordForm />
+      </div>
     </div>
   )
 }

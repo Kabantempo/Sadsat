@@ -1,6 +1,6 @@
-import { verifySession } from '@/lib/dal'
-import { getCurrentUser } from '@/lib/dal'
+import { verifySession, getCurrentUser } from '@/lib/dal'
 import { logout } from '@/app/actions/auth'
+import ChangePasswordForm from '@/components/shared/ChangePasswordForm'
 
 export default async function ComptePage() {
   await verifySession()
@@ -33,6 +33,7 @@ export default async function ComptePage() {
               Aucune commande pour le moment.
             </p>
           </div>
+          <ChangePasswordForm />
         </div>
 
         <form action={logout} className="mt-12">
