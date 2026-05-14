@@ -23,19 +23,19 @@ type Props = {
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
 const VARS = {
-  center: { x: "0%",   rotateY:   0, scale: 1,    opacity: 1,    zIndex: 10 },
-  left:   { x: "-88%", rotateY:  48, scale: 0.72, opacity: 0.45, zIndex: 5  },
-  right:  { x: "88%",  rotateY: -48, scale: 0.72, opacity: 0.45, zIndex: 5  },
-  hidden: { x: "0%",   rotateY:   0, scale: 0.5,  opacity: 0,    zIndex: 0  },
+  center: { x: "0%",   rotateY:   0, scale: 1,    opacity: 1,   zIndex: 10 },
+  left:   { x: "-80%", rotateY:  40, scale: 0.75, opacity: 0.5, zIndex: 5  },
+  right:  { x: "80%",  rotateY: -40, scale: 0.75, opacity: 0.5, zIndex: 5  },
+  hidden: { x: "0%",   rotateY:   0, scale: 0.5,  opacity: 0,   zIndex: 0  },
 } as const;
 
 type Pos = keyof typeof VARS;
 
 function getPos(i: number, current: number, n: number): Pos {
   const off = ((i - current) % n + n) % n;
-  if (off === 0)     return "center";
-  if (off === 1)     return "right";
-  if (off === n - 1) return "left";
+  if (off === 0)      return "center";
+  if (off === 1)      return "right";
+  if (off === n - 1)  return "left";
   return "hidden";
 }
 
@@ -54,14 +54,14 @@ export default function ProductCarousel({
   return (
     <div>
       {/* Compteur */}
-      <div className={`font-mono text-[0.6rem] tracking-[0.3em] uppercase mb-8 ${dark ? "text-neutral-500" : "text-neutral-400"}`}>
+      <div className={`font-mono text-[0.58rem] tracking-[0.3em] uppercase text-center mb-8 ${dark ? "text-neutral-500" : "text-neutral-400"}`}>
         {String(current + 1).padStart(2, "0")} — {String(n).padStart(2, "0")}
       </div>
 
       {/* Scène */}
       <div
-        className="relative overflow-hidden h-[360px] md:h-[460px] lg:h-[520px]"
-        style={{ perspective: "1100px" }}
+        className="relative overflow-hidden h-[340px] md:h-[420px]"
+        style={{ perspective: "1000px" }}
       >
         {items.map((item, i) => {
           const pos = getPos(i, current, n);
@@ -72,11 +72,9 @@ export default function ProductCarousel({
           return (
             <motion.div
               key={item.id}
-              className={`absolute top-0 left-1/2 -translate-x-1/2 w-[38%] ${
-                isLeft || isRight || (isCenter && item.href) ? "cursor-pointer" : ""
-              }`}
+              className={`absolute top-0 left-1/2 -translate-x-1/2 w-[38%] md:w-[28%] cursor-pointer`}
               animate={VARS[pos]}
-              transition={{ duration: 0.55, ease }}
+              transition={{ duration: 0.5, ease }}
               style={{ transformStyle: "preserve-3d" }}
               onClick={() => {
                 if (isLeft)  go(-1);
@@ -85,44 +83,49 @@ export default function ProductCarousel({
               }}
             >
               {/* Image */}
-              <div
-                className={`relative overflow-hidden ${
-                  aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
-                } ${
-                  dark
-                    ? "bg-neutral-900 border border-neutral-800"
-                    : "bg-neutral-200"
-                }`}
-              >
+              <div className={`relative overflow-hidden ${aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"} ${
+                dark ? "bg-neutral-800" : "bg-neutral-200"
+              } ${isCenter ? "group" : ""}`}>
                 {item.image ? (
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
-                    className="object-cover"
+                    className={`object-cover ${isCenter ? "group-hover:scale-105 transition-transform duration-500" : ""}`}
                   />
                 ) : (
-                  <div className={`w-full h-full flex items-center justify-center ${dark ? "text-neutral-800" : "text-neutral-300"}`}>
-                    <span className="text-4xl">{dark ? "[ ]" : "✦"}</span>
+                  <div className={`w-full h-full flex items-center justify-center ${dark ? "text-neutral-600" : "text-neutral-400"}`}>
+                    <span className="text-4xl">✦</span>
                   </div>
                 )}
               </div>
 
-              {/* Texte — seulement sur la carte centrale */}
+              {/* Infos — seulement sur la carte centrale */}
               {isCenter && (
                 <div className="text-center mt-5">
-                  <div className={`mb-1 ${item.href ? "hover:opacity-60 transition-opacity" : ""} ${dark ? "font-sans uppercase text-sm tracking-wider text-neutral-200" : "font-serif italic text-xl text-neutral-900"}`}>
+                  <p className={`font-serif italic text-xl mb-1 ${
+                    item.href ? "hover:opacity-60 transition-opacity" : ""
+                  } ${dark ? "text-neutral-100" : "text-neutral-900"}`}>
                     {item.title}
-                  </div>
+                  </p>
                   {item.subtitle && (
-                    <div className={`text-[0.65rem] tracking-widest uppercase opacity-50 ${dark ? "font-mono text-[#8b0000]" : ""}`}>
+                    <p className={`text-[0.62rem] tracking-[0.16em] uppercase mb-2 ${dark ? "text-neutral-500" : "text-neutral-500"}`}>
                       {item.subtitle}
-                    </div>
+                    </p>
                   )}
                   {item.price && (
-                    <div className={`text-sm mt-1 ${dark ? "text-neutral-400" : "text-neutral-600"}`}>
+                    <p className={`text-[0.82rem] mb-3 ${dark ? "text-neutral-400" : "text-neutral-600"}`}>
                       {item.price}
-                    </div>
+                    </p>
+                  )}
+                  {item.href && (
+                    <span className={`inline-block text-[0.58rem] tracking-[0.2em] uppercase pb-0.5 border-b transition-colors ${
+                      dark
+                        ? "border-neutral-600 hover:border-neutral-200 text-neutral-400 hover:text-neutral-100"
+                        : "border-neutral-400 hover:border-neutral-900 text-neutral-500 hover:text-neutral-900"
+                    }`}>
+                      Voir la pièce →
+                    </span>
                   )}
                 </div>
               )}
