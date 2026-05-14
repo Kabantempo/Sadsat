@@ -76,7 +76,7 @@ export function deleteUser(id: string): boolean {
   return true
 }
 
-export function getUserByPasswordToken(token: string): import('./definitions').User | undefined {
+export function getUserByPasswordToken(token: string): User | undefined {
   return getUsers().find((u) => u.setPasswordToken === token)
 }
 

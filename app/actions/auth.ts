@@ -49,7 +49,7 @@ export async function login(state: FormState, formData: FormData): Promise<FormS
 
   const { email, password } = validated.data
   const user = getUserByEmail(email)
-  if (!user) {
+  if (!user || !user.passwordHash) {
     return { message: 'Email ou mot de passe incorrect.' }
   }
 
