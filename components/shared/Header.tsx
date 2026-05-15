@@ -57,7 +57,7 @@ const NAV: NavItem[] = [
   { label: "Contact", href: "/contact" },
 ];
 
-type UserProp = { name: string; role: 'admin' | 'client' | 'créateur' } | null
+type UserProp = { name: string; role: 'admin' | 'client' | 'créateur' | 'grossiste' } | null
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
