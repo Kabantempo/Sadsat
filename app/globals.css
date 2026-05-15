@@ -1,15 +1,7 @@
-/* ─── Tailwind v4 ───────────────────────────────────────────────────────── */
-@import "tailwindcss";
-
-/* Dark mode via classe .dark sur <html> */
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* ─── Thème custom : polices (variables injectées par next/font) ─────────── */
-@theme {
-  --font-sans:  var(--font-inter), system-ui, sans-serif;
-  --font-serif: var(--font-cormorant), serif;
-  --font-mono:  var(--font-jetbrains), monospace;
-}
+/* ─── Tailwind v3 ───────────────────────────────────────────────────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ─── Variables CSS globales ─────────────────────────────────────────────── */
 :root {
