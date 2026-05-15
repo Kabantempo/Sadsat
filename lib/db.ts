@@ -2,6 +2,7 @@ import 'server-only'
 import fs from 'fs'
 import path from 'path'
 import type { User } from './definitions'
+import { SEED_USERS } from './seed'
 
 const DATA_DIR = process.env.VERCEL
   ? '/tmp/sadsat-data'
@@ -13,7 +14,7 @@ function ensureDataDir() {
     fs.mkdirSync(DATA_DIR, { recursive: true })
   }
   if (!fs.existsSync(USERS_FILE)) {
-    fs.writeFileSync(USERS_FILE, JSON.stringify([]), 'utf-8')
+    fs.writeFileSync(USERS_FILE, JSON.stringify(SEED_USERS, null, 2), 'utf-8')
   }
 }
 

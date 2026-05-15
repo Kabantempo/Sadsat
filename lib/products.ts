@@ -2,6 +2,7 @@ import 'server-only'
 import fs from 'fs'
 import path from 'path'
 import type { Product } from './definitions'
+import { SEED_PRODUCTS } from './seed'
 
 const DATA_DIR = process.env.VERCEL
   ? '/tmp/sadsat-data'
@@ -10,7 +11,9 @@ const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json')
 
 function ensureFile() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true })
-  if (!fs.existsSync(PRODUCTS_FILE)) fs.writeFileSync(PRODUCTS_FILE, '[]', 'utf-8')
+  if (!fs.existsSync(PRODUCTS_FILE)) {
+    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(SEED_PRODUCTS, null, 2), 'utf-8')
+  }
 }
 
 export function getProducts(): Product[] {
