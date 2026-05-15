@@ -4,9 +4,7 @@ import path from 'path'
 import type { Product } from './definitions'
 import { SEED_PRODUCTS } from './seed'
 
-const DATA_DIR = process.env.VERCEL
-  ? '/tmp/sadsat-data'
-  : path.join(process.cwd(), 'data')
+const DATA_DIR = path.join(process.cwd(), 'data')
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json')
 
 function ensureFile() {

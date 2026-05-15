@@ -8,12 +8,8 @@ import { createProduct, updateProduct, deleteProduct, getProductById } from '@/l
 import type { ProductFormState, Universe, ProductStatus, Dimensions } from '@/lib/definitions'
 import { UNIVERSES } from '@/lib/definitions'
 
-const UPLOAD_DIR = process.env.VERCEL
-  ? '/tmp/sadsat-uploads/products'
-  : path.join(process.cwd(), 'public', 'uploads', 'products')
-const AVATAR_DIR = process.env.VERCEL
-  ? '/tmp/sadsat-uploads/avatars'
-  : path.join(process.cwd(), 'public', 'uploads', 'avatars')
+const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'products')
+const AVATAR_DIR = path.join(process.cwd(), 'public', 'uploads', 'avatars')
 
 export type ProfileFormState = { message?: string; success?: boolean } | undefined
 

@@ -7,9 +7,7 @@ import { createProduct, updateProduct, deleteProduct, getProductById } from '@/l
 import type { ProductFormState, Universe, ProductStatus, Dimensions } from '@/lib/definitions'
 import { UNIVERSES } from '@/lib/definitions'
 
-const UPLOAD_DIR = process.env.VERCEL
-  ? '/tmp/sadsat-uploads/products'
-  : path.join(process.cwd(), 'public', 'uploads', 'products')
+const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'products')
 
 async function saveFiles(files: File[]): Promise<string[]> {
   await mkdir(UPLOAD_DIR, { recursive: true })
