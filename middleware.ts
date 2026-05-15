@@ -5,7 +5,7 @@ const adminRoutes = ['/admin']
 const clientRoutes = ['/compte']
 const authRoutes = ['/connexion', '/inscription']
 
-export default async function proxy(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
   const cookie = req.cookies.get('session')?.value
   const session = await decrypt(cookie)
