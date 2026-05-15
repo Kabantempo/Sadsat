@@ -38,6 +38,11 @@ export function updateProduct(id: string, data: Partial<Product>): boolean {
   return true
 }
 
+export function clearAllProducts(): void {
+  const DATA_DIR_LOCAL = path.join(process.cwd(), 'data')
+  fs.writeFileSync(path.join(DATA_DIR_LOCAL, 'products.json'), '[]', 'utf-8')
+}
+
 export function deleteProduct(id: string): boolean {
   const products = getProducts()
   const filtered = products.filter((p) => p.id !== id)

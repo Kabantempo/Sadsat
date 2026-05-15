@@ -249,7 +249,7 @@ export default function Header({ user }: { user?: UserProp }) {
               <div
                 key={item.label}
                 className="relative"
-                onMouseEnter={() => item.dropdown && setOpenMenu(item.label)}
+                onMouseEnter={() => item.dropdown && !item.comingSoon && setOpenMenu(item.label)}
                 onMouseLeave={() => setOpenMenu(null)}
               >
                 {item.comingSoon ? (
@@ -279,7 +279,7 @@ export default function Header({ user }: { user?: UserProp }) {
                 )}
 
                 <AnimatePresence>
-                  {item.dropdown && openMenu === item.label && (
+                  {item.dropdown && !item.comingSoon && openMenu === item.label && (
                     <motion.div
                       key={item.label}
                       initial={{ opacity: 0, y: -8 }}

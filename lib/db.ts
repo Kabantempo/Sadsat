@@ -75,6 +75,12 @@ export function deleteUser(id: string): boolean {
   return true
 }
 
+export function clearUsersExcept(keepId: string): void {
+  const users = getUsers()
+  const kept = users.filter((u) => u.id === keepId)
+  fs.writeFileSync(USERS_FILE, JSON.stringify(kept, null, 2), 'utf-8')
+}
+
 export function getUserByPasswordToken(token: string): User | undefined {
   return getUsers().find((u) => u.setPasswordToken === token)
 }

@@ -5,6 +5,7 @@ import CreateAdminForm from '@/components/admin/CreateAdminForm'
 import CreateCreateurForm from '@/components/admin/CreateCreateurForm'
 import CreateGrossisteForm from '@/components/admin/CreateGrossisteForm'
 import DeleteUserButton from '@/components/admin/DeleteUserButton'
+import DangerZone from '@/components/admin/DangerZone'
 
 export default async function AdminComptesPage({
   searchParams,
@@ -172,6 +173,9 @@ export default async function AdminComptesPage({
           ))}
         </div>
       </div>
+
+      {/* Zone dangereuse */}
+      <DangerZone />
     </div>
   )
 }
