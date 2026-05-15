@@ -15,6 +15,7 @@ type NavItem = {
   label: string;
   href: string;
   bordeaux?: boolean;
+  comingSoon?: boolean;
   dropdown?: SubItem[];
 };
 
@@ -44,6 +45,7 @@ const NAV: NavItem[] = [
   {
     label: "Bougies",
     href: "/bougies",
+    comingSoon: true,
     dropdown: [
       { label: "Cire de soja", href: "/bougies/soja" },
       { label: "Cire d'abeille", href: "/bougies/abeille" },
@@ -250,24 +252,31 @@ export default function Header({ user }: { user?: UserProp }) {
                 onMouseEnter={() => item.dropdown && setOpenMenu(item.label)}
                 onMouseLeave={() => setOpenMenu(null)}
               >
-                <Link
-                  href={item.href}
-                  className={`group relative flex items-center gap-1.5 text-[0.62rem] tracking-[0.16em] uppercase font-medium transition-colors pb-0.5 ${
-                    item.bordeaux
-                      ? "text-[#8b0000] hover:text-[#6b0000]"
-                      : "text-neutral-700 hover:text-neutral-900"
-                  }`}
-                >
-                  {item.label}
-                  {item.dropdown && (
-                    <ChevronDown
-                      size={10}
-                      strokeWidth={2}
-                      className={`transition-transform duration-200 ${openMenu === item.label ? "rotate-180" : ""}`}
-                    />
-                  )}
-                  <span className="absolute bottom-0 left-0 h-px w-0 bg-current transition-all duration-300 ease-out group-hover:w-full" />
-                </Link>
+                {item.comingSoon ? (
+                  <span className="relative flex items-center gap-1.5 text-[0.62rem] tracking-[0.16em] uppercase font-medium text-neutral-400 cursor-default select-none pb-0.5">
+                    {item.label}
+                    <span className="text-[0.48rem] tracking-[0.2em] uppercase text-neutral-300">(bientôt)</span>
+                  </span>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className={`group relative flex items-center gap-1.5 text-[0.62rem] tracking-[0.16em] uppercase font-medium transition-colors pb-0.5 ${
+                      item.bordeaux
+                        ? "text-[#8b0000] hover:text-[#6b0000]"
+                        : "text-neutral-700 hover:text-neutral-900"
+                    }`}
+                  >
+                    {item.label}
+                    {item.dropdown && (
+                      <ChevronDown
+                        size={10}
+                        strokeWidth={2}
+                        className={`transition-transform duration-200 ${openMenu === item.label ? "rotate-180" : ""}`}
+                      />
+                    )}
+                    <span className="absolute bottom-0 left-0 h-px w-0 bg-current transition-all duration-300 ease-out group-hover:w-full" />
+                  </Link>
+                )}
 
                 <AnimatePresence>
                   {item.dropdown && openMenu === item.label && (
@@ -348,16 +357,23 @@ export default function Header({ user }: { user?: UserProp }) {
                 {NAV.map((item) => (
                   <div key={item.label} className="border-b border-neutral-100">
                     <div className="flex items-center">
-                      <Link
-                        href={item.href}
-                        onClick={() => !item.dropdown && setMobileOpen(false)}
-                        className={`flex-1 py-4 text-[0.78rem] tracking-[0.14em] uppercase font-medium ${
-                          item.bordeaux ? "text-[#8b0000]" : "text-neutral-800"
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                      {item.dropdown && (
+                      {item.comingSoon ? (
+                        <span className="flex-1 py-4 text-[0.78rem] tracking-[0.14em] uppercase font-medium text-neutral-400 cursor-default select-none flex items-center gap-2">
+                          {item.label}
+                          <span className="text-[0.52rem] tracking-[0.18em] text-neutral-300">(bientôt)</span>
+                        </span>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          onClick={() => !item.dropdown && setMobileOpen(false)}
+                          className={`flex-1 py-4 text-[0.78rem] tracking-[0.14em] uppercase font-medium ${
+                            item.bordeaux ? "text-[#8b0000]" : "text-neutral-800"
+                          }`}
+                        >
+                          {item.label}
+                        </Link>
+                      )}
+                      {item.dropdown && !item.comingSoon && (
                         <button
                           onClick={() =>
                             setMobileSub(mobileSub === item.label ? null : item.label)

@@ -59,7 +59,11 @@ export async function login(state: FormState, formData: FormData): Promise<FormS
   }
 
   await createSession(user.id, user.role)
-  const dest = user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur' : '/compte'
+  const dest =
+    user.role === 'admin' ? '/admin' :
+    user.role === 'créateur' ? '/createur' :
+    user.role === 'grossiste' ? '/grossiste' :
+    '/compte'
   redirect(dest)
 }
 
@@ -119,7 +123,12 @@ export async function setPasswordAction(
   clearPasswordToken(user.id)
 
   await createSession(user.id, user.role)
-  redirect(user.role === 'admin' ? '/admin' : '/createur')
+  const setPasswordDest =
+    user.role === 'admin' ? '/admin' :
+    user.role === 'créateur' ? '/createur' :
+    user.role === 'grossiste' ? '/grossiste' :
+    '/compte'
+  redirect(setPasswordDest)
 }
 
 export async function setupAdmin(state: FormState, formData: FormData): Promise<FormState> {

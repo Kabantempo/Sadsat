@@ -1,6 +1,7 @@
 'use server'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
+import bcrypt from 'bcryptjs'
 import { createUser, getUserByEmail, deleteUser } from '@/lib/db'
 import { verifyAdmin } from '@/lib/dal'
 import { sendSetPasswordEmail } from '@/lib/email'
@@ -13,7 +14,7 @@ const CreateAdminSchema = z.object({
 
 export type AdminFormState =
   | {
-      errors?: { prenom?: string[]; nom?: string[]; email?: string[] }
+      errors?: { prenom?: string[]; nom?: string[]; email?: string[]; password?: string[] }
       message?: string
       success?: boolean
       setupLink?: string
@@ -23,7 +24,7 @@ export type AdminFormState =
 
 async function createAccountAction(
   formData: FormData,
-  role: 'admin' | 'créateur'
+  role: 'admin' | 'créateur' | 'grossiste'
 ): Promise<AdminFormState> {
   await verifyAdmin()
 
@@ -42,6 +43,25 @@ async function createAccountAction(
 
   if (getUserByEmail(email)) {
     return { message: 'Cet email est déjà utilisé.' }
+  }
+
+  const rawPassword = String(formData.get('password') ?? '').trim()
+
+  if (rawPassword) {
+    if (rawPassword.length < 8) return { errors: { password: ['Au moins 8 caractères.'] } }
+    if (!/[a-zA-Z]/.test(rawPassword)) return { errors: { password: ['Au moins une lettre.'] } }
+    if (!/[0-9]/.test(rawPassword)) return { errors: { password: ['Au moins un chiffre.'] } }
+
+    const passwordHash = await bcrypt.hash(rawPassword, 12)
+    createUser({
+      id: crypto.randomUUID(),
+      email,
+      passwordHash,
+      name,
+      role,
+      createdAt: new Date().toISOString(),
+    })
+    return { success: true, recipientEmail: email }
   }
 
   const token = crypto.randomUUID() + '-' + crypto.randomUUID()
@@ -81,6 +101,13 @@ export async function createCreateurAccountAction(
   formData: FormData
 ): Promise<AdminFormState> {
   return createAccountAction(formData, 'créateur')
+}
+
+export async function createGrossisteAccountAction(
+  state: AdminFormState,
+  formData: FormData
+): Promise<AdminFormState> {
+  return createAccountAction(formData, 'grossiste')
 }
 
 export async function deleteUserAction(id: string): Promise<void> {

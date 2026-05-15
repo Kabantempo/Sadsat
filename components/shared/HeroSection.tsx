@@ -70,13 +70,12 @@ export default function HeroSection() {
           </div>
         </Link>
 
-        <Link
-          href="/bougies"
-          className="relative overflow-hidden group flex items-center justify-center min-h-[60vh] md:min-h-screen bg-black"
+        <div
+          className="relative overflow-hidden flex items-center justify-center min-h-[60vh] md:min-h-screen bg-black cursor-default"
           style={{ color: "#00ff41" }}
         >
           <MatrixRain />
-          <div className="relative z-10 text-center px-8 transition-transform duration-700 group-hover:scale-105">
+          <div className="relative z-10 text-center px-8">
             <div className="font-mono text-[0.7rem] tracking-[0.3em] mb-6" style={{ color: "#008f11" }}>&gt; SYS_03</div>
             <h2 className="font-mono font-normal text-4xl md:text-5xl mb-3" style={{ textShadow: "0 0 12px #00ff41" }}>Bougies</h2>
             <div className="font-mono text-[0.7rem] tracking-[0.2em] uppercase opacity-70">&gt; system.boot</div>
@@ -85,7 +84,7 @@ export default function HeroSection() {
               <span className="font-mono text-[0.6rem] tracking-[0.3em] uppercase">En cours</span>
             </div>
           </div>
-        </Link>
+        </div>
       </section>
     </>
   );

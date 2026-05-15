@@ -47,15 +47,24 @@ export default function Footer() {
 
         {/* Liens */}
         <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
-          {NAV.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="text-[0.65rem] tracking-[0.22em] uppercase text-neutral-500 hover:text-neutral-100 transition-colors duration-200"
-            >
-              {l.label}
-            </Link>
-          ))}
+          {NAV.map((l) =>
+            l.label === 'Bougies' ? (
+              <span
+                key={l.href}
+                className="text-[0.65rem] tracking-[0.22em] uppercase text-neutral-700 cursor-default select-none"
+              >
+                {l.label}
+              </span>
+            ) : (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="text-[0.65rem] tracking-[0.22em] uppercase text-neutral-500 hover:text-neutral-100 transition-colors duration-200"
+              >
+                {l.label}
+              </Link>
+            )
+          )}
         </nav>
 
         {/* Newsletter */}

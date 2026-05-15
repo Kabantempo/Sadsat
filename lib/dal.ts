@@ -25,6 +25,13 @@ export const verifyCreateur = cache(async () => {
   return session
 })
 
+export const verifyGrossiste = cache(async () => {
+  const session = await getSession()
+  if (!session?.userId) redirect('/connexion')
+  if (session.role !== 'grossiste' && session.role !== 'admin') redirect('/')
+  return session
+})
+
 export const getCurrentUser = cache(async (): Promise<SafeUser | null> => {
   const session = await getSession()
   if (!session?.userId) return null

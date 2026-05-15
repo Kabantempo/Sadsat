@@ -27,6 +27,8 @@ export default function CreateAdminForm() {
             Compte créé.{' '}
             {state.setupLink
               ? 'Aucun service mail configuré — envoyez ce lien manuellement :'
+              : state.setupLink === undefined && !state.setupLink
+              ? <>Compte activé pour <strong>{state.recipientEmail}</strong>.</>
               : <>Un email a été envoyé à <strong>{state.recipientEmail}</strong> pour créer son mot de passe.</>}
           </p>
         </div>
@@ -98,8 +100,23 @@ export default function CreateAdminForm() {
         )}
       </div>
 
+      <div>
+        <label className="block text-[0.6rem] tracking-[0.16em] uppercase text-neutral-500 mb-1.5">
+          Mot de passe <span className="normal-case text-neutral-300">(optionnel)</span>
+        </label>
+        <input
+          name="password"
+          type="password"
+          className="w-full border border-neutral-200 px-3 py-2 text-[0.83rem] text-neutral-900 outline-none focus:border-neutral-900 transition-colors bg-white"
+          placeholder="Laisser vide pour envoyer un lien"
+        />
+        {state?.errors?.password && (
+          <p className="mt-1 text-[0.65rem] text-red-500">{state.errors.password[0]}</p>
+        )}
+      </div>
+
       <p className="text-[0.62rem] text-neutral-400 leading-relaxed">
-        Un email sera envoyé à l'utilisateur pour qu'il crée lui-même son mot de passe.
+        Si vide, un lien de création de mot de passe sera envoyé par email.
       </p>
 
       <button

@@ -1,12 +1,12 @@
 'use client'
 import { useActionState } from 'react'
-import { createCreateurAccountAction, type AdminFormState } from '@/app/actions/admin'
+import { createGrossisteAccountAction, type AdminFormState } from '@/app/actions/admin'
 import { CheckCircle, Copy } from 'lucide-react'
 import { useState } from 'react'
 
-export default function CreateCreateurForm() {
+export default function CreateGrossisteForm() {
   const [state, action, pending] = useActionState<AdminFormState, FormData>(
-    createCreateurAccountAction,
+    createGrossisteAccountAction,
     undefined
   )
   const [copied, setCopied] = useState(false)
@@ -59,7 +59,7 @@ export default function CreateCreateurForm() {
             type="text"
             required
             className="w-full border border-neutral-200 px-3 py-2 text-[0.83rem] text-neutral-900 outline-none focus:border-neutral-900 transition-colors bg-white"
-            placeholder="Marie"
+            placeholder="Jean"
           />
           {state?.errors?.prenom && (
             <p className="mt-1 text-[0.65rem] text-red-500">{state.errors.prenom[0]}</p>
@@ -74,7 +74,7 @@ export default function CreateCreateurForm() {
             type="text"
             required
             className="w-full border border-neutral-200 px-3 py-2 text-[0.83rem] text-neutral-900 outline-none focus:border-neutral-900 transition-colors bg-white"
-            placeholder="Dupont"
+            placeholder="Leblanc"
           />
           {state?.errors?.nom && (
             <p className="mt-1 text-[0.65rem] text-red-500">{state.errors.nom[0]}</p>
@@ -91,7 +91,7 @@ export default function CreateCreateurForm() {
           type="email"
           required
           className="w-full border border-neutral-200 px-3 py-2 text-[0.83rem] text-neutral-900 outline-none focus:border-neutral-900 transition-colors bg-white"
-          placeholder="createur@exemple.com"
+          placeholder="grossiste@exemple.com"
         />
         {state?.errors?.email && (
           <p className="mt-1 text-[0.65rem] text-red-500">{state.errors.email[0]}</p>
@@ -122,7 +122,7 @@ export default function CreateCreateurForm() {
         disabled={pending}
         className="w-full py-3 bg-neutral-700 text-white text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-neutral-600 transition-colors disabled:opacity-50"
       >
-        {pending ? 'Création...' : 'Créer le compte créateur'}
+        {pending ? 'Création...' : 'Créer le compte grossiste'}
       </button>
     </form>
   )

@@ -1,8 +1,9 @@
 import { verifyAdmin } from '@/lib/dal'
 import { getUsers } from '@/lib/db'
-import { UserPlus, Palette } from 'lucide-react'
+import { UserPlus, Palette, ShoppingBag } from 'lucide-react'
 import CreateAdminForm from '@/components/admin/CreateAdminForm'
 import CreateCreateurForm from '@/components/admin/CreateCreateurForm'
+import CreateGrossisteForm from '@/components/admin/CreateGrossisteForm'
 import DeleteUserButton from '@/components/admin/DeleteUserButton'
 
 export default async function AdminComptesPage({
@@ -15,6 +16,7 @@ export default async function AdminComptesPage({
   const users = getUsers()
   const admins = users.filter((u) => u.role === 'admin')
   const createurs = users.filter((u) => u.role === 'créateur')
+  const grossistes = users.filter((u) => u.role === 'grossiste')
   const clients = users.filter((u) => u.role === 'client')
 
   return (
@@ -60,6 +62,22 @@ export default async function AdminComptesPage({
             <CreateCreateurForm />
           </div>
         </div>
+
+        {/* Créer grossiste */}
+        <div className="border border-neutral-200 bg-white">
+          <div className="px-6 py-4 border-b border-neutral-100 flex items-center gap-2">
+            <ShoppingBag size={13} strokeWidth={1.5} className="text-neutral-500" />
+            <p className="text-[0.62rem] tracking-[0.18em] uppercase text-neutral-500">
+              Nouveau compte grossiste
+            </p>
+          </div>
+          <div className="px-6 py-6">
+            {params.ok === 'grossiste' && (
+              <p className="mb-4 text-[0.72rem] text-green-600 tracking-wide">Compte grossiste créé.</p>
+            )}
+            <CreateGrossisteForm />
+          </div>
+        </div>
       </div>
 
       {/* Admins */}
@@ -98,6 +116,29 @@ export default async function AdminComptesPage({
             <p className="px-6 py-8 text-[0.82rem] text-neutral-400 italic">Aucun créateur.</p>
           )}
           {createurs.map((u) => (
+            <div key={u.id} className="px-6 py-3.5 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-[0.83rem] text-neutral-800">{u.name}</p>
+                <p className="text-[0.68rem] text-neutral-400">{u.email}</p>
+              </div>
+              <DeleteUserButton id={u.id} name={u.name} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Grossistes */}
+      <div className="border border-neutral-200 bg-white mb-4">
+        <div className="px-6 py-4 border-b border-neutral-100">
+          <p className="text-[0.62rem] tracking-[0.18em] uppercase text-neutral-500">
+            Grossistes ({grossistes.length})
+          </p>
+        </div>
+        <div className="divide-y divide-neutral-100">
+          {grossistes.length === 0 && (
+            <p className="px-6 py-8 text-[0.82rem] text-neutral-400 italic">Aucun grossiste.</p>
+          )}
+          {grossistes.map((u) => (
             <div key={u.id} className="px-6 py-3.5 flex items-center justify-between gap-4">
               <div>
                 <p className="text-[0.83rem] text-neutral-800">{u.name}</p>

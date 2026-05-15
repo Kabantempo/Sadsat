@@ -26,12 +26,19 @@ export default async function proxy(req: NextRequest) {
     const dest =
       session.role === 'admin' ? '/admin' :
       session.role === 'créateur' ? '/createur' :
+      session.role === 'grossiste' ? '/grossiste' :
       '/compte'
     return NextResponse.redirect(new URL(dest, req.nextUrl))
   }
 
   if (path === '/createur' || path.startsWith('/createur/')) {
     if (!session?.userId || (session.role !== 'créateur' && session.role !== 'admin')) {
+      return NextResponse.redirect(new URL('/connexion', req.nextUrl))
+    }
+  }
+
+  if (path === '/grossiste' || path.startsWith('/grossiste/')) {
+    if (!session?.userId || (session.role !== 'grossiste' && session.role !== 'admin')) {
       return NextResponse.redirect(new URL('/connexion', req.nextUrl))
     }
   }

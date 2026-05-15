@@ -29,7 +29,7 @@ export type FormState =
 
 export type SessionPayload = {
   userId: string
-  role: 'admin' | 'client' | 'créateur'
+  role: 'admin' | 'client' | 'créateur' | 'grossiste'
   expiresAt: Date
 }
 
@@ -38,7 +38,7 @@ export type User = {
   email: string
   passwordHash: string
   name: string
-  role: 'admin' | 'client' | 'créateur'
+  role: 'admin' | 'client' | 'créateur' | 'grossiste'
   bio?: string
   avatar?: string
   createdAt: string
