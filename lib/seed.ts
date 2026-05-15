@@ -3,6 +3,14 @@ import type { Product } from './definitions'
 
 export const SEED_USERS: User[] = [
   {
+    id: 'fa51c76c-4368-49bd-8fc5-e5292119bc48',
+    email: 'kalvinpaviel4@gmail.com',
+    passwordHash: '$2b$12$G/iq.sln3.pbO5wp5Ntc6eSuI.FaP69Soux7H13iorIwAztnwPMHS',
+    name: 'Kalvin Paviel',
+    role: 'admin',
+    createdAt: '2026-05-14T18:58:16.630Z',
+  },
+  {
     id: 'createur-demo-001',
     email: 'ambre.taxidermie@sadsat.fr',
     passwordHash: '',
