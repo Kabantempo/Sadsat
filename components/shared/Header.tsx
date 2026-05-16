@@ -148,64 +148,11 @@ export default function Header({ user }: { user?: UserProp }) {
             >
               <Search size={16} strokeWidth={1.5} />
             </motion.button>
-            {user ? (
-              <div ref={userMenuRef} className="relative">
-                <motion.button
-                  whileHover={{ scale: 1.12 }}
-                  transition={{ duration: 0.15 }}
-                  onClick={() => setUserMenuOpen((v) => !v)}
-                  aria-label="Menu utilisateur"
-                  className="hover:text-neutral-900 transition-colors flex items-center gap-1.5"
-                >
-                  {user.role === 'admin'
-                    ? <LayoutDashboard size={16} strokeWidth={1.5} />
-                    : <User size={16} strokeWidth={1.5} />}
-                </motion.button>
-
-                <AnimatePresence>
-                  {userMenuOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.18, ease: 'easeOut' }}
-                      className="absolute top-full right-0 mt-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 min-w-[200px] py-2 z-50 shadow-lg"
-                    >
-                      <div className="px-5 py-3 border-b border-neutral-100">
-                        <p className="text-[0.6rem] tracking-[0.16em] uppercase text-neutral-400 mb-0.5">Connecté en tant que</p>
-                        <p className="text-[0.82rem] text-neutral-800 font-medium truncate">{user.name}</p>
-                      </div>
-                      <Link
-                        href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur' : '/compte'}
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2.5 px-5 py-3 text-[0.64rem] tracking-[0.14em] uppercase text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 transition-colors"
-                      >
-                        {user.role === 'admin'
-                          ? <><LayoutDashboard size={12} strokeWidth={1.5} />Administration</>
-                          : user.role === 'créateur'
-                          ? <><LayoutDashboard size={12} strokeWidth={1.5} />Espace créateur</>
-                          : <><User size={12} strokeWidth={1.5} />Mon compte</>}
-                      </Link>
-                      <form action={logout}>
-                        <button
-                          type="submit"
-                          className="w-full flex items-center gap-2.5 px-5 py-3 text-[0.64rem] tracking-[0.14em] uppercase text-neutral-500 hover:text-red-600 hover:bg-red-50 transition-colors"
-                        >
-                          <LogOut size={12} strokeWidth={1.5} />
-                          Se déconnecter
-                        </button>
-                      </form>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ) : (
-              <motion.div whileHover={{ scale: 1.12 }} transition={{ duration: 0.15 }}>
-                <Link href="/connexion" aria-label="Se connecter" className="hover:text-neutral-900 transition-colors">
-                  <User size={16} strokeWidth={1.5} />
-                </Link>
-              </motion.div>
-            )}
+            <motion.div whileHover={{ scale: 1.12 }} transition={{ duration: 0.15 }}>
+              <Link href="/connexion" aria-label="Se connecter" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+                <User size={16} strokeWidth={1.5} />
+              </Link>
+            </motion.div>
             <Link href="/favoris">
               <motion.div
                 whileHover={{ scale: 1.12 }}
@@ -420,43 +367,14 @@ export default function Header({ user }: { user?: UserProp }) {
 
               {/* Actions bas du drawer */}
               <div className="px-6 py-5 border-t border-neutral-100 space-y-1">
-                {user ? (
-                  <>
-                    <div className="pb-3 mb-2 border-b border-neutral-100">
-                      <p className="text-[0.58rem] tracking-[0.16em] uppercase text-neutral-400 mb-0.5">Connecté</p>
-                      <p className="text-[0.82rem] text-neutral-700 font-medium">{user.name}</p>
-                    </div>
-                    <Link
-                      href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur' : '/compte'}
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-600 hover:text-neutral-900 transition-colors"
-                    >
-                      {user.role === 'admin'
-                        ? <><LayoutDashboard size={14} strokeWidth={1.5} />Administration</>
-                        : user.role === 'créateur'
-                        ? <><LayoutDashboard size={14} strokeWidth={1.5} />Espace créateur</>
-                        : <><User size={14} strokeWidth={1.5} />Mon compte</>}
-                    </Link>
-                    <form action={logout}>
-                      <button
-                        type="submit"
-                        className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-500 hover:text-red-600 transition-colors"
-                      >
-                        <LogOut size={14} strokeWidth={1.5} />
-                        Se déconnecter
-                      </button>
-                    </form>
-                  </>
-                ) : (
-                  <Link
-                    href="/connexion"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-600 hover:text-neutral-900 transition-colors"
-                  >
-                    <User size={14} strokeWidth={1.5} />
-                    Se connecter
-                  </Link>
-                )}
+                <Link
+                  href="/connexion"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-600 hover:text-neutral-900 transition-colors"
+                >
+                  <User size={14} strokeWidth={1.5} />
+                  Se connecter
+                </Link>
               </div>
             </motion.div>
           </>
