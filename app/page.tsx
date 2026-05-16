@@ -6,8 +6,10 @@ import CreateurCarousel, { type CreateurCard } from "@/components/shared/Createu
 import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 
 export default async function Home() {
-  const users = await getUsers();
-  const products = await getProducts();
+  const [users, products] = await Promise.all([
+    getUsers().catch(() => []),
+    getProducts().catch(() => []),
+  ]);
 
   const createurs: CreateurCard[] = users
     .filter((u) => u.role === "créateur")
