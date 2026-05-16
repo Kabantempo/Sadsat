@@ -93,6 +93,19 @@ export default function Footer() {
           )}
         </div>
 
+        {/* Légal */}
+        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+          <Link href="/mentions-legales" className="text-[0.54rem] tracking-[0.2em] uppercase text-neutral-700 hover:text-neutral-400 transition-colors">
+            Mentions légales
+          </Link>
+          <Link href="/cgv" className="text-[0.54rem] tracking-[0.2em] uppercase text-neutral-700 hover:text-neutral-400 transition-colors">
+            CGV
+          </Link>
+          <Link href="/confidentialite" className="text-[0.54rem] tracking-[0.2em] uppercase text-neutral-700 hover:text-neutral-400 transition-colors">
+            Confidentialité
+          </Link>
+        </div>
+
         {/* Bas */}
         <div className="flex items-center justify-between w-full border-t border-neutral-900 pt-8">
           <p className="text-[0.54rem] tracking-[0.22em] uppercase text-neutral-700">
