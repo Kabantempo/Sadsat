@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     })
 
     // Trouve ou crée l'utilisateur
-    let user = getUserByEmail(email)
+    let user = await getUserByEmail(email)
     if (!user) {
       user = {
         id: crypto.randomUUID(),
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
         role: 'client',
         createdAt: new Date().toISOString(),
       }
-      createUser(user)
+      await createUser(user)
     }
 
     await createSession(user.id, user.role)

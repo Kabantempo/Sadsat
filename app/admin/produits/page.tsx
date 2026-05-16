@@ -8,7 +8,7 @@ import { UNIVERSE_LABELS } from '@/lib/definitions'
 
 export default async function ProduitsPage() {
   await verifyAdmin()
-  const products = getProducts()
+  const products = await getProducts()
 
   return (
     <div className="px-4 md:px-6 py-12 max-w-5xl mx-auto">

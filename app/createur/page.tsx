@@ -6,8 +6,8 @@ import { Package, Plus } from 'lucide-react'
 
 export default async function CreateurPage() {
   const session = await verifyCreateur()
-  const user = getUserById(session.userId)
-  const allProducts = getProducts()
+  const user = await getUserById(session.userId)
+  const allProducts = await getProducts()
   const myProducts = allProducts.filter((p) => p.createdBy === session.userId)
   const dispo = myProducts.filter((p) => p.status === 'disponible')
   const vendus = myProducts.filter((p) => p.status === 'vendu')

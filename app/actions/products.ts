@@ -80,7 +80,7 @@ export async function createProductAction(
   const newFiles = formData.getAll('newImages') as File[]
   const imagePaths = await saveFiles(newFiles)
 
-  createProduct({
+  await createProduct({
     id: crypto.randomUUID(),
     ...parsed.data,
     images: imagePaths,
@@ -105,7 +105,7 @@ export async function updateProductAction(
   const newFiles = formData.getAll('newImages') as File[]
   const newPaths = await saveFiles(newFiles)
 
-  updateProduct(id, {
+  await updateProduct(id, {
     ...parsed.data,
     images: [...existingImages, ...newPaths],
   })
@@ -115,13 +115,13 @@ export async function updateProductAction(
 export async function deleteProductAction(formData: FormData): Promise<void> {
   await verifyAdmin()
   const id = String(formData.get('productId') ?? '')
-  const product = getProductById(id)
+  const product = await getProductById(id)
   if (product) {
     for (const imgPath of product.images) {
       const fullPath = path.join(process.cwd(), 'public', imgPath)
       unlink(fullPath).catch(() => null)
     }
-    deleteProduct(id)
+    await deleteProduct(id)
   }
   redirect('/admin/produits')
 }

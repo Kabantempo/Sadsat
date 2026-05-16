@@ -20,11 +20,11 @@ export default async function FicheProduitPage({
   const { id } = await params;
   const { preview } = await searchParams;
   const isPreview = preview === "1";
-  const product = getProductById(id);
+  const product = await getProductById(id);
   if (!product) notFound();
   if (product.status === "masqué" && !isPreview) notFound();
 
-  const creator = product.createdBy ? getUserById(product.createdBy) : null;
+  const creator = product.createdBy ? await getUserById(product.createdBy) : null;
   const creatorData = creator
     ? { id: creator.id, name: creator.name, avatar: creator.avatar }
     : null;

@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     if (!gUser.email) throw new Error('no_email')
 
     // Trouve ou crée l'utilisateur dans notre base
-    let user = getUserByEmail(gUser.email)
+    let user = await getUserByEmail(gUser.email)
     if (!user) {
       user = {
         id: crypto.randomUUID(),
@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
         role: 'client',
         createdAt: new Date().toISOString(),
       }
-      createUser(user)
+      await createUser(user)
     }
 
     await createSession(user.id, user.role)

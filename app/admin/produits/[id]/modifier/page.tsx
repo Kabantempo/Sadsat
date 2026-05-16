@@ -14,7 +14,7 @@ export default async function ModifierProduitPage({
 }) {
   await verifyAdmin()
   const { id } = await params
-  const product = getProductById(id)
+  const product = await getProductById(id)
   if (!product) notFound()
 
   return (

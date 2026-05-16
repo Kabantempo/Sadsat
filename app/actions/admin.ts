@@ -42,7 +42,7 @@ async function createAccountAction(
   const { prenom, nom, email } = validated.data
   const name = `${prenom} ${nom}`
 
-  if (getUserByEmail(email)) {
+  if (await getUserByEmail(email)) {
     return { message: 'Cet email est déjà utilisé.' }
   }
 
@@ -54,7 +54,7 @@ async function createAccountAction(
     if (!/[0-9]/.test(rawPassword)) return { errors: { password: ['Au moins un chiffre.'] } }
 
     const passwordHash = await bcrypt.hash(rawPassword, 12)
-    createUser({
+    await createUser({
       id: crypto.randomUUID(),
       email,
       passwordHash,
@@ -70,7 +70,7 @@ async function createAccountAction(
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
   const setupLink = `${baseUrl}/set-password?token=${token}`
 
-  createUser({
+  await createUser({
     id: crypto.randomUUID(),
     email,
     passwordHash: '',
@@ -118,25 +118,25 @@ export async function deleteUserAction(id: string): Promise<void> {
     throw new Error('Vous ne pouvez pas supprimer votre propre compte.')
   }
 
-  deleteUser(id)
+  await deleteUser(id)
   redirect('/admin/comptes')
 }
 
 export async function clearUsersAction(): Promise<void> {
   const session = await verifyAdmin()
-  clearUsersExcept(session.userId)
+  await clearUsersExcept(session.userId)
   redirect('/admin/comptes')
 }
 
 export async function clearProductsAction(): Promise<void> {
   await verifyAdmin()
-  clearAllProducts()
+  await clearAllProducts()
   redirect('/admin/comptes')
 }
 
 export async function clearAllDataAction(): Promise<void> {
   const session = await verifyAdmin()
-  clearUsersExcept(session.userId)
-  clearAllProducts()
+  await clearUsersExcept(session.userId)
+  await clearAllProducts()
   redirect('/admin/comptes')
 }

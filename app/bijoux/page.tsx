@@ -12,8 +12,8 @@ const FAQ: AccordionItem[] = [
   { question: "La patine change-t-elle avec le temps ?", answer: "Oui, et c'est voulu. Le laiton et le cuivre développent naturellement une patine qui approfondit les teintes — une signature vivante. Si vous souhaitez maintenir l'éclat initial, un vernis à bijoux transparent peut être appliqué." },
 ];
 
-export default function BijouxPage() {
-  const products = getProducts().filter(
+export default async function BijouxPage() {
+  const products = (await getProducts()).filter(
     (p) => p.universe === "bijoux" && p.status !== "masqué"
   );
   const carouselItems: CarouselItem[] =

@@ -37,7 +37,7 @@ export async function updateProfileAction(
     avatarPath = `/uploads/avatars/${filename}`
   }
 
-  updateUser(session.userId, {
+  await updateUser(session.userId, {
     name,
     bio: bio || undefined,
     ...(avatarPath ? { avatar: avatarPath } : {}),
@@ -133,7 +133,7 @@ export async function createCreateurProductAction(
   const productId = crypto.randomUUID()
   const status = intent === 'preview' ? 'masqué' : parsed.data.status
 
-  createProduct({
+  await createProduct({
     id: productId,
     ...parsed.data,
     status,
@@ -157,7 +157,7 @@ export async function updateCreateurProductAction(
   const id = String(formData.get('productId') ?? '')
   if (!id) return { message: 'Produit introuvable.' }
 
-  const product = getProductById(id)
+  const product = await getProductById(id)
   if (!product) return { message: 'Produit introuvable.' }
 
   if (product.createdBy && product.createdBy !== session.userId && session.role !== 'admin') {
@@ -176,7 +176,7 @@ export async function updateCreateurProductAction(
   const newVideoPath = await saveVideoFile(videoFile)
   const finalVideo = newVideoPath ?? (existingVideo || undefined)
 
-  updateProduct(id, {
+  await updateProduct(id, {
     ...parsed.data,
     images: [...existingImages, ...newPaths],
     video: finalVideo,
@@ -189,19 +189,19 @@ export async function updateCreateurProductAction(
 export async function publishProductAction(formData: FormData): Promise<void> {
   const session = await verifyCreateur()
   const id = String(formData.get('productId') ?? '')
-  const product = getProductById(id)
+  const product = await getProductById(id)
   if (!product) return
   if (product.createdBy && product.createdBy !== session.userId && session.role !== 'admin') {
     throw new Error('Non autorisé.')
   }
-  updateProduct(id, { status: 'disponible' })
+  await updateProduct(id, { status: 'disponible' })
   redirect(`/produits/${id}`)
 }
 
 export async function deleteCreateurProductAction(formData: FormData): Promise<void> {
   const session = await verifyCreateur()
   const id = String(formData.get('productId') ?? '')
-  const product = getProductById(id)
+  const product = await getProductById(id)
   if (product) {
     if (product.createdBy && product.createdBy !== session.userId && session.role !== 'admin') {
       throw new Error('Non autorisé.')
@@ -210,7 +210,7 @@ export async function deleteCreateurProductAction(formData: FormData): Promise<v
       const fullPath = path.join(process.cwd(), 'public', imgPath)
       unlink(fullPath).catch(() => null)
     }
-    deleteProduct(id)
+    await deleteProduct(id)
   }
   redirect('/createur/produits')
 }

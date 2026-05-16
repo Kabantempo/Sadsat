@@ -2,8 +2,8 @@ import { getProducts } from "@/lib/products";
 import BougiesContent from "@/components/pages/BougiesContent";
 import type { CarouselItem } from "@/components/shared/ProductCarousel";
 
-export default function BougiesPage() {
-  const products = getProducts().filter(
+export default async function BougiesPage() {
+  const products = (await getProducts()).filter(
     (p) => p.universe === "bougies" && p.status !== "masqué"
   );
   const carouselItems: CarouselItem[] =

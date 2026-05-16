@@ -48,10 +48,10 @@ export default async function CreateurPublicPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const user = getUserById(id);
+  const user = await getUserById(id);
   if (!user || user.role !== "créateur") notFound();
 
-  const products = getProducts().filter(
+  const products = (await getProducts()).filter(
     (p) => p.createdBy === id && p.status !== "masqué"
   );
 

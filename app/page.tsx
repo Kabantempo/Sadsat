@@ -5,9 +5,9 @@ import HeroSection from "@/components/shared/HeroSection";
 import CreateurCarousel, { type CreateurCard } from "@/components/shared/CreateurCarousel";
 import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 
-export default function Home() {
-  const users = getUsers();
-  const products = getProducts();
+export default async function Home() {
+  const users = await getUsers();
+  const products = await getProducts();
 
   const createurs: CreateurCard[] = users
     .filter((u) => u.role === "créateur")

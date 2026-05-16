@@ -1,52 +1,115 @@
 import 'server-only'
-import fs from 'fs'
-import path from 'path'
-import type { Product } from './definitions'
-import { SEED_PRODUCTS } from './seed'
+import type { Product, Dimensions } from './definitions'
+import { prisma } from './prisma'
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json')
-
-function ensureFile() {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true })
-  if (!fs.existsSync(PRODUCTS_FILE)) {
-    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(SEED_PRODUCTS, null, 2), 'utf-8')
+function rowToProduct(row: {
+  id: string
+  name: string
+  description: string
+  price: number
+  universe: string
+  category: string
+  images: string
+  stock: number
+  status: string
+  serialNumber: string | null
+  dimensions: string | null
+  materials: string | null
+  video: string | null
+  createdBy: string | null
+  createdAt: string
+  updatedAt: string
+}): Product {
+  return {
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    price: row.price,
+    universe: row.universe as Product['universe'],
+    category: row.category,
+    images: JSON.parse(row.images || '[]') as string[],
+    stock: row.stock,
+    status: row.status as Product['status'],
+    serialNumber: row.serialNumber ?? undefined,
+    dimensions: row.dimensions ? (JSON.parse(row.dimensions) as Dimensions) : undefined,
+    materials: row.materials ?? undefined,
+    video: row.video ?? undefined,
+    createdBy: row.createdBy ?? undefined,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
   }
 }
 
-export function getProducts(): Product[] {
-  ensureFile()
-  return JSON.parse(fs.readFileSync(PRODUCTS_FILE, 'utf-8')) as Product[]
+export async function getProducts(): Promise<Product[]> {
+  const rows = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } })
+  return rows.map(rowToProduct)
 }
 
-export function getProductById(id: string): Product | undefined {
-  return getProducts().find((p) => p.id === id)
+export async function getProductById(id: string): Promise<Product | undefined> {
+  const row = await prisma.product.findUnique({ where: { id } })
+  return row ? rowToProduct(row) : undefined
 }
 
-export function createProduct(product: Product): void {
-  const products = getProducts()
-  products.unshift(product)
-  fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2), 'utf-8')
+export async function createProduct(product: Product): Promise<void> {
+  await prisma.product.create({
+    data: {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      universe: product.universe,
+      category: product.category,
+      images: JSON.stringify(product.images),
+      stock: product.stock,
+      status: product.status,
+      serialNumber: product.serialNumber ?? null,
+      dimensions: product.dimensions ? JSON.stringify(product.dimensions) : null,
+      materials: product.materials ?? null,
+      video: product.video ?? null,
+      createdBy: product.createdBy ?? null,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
+    },
+  })
 }
 
-export function updateProduct(id: string, data: Partial<Product>): boolean {
-  const products = getProducts()
-  const idx = products.findIndex((p) => p.id === id)
-  if (idx === -1) return false
-  products[idx] = { ...products[idx], ...data, updatedAt: new Date().toISOString() }
-  fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2), 'utf-8')
-  return true
+export async function updateProduct(id: string, data: Partial<Product>): Promise<boolean> {
+  try {
+    await prisma.product.update({
+      where: { id },
+      data: {
+        ...(data.name !== undefined && { name: data.name }),
+        ...(data.description !== undefined && { description: data.description }),
+        ...(data.price !== undefined && { price: data.price }),
+        ...(data.universe !== undefined && { universe: data.universe }),
+        ...(data.category !== undefined && { category: data.category }),
+        ...(data.images !== undefined && { images: JSON.stringify(data.images) }),
+        ...(data.stock !== undefined && { stock: data.stock }),
+        ...(data.status !== undefined && { status: data.status }),
+        ...(data.serialNumber !== undefined && { serialNumber: data.serialNumber ?? null }),
+        ...(data.dimensions !== undefined && {
+          dimensions: data.dimensions ? JSON.stringify(data.dimensions) : null,
+        }),
+        ...(data.materials !== undefined && { materials: data.materials ?? null }),
+        ...(data.video !== undefined && { video: data.video ?? null }),
+        updatedAt: new Date().toISOString(),
+      },
+    })
+    return true
+  } catch {
+    return false
+  }
 }
 
-export function clearAllProducts(): void {
-  const DATA_DIR_LOCAL = path.join(process.cwd(), 'data')
-  fs.writeFileSync(path.join(DATA_DIR_LOCAL, 'products.json'), '[]', 'utf-8')
+export async function clearAllProducts(): Promise<void> {
+  await prisma.product.deleteMany()
 }
 
-export function deleteProduct(id: string): boolean {
-  const products = getProducts()
-  const filtered = products.filter((p) => p.id !== id)
-  if (filtered.length === products.length) return false
-  fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(filtered, null, 2), 'utf-8')
-  return true
+export async function deleteProduct(id: string): Promise<boolean> {
+  try {
+    await prisma.product.delete({ where: { id } })
+    return true
+  } catch {
+    return false
+  }
 }

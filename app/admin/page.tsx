@@ -6,8 +6,8 @@ import { Package, Plus } from 'lucide-react'
 
 export default async function AdminPage() {
   const session = await verifyAdmin()
-  const users = getUsers()
-  const products = getProducts()
+  const users = await getUsers()
+  const products = await getProducts()
   const clients = users.filter((u) => u.role === 'client')
   const admins = users.filter((u) => u.role === 'admin')
   const dispo = products.filter((p) => p.status === 'disponible')

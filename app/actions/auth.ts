@@ -18,7 +18,7 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
   }
 
   const { name, email, password } = validated.data
-  const existing = getUserByEmail(email)
+  const existing = await getUserByEmail(email)
   if (existing) {
     return { message: 'Cet email est déjà utilisé.' }
   }
@@ -32,7 +32,7 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
     role: 'client' as const,
     createdAt: new Date().toISOString(),
   }
-  createUser(user)
+  await createUser(user)
   await createSession(user.id, 'client')
   redirect('/compte')
 }
@@ -48,7 +48,7 @@ export async function login(state: FormState, formData: FormData): Promise<FormS
   }
 
   const { email, password } = validated.data
-  const user = getUserByEmail(email)
+  const user = await getUserByEmail(email)
   if (!user || !user.passwordHash) {
     return { message: 'Email ou mot de passe incorrect.' }
   }
@@ -79,7 +79,7 @@ export async function changePasswordAction(
   formData: FormData
 ): Promise<ChangePasswordState> {
   const session = await verifySession()
-  const user = getUserById(session.userId)
+  const user = await getUserById(session.userId)
   if (!user) return { message: 'Utilisateur introuvable.' }
 
   const current = String(formData.get('currentPassword') ?? '')
@@ -93,7 +93,7 @@ export async function changePasswordAction(
   if (next !== confirm) return { message: 'Les mots de passe ne correspondent pas.' }
 
   const passwordHash = await bcrypt.hash(next, 12)
-  updateUserPassword(user.id, passwordHash)
+  await updateUserPassword(user.id, passwordHash)
 
   return { success: true, message: 'Mot de passe mis à jour.' }
 }
@@ -108,7 +108,7 @@ export async function setPasswordAction(
   const password = String(formData.get('password') ?? '')
   const confirm = String(formData.get('confirmPassword') ?? '')
 
-  const user = getUserByPasswordToken(token)
+  const user = await getUserByPasswordToken(token)
   if (!user || !user.setPasswordTokenExpiry || new Date(user.setPasswordTokenExpiry) < new Date()) {
     return { message: 'Lien invalide ou expiré.' }
   }
@@ -119,8 +119,8 @@ export async function setPasswordAction(
   if (password !== confirm) return { message: 'Les mots de passe ne correspondent pas.' }
 
   const passwordHash = await bcrypt.hash(password, 12)
-  updateUserPassword(user.id, passwordHash)
-  clearPasswordToken(user.id)
+  await updateUserPassword(user.id, passwordHash)
+  await clearPasswordToken(user.id)
 
   await createSession(user.id, user.role)
   const setPasswordDest =
@@ -132,7 +132,7 @@ export async function setPasswordAction(
 }
 
 export async function setupAdmin(state: FormState, formData: FormData): Promise<FormState> {
-  if (adminExists()) {
+  if (await adminExists()) {
     return { message: 'Un administrateur existe déjà.' }
   }
 
@@ -156,7 +156,7 @@ export async function setupAdmin(state: FormState, formData: FormData): Promise<
     role: 'admin' as const,
     createdAt: new Date().toISOString(),
   }
-  createUser(user)
+  await createUser(user)
   await createSession(user.id, 'admin')
   redirect('/admin')
 }

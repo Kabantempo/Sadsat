@@ -10,7 +10,7 @@ export default async function SetPasswordPage({
   const { token } = await searchParams
   if (!token) redirect('/connexion')
 
-  const user = getUserByPasswordToken(token)
+  const user = await getUserByPasswordToken(token)
 
   if (!user || !user.setPasswordTokenExpiry || new Date(user.setPasswordTokenExpiry) < new Date()) {
     return (

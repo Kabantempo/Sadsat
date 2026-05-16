@@ -1,8 +1,8 @@
 import { getProducts } from "@/lib/products";
 import PiecesUniquesContent from "@/components/pages/PiecesUniquesContent";
 
-export default function PiecesUniquesPage() {
-  const allProducts = getProducts().filter((p) => p.status !== "masqué");
+export default async function PiecesUniquesPage() {
+  const allProducts = (await getProducts()).filter((p) => p.status !== "masqué");
 
   return (
     <div className="min-h-screen bg-white pt-32 pb-24">

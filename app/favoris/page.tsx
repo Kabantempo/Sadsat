@@ -2,8 +2,8 @@ import { getProducts } from "@/lib/products";
 import FavoritesContent from "@/components/pages/FavoritesContent";
 import { Heart } from "lucide-react";
 
-export default function FavorisPage() {
-  const allProducts = getProducts().filter((p) => p.status !== "masqué");
+export default async function FavorisPage() {
+  const allProducts = (await getProducts()).filter((p) => p.status !== "masqué");
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-200 pt-32 pb-24">

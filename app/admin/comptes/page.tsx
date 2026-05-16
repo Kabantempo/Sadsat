@@ -14,7 +14,7 @@ export default async function AdminComptesPage({
 }) {
   const session = await verifyAdmin()
   const params = await searchParams
-  const users = getUsers()
+  const users = await getUsers()
   const admins = users.filter((u) => u.role === 'admin')
   const createurs = users.filter((u) => u.role === 'créateur')
   const grossistes = users.filter((u) => u.role === 'grossiste')

@@ -3,9 +3,9 @@ import Image from "next/image";
 import { getUsers } from "@/lib/db";
 import { getProducts } from "@/lib/products";
 
-export default function CreateursPage() {
-  const createurs = getUsers().filter((u) => u.role === "créateur");
-  const allProducts = getProducts();
+export default async function CreateursPage() {
+  const createurs = (await getUsers()).filter((u) => u.role === "créateur");
+  const allProducts = await getProducts();
 
   const creatorsWithStats = createurs.map((c) => {
     const products = allProducts.filter((p) => p.createdBy === c.id && p.status !== "masqué");

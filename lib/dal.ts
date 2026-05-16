@@ -35,7 +35,7 @@ export const verifyGrossiste = cache(async () => {
 export const getCurrentUser = cache(async (): Promise<SafeUser | null> => {
   const session = await getSession()
   if (!session?.userId) return null
-  const user = getUserById(session.userId)
+  const user = await getUserById(session.userId)
   if (!user) return null
   const { passwordHash: _, ...safeUser } = user
   return safeUser

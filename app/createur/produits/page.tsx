@@ -8,7 +8,7 @@ import { deleteCreateurProductAction } from '@/app/actions/createur'
 
 export default async function CreateurProduitsPage() {
   const session = await verifyCreateur()
-  const products = getProducts().filter((p) => p.createdBy === session.userId)
+  const products = (await getProducts()).filter((p) => p.createdBy === session.userId)
 
   return (
     <div className="px-4 md:px-6 py-12 max-w-5xl mx-auto">

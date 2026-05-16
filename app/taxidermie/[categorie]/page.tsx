@@ -50,7 +50,7 @@ export default async function CategoriePage({ params }: Props) {
   const cat = CATEGORIES[categorie];
   if (!cat) notFound();
 
-  const allProducts = getProducts();
+  const allProducts = await getProducts();
   const categoryProducts = allProducts.filter(
     (p) =>
       p.universe === "taxidermie" &&

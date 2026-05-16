@@ -14,7 +14,7 @@ export default async function ModifierProduitCreateurPage({
 }) {
   const session = await verifyCreateur()
   const { id } = await params
-  const product = getProductById(id)
+  const product = await getProductById(id)
 
   if (!product) notFound()
   if (product.createdBy && product.createdBy !== session.userId && session.role !== 'admin') {

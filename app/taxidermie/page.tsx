@@ -29,8 +29,8 @@ const FAQ: AccordionItem[] = [
   { question: "La taxidermie est-elle légale en France ?", answer: "Oui, sous conditions. La vente et la possession de spécimens naturalisés sont réglementées par la convention CITES. Toutes nos pièces sont conformes et accompagnées des documents légaux nécessaires." },
 ];
 
-export default function TaxidermiePage() {
-  const products = getProducts().filter(
+export default async function TaxidermiePage() {
+  const products = (await getProducts()).filter(
     (p) => p.universe === "taxidermie" && p.status !== "masqué"
   );
   const carouselItems: CarouselItem[] =
