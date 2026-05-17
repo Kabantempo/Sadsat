@@ -24,10 +24,10 @@ type Props = {
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
 const VARS = {
-  center: { x: "0%",   rotateY:   0, scale: 1,    opacity: 1,   zIndex: 10 },
-  left:   { x: "-80%", rotateY:  40, scale: 0.75, opacity: 0.5, zIndex: 5  },
-  right:  { x: "80%",  rotateY: -40, scale: 0.75, opacity: 0.5, zIndex: 5  },
-  hidden: { x: "0%",   rotateY:   0, scale: 0.5,  opacity: 0,   zIndex: 0  },
+  center: { x: "-50%",   rotateY:   0, scale: 1,    opacity: 1,   zIndex: 10 },
+  left:   { x: "-130%",  rotateY:  40, scale: 0.75, opacity: 0.5, zIndex: 5  },
+  right:  { x: "30%",    rotateY: -40, scale: 0.75, opacity: 0.5, zIndex: 5  },
+  hidden: { x: "-50%",   rotateY:   0, scale: 0.5,  opacity: 0,   zIndex: 0  },
 } as const;
 
 type Pos = keyof typeof VARS;
@@ -73,7 +73,7 @@ export default function ProductCarousel({
           return (
             <motion.div
               key={item.id}
-              className={`absolute top-0 left-1/2 -translate-x-1/2 w-[38%] md:w-[28%] cursor-pointer`}
+              className={`absolute top-0 left-1/2 w-[38%] md:w-[28%] cursor-pointer`}
               animate={VARS[pos]}
               transition={{ duration: 0.5, ease }}
               style={{ transformStyle: "preserve-3d" }}
