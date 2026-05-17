@@ -107,7 +107,7 @@ export default function Header({ user }: { user?: UserProp }) {
           <button
             aria-label="Ouvrir le menu"
             onClick={() => setMobileOpen(true)}
-            className="md:hidden text-neutral-600 hover:text-neutral-900 transition-colors"
+            className="md:hidden text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
           >
             <Menu size={22} strokeWidth={1.5} />
           </button>
@@ -116,7 +116,7 @@ export default function Header({ user }: { user?: UserProp }) {
           <div className="flex-1 flex justify-center md:flex-none md:justify-start">
             <Link
               href="/"
-              className="font-serif text-[1.45rem] md:text-4xl tracking-[0.22em] uppercase flex items-center gap-2 md:gap-4 select-none text-neutral-900 transition-opacity hover:opacity-60 duration-300"
+              className="font-serif text-[1.45rem] md:text-4xl tracking-[0.22em] uppercase flex items-center gap-2 md:gap-4 select-none text-neutral-900 dark:text-neutral-100 transition-opacity hover:opacity-60 duration-300"
             >
               SADSAT
               <span className="text-xs md:text-lg leading-none text-neutral-400">✦</span>
@@ -189,7 +189,7 @@ export default function Header({ user }: { user?: UserProp }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.28, ease }}
-          className="hidden md:block border-t border-neutral-200"
+          className="hidden md:block border-t border-neutral-200 dark:border-neutral-800"
         >
           <nav className="flex items-center justify-center gap-14 px-8 py-5">
             {NAV.map((item) => (
@@ -210,7 +210,7 @@ export default function Header({ user }: { user?: UserProp }) {
                     className={`group relative flex items-center gap-1.5 text-[0.62rem] tracking-[0.16em] uppercase font-medium transition-colors pb-0.5 ${
                       item.bordeaux
                         ? "text-[#8b0000] hover:text-[#6b0000]"
-                        : "text-neutral-700 hover:text-neutral-900"
+                        : "text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100"
                     }`}
                   >
                     {item.label}
@@ -244,7 +244,7 @@ export default function Header({ user }: { user?: UserProp }) {
                         >
                           <Link
                             href={sub.href}
-                            className="block px-7 py-3.5 text-[0.62rem] tracking-[0.14em] uppercase text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 transition-colors"
+                            className="block px-7 py-3.5 text-[0.62rem] tracking-[0.14em] uppercase text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                           >
                             {sub.label}
                           </Link>
@@ -282,18 +282,18 @@ export default function Header({ user }: { user?: UserProp }) {
               className="fixed top-0 left-0 bottom-0 z-[70] w-[82vw] max-w-[340px] bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col md:hidden overflow-y-auto shadow-2xl"
             >
               {/* Header du drawer */}
-              <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100">
+              <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100 dark:border-neutral-800">
                 <Link
                   href="/"
                   onClick={() => setMobileOpen(false)}
-                  className="font-serif text-xl tracking-[0.2em] uppercase text-neutral-900"
+                  className="font-serif text-xl tracking-[0.2em] uppercase text-neutral-900 dark:text-neutral-100"
                 >
                   SADSAT ✦
                 </Link>
                 <button
                   onClick={() => setMobileOpen(false)}
                   aria-label="Fermer le menu"
-                  className="text-neutral-500 hover:text-neutral-900 transition-colors p-1 -mr-1"
+                  className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors p-1 -mr-1"
                 >
                   <X size={20} strokeWidth={1.5} />
                 </button>
@@ -302,7 +302,7 @@ export default function Header({ user }: { user?: UserProp }) {
               {/* Liens */}
               <nav className="flex-1 px-6 py-4 flex flex-col" aria-label="Navigation principale">
                 {NAV.map((item) => (
-                  <div key={item.label} className="border-b border-neutral-100">
+                  <div key={item.label} className="border-b border-neutral-100 dark:border-neutral-800">
                     <div className="flex items-center">
                       {item.comingSoon ? (
                         <span className="flex-1 py-4 text-[0.78rem] tracking-[0.14em] uppercase font-medium text-neutral-400 cursor-default select-none flex items-center gap-2">
@@ -314,7 +314,7 @@ export default function Header({ user }: { user?: UserProp }) {
                           href={item.href}
                           onClick={() => !item.dropdown && setMobileOpen(false)}
                           className={`flex-1 py-4 text-[0.78rem] tracking-[0.14em] uppercase font-medium ${
-                            item.bordeaux ? "text-[#8b0000]" : "text-neutral-800"
+                            item.bordeaux ? "text-[#8b0000]" : "text-neutral-800 dark:text-neutral-100"
                           }`}
                         >
                           {item.label}
@@ -326,7 +326,7 @@ export default function Header({ user }: { user?: UserProp }) {
                             setMobileSub(mobileSub === item.label ? null : item.label)
                           }
                           aria-label={`Sous-menu ${item.label}`}
-                          className="py-4 pl-4 pr-1 text-neutral-400 hover:text-neutral-900 transition-colors"
+                          className="py-4 pl-4 pr-1 text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
                         >
                           <ChevronDown
                             size={14}
@@ -353,7 +353,7 @@ export default function Header({ user }: { user?: UserProp }) {
                               key={sub.href}
                               href={sub.href}
                               onClick={() => setMobileOpen(false)}
-                              className="block pl-5 py-3 text-[0.7rem] tracking-[0.12em] uppercase text-neutral-500 hover:text-neutral-900 transition-colors border-b border-neutral-50 last:border-0"
+                              className="block pl-5 py-3 text-[0.7rem] tracking-[0.12em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors border-b border-neutral-50 dark:border-neutral-800 last:border-0"
                             >
                               {sub.label}
                             </Link>
@@ -366,11 +366,11 @@ export default function Header({ user }: { user?: UserProp }) {
               </nav>
 
               {/* Actions bas du drawer */}
-              <div className="px-6 py-5 border-t border-neutral-100 space-y-1">
+              <div className="px-6 py-5 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
                 <Link
                   href="/connexion"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-600 hover:text-neutral-900 transition-colors"
+                  className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
                 >
                   <User size={14} strokeWidth={1.5} />
                   Se connecter
