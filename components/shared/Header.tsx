@@ -148,11 +148,69 @@ export default function Header({ user }: { user?: UserProp }) {
             >
               <Search size={16} strokeWidth={1.5} />
             </motion.button>
-            <motion.div whileHover={{ scale: 1.12 }} transition={{ duration: 0.15 }}>
-              <Link href="/connexion" aria-label="Se connecter" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
-                <User size={16} strokeWidth={1.5} />
-              </Link>
-            </motion.div>
+
+            {/* Icône utilisateur — lien connexion ou menu dropdown */}
+            {user ? (
+              <div className="relative" ref={userMenuRef}>
+                <motion.button
+                  whileHover={{ scale: 1.12 }}
+                  transition={{ duration: 0.15 }}
+                  aria-label="Mon compte"
+                  onClick={() => setUserMenuOpen((v) => !v)}
+                  className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+                >
+                  <User size={16} strokeWidth={1.5} />
+                </motion.button>
+                <AnimatePresence>
+                  {userMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      className="absolute top-full right-0 mt-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 min-w-[200px] py-3 z-50 shadow-lg"
+                    >
+                      <p className="px-5 pb-2 text-[0.55rem] tracking-[0.18em] uppercase text-neutral-400 border-b border-neutral-100 dark:border-neutral-800 mb-2">
+                        {user.name}
+                      </p>
+                      {(user.role === 'admin' || user.role === 'créateur') && (
+                        <Link
+                          href={user.role === 'admin' ? '/admin/produits/nouveau' : '/createur/produits/nouveau'}
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-5 py-2.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                        >
+                          <span className="text-base leading-none">+</span>
+                          Nouveau produit
+                        </Link>
+                      )}
+                      <Link
+                        href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/mon-compte'}
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2.5 px-5 py-2.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                      >
+                        <LayoutDashboard size={12} strokeWidth={1.5} />
+                        {user.role === 'admin' ? 'Administration' : 'Mon espace'}
+                      </Link>
+                      <div className="border-t border-neutral-100 dark:border-neutral-800 mt-2 pt-2">
+                        <button
+                          onClick={() => { setUserMenuOpen(false); logout(); }}
+                          className="flex items-center gap-2.5 px-5 py-2.5 w-full text-left text-[0.6rem] tracking-[0.14em] uppercase text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                        >
+                          <LogOut size={12} strokeWidth={1.5} />
+                          Déconnexion
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <motion.div whileHover={{ scale: 1.12 }} transition={{ duration: 0.15 }}>
+                <Link href="/connexion" aria-label="Se connecter" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+                  <User size={16} strokeWidth={1.5} />
+                </Link>
+              </motion.div>
+            )}
             <Link href="/favoris">
               <motion.div
                 whileHover={{ scale: 1.12 }}
@@ -367,14 +425,45 @@ export default function Header({ user }: { user?: UserProp }) {
 
               {/* Actions bas du drawer */}
               <div className="px-6 py-5 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
-                <Link
-                  href="/connexion"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
-                >
-                  <User size={14} strokeWidth={1.5} />
-                  Se connecter
-                </Link>
+                {user ? (
+                  <>
+                    <p className="text-[0.52rem] tracking-[0.18em] uppercase text-neutral-400 mb-3">{user.name}</p>
+                    {(user.role === 'admin' || user.role === 'créateur') && (
+                      <Link
+                        href={user.role === 'admin' ? '/admin/produits/nouveau' : '/createur/produits/nouveau'}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+                      >
+                        <span className="text-base leading-none">+</span>
+                        Nouveau produit
+                      </Link>
+                    )}
+                    <Link
+                      href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/mon-compte'}
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+                    >
+                      <LayoutDashboard size={14} strokeWidth={1.5} />
+                      {user.role === 'admin' ? 'Administration' : 'Mon espace'}
+                    </Link>
+                    <button
+                      onClick={() => { setMobileOpen(false); logout(); }}
+                      className="flex items-center gap-2.5 py-2 w-full text-left text-[0.65rem] tracking-[0.14em] uppercase text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+                    >
+                      <LogOut size={14} strokeWidth={1.5} />
+                      Déconnexion
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/connexion"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2.5 py-2 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+                  >
+                    <User size={14} strokeWidth={1.5} />
+                    Se connecter
+                  </Link>
+                )}
               </div>
             </motion.div>
           </>
