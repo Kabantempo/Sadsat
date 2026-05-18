@@ -50,7 +50,7 @@ export default async function TaxidermiePage() {
         }));
 
   return (
-    <div style={{ background: "#fafaf7", color: "#1a1a1a" }} className="min-h-screen pb-24">
+    <div className="min-h-screen pb-24 bg-[#fafaf7] dark:bg-neutral-950 text-[#1a1a1a] dark:text-neutral-100">
 
       {/* ── En-tête ── */}
       <div className="pt-32 pb-24 max-w-3xl mx-auto px-8 text-center">
@@ -89,7 +89,7 @@ export default async function TaxidermiePage() {
               { label: "Certification CITES",          detail: "Conformité réglementaire totale"  },
               { label: "Pièces uniques",               detail: "Aucune reproduction possible"     },
             ].map(({ label, detail }) => (
-              <div key={label} className="bg-[#fafaf7] px-5 py-6 text-center">
+              <div key={label} className="bg-[#fafaf7] dark:bg-neutral-950 px-5 py-6 text-center">
                 <p className="font-mono text-[0.56rem] tracking-[0.18em] uppercase text-neutral-400 mb-2">{detail}</p>
                 <p className="font-serif text-[0.88rem] italic text-neutral-700">{label}</p>
               </div>

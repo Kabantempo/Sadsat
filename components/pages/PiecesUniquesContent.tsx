@@ -59,8 +59,8 @@ export default function PiecesUniquesContent({ products, totalCount }: Props) {
               onClick={() => setUniverse(u)}
               className={`text-[0.6rem] tracking-[0.2em] uppercase px-4 py-2 border transition-colors ${
                 universe === u
-                  ? "border-neutral-900 bg-neutral-900 text-white"
-                  : "border-neutral-300 text-neutral-500 hover:border-neutral-600 hover:text-neutral-800"
+                  ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900"
+                  : "border-neutral-300 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 hover:border-neutral-600 hover:text-neutral-800 dark:hover:border-neutral-400 dark:hover:text-neutral-200"
               }`}
             >
               {UNIVERS_LABELS[u]}
@@ -70,7 +70,7 @@ export default function PiecesUniquesContent({ products, totalCount }: Props) {
           <button
             onClick={() => setFiltersOpen((v) => !v)}
             className={`ml-auto flex items-center gap-1.5 text-[0.58rem] tracking-[0.18em] uppercase transition-colors ${
-              filtersOpen ? "text-neutral-900" : "text-neutral-400 hover:text-neutral-700"
+              filtersOpen ? "text-neutral-900 dark:text-neutral-100" : "text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
             }`}
           >
             <SlidersHorizontal size={12} strokeWidth={1.5} />
@@ -80,7 +80,7 @@ export default function PiecesUniquesContent({ products, totalCount }: Props) {
 
         {/* Ligne 2 : filtres avancés (prix + dispo) */}
         {filtersOpen && (
-          <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-neutral-200">
+          <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-neutral-200 dark:border-neutral-800">
             {/* Prix */}
             <div className="flex items-center gap-2">
               <span className="text-[0.58rem] tracking-[0.18em] uppercase text-neutral-500">Prix</span>
@@ -90,7 +90,7 @@ export default function PiecesUniquesContent({ products, totalCount }: Props) {
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
                 placeholder="Min €"
-                className="w-20 border border-neutral-300 px-2 py-1.5 text-[0.78rem] text-neutral-800 outline-none focus:border-neutral-600 bg-white"
+                className="w-20 border border-neutral-300 dark:border-neutral-700 px-2 py-1.5 text-[0.78rem] text-neutral-800 dark:text-neutral-200 outline-none focus:border-neutral-600 dark:focus:border-neutral-400 bg-white dark:bg-neutral-900"
               />
               <span className="text-neutral-400 text-xs">—</span>
               <input
@@ -99,7 +99,7 @@ export default function PiecesUniquesContent({ products, totalCount }: Props) {
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
                 placeholder="Max €"
-                className="w-20 border border-neutral-300 px-2 py-1.5 text-[0.78rem] text-neutral-800 outline-none focus:border-neutral-600 bg-white"
+                className="w-20 border border-neutral-300 dark:border-neutral-700 px-2 py-1.5 text-[0.78rem] text-neutral-800 dark:text-neutral-200 outline-none focus:border-neutral-600 dark:focus:border-neutral-400 bg-white dark:bg-neutral-900"
               />
             </div>
 
@@ -134,7 +134,7 @@ export default function PiecesUniquesContent({ products, totalCount }: Props) {
         {hasFilters && (
           <button
             onClick={resetFilters}
-            className="text-[0.58rem] tracking-[0.16em] uppercase text-neutral-400 hover:text-neutral-700 transition-colors border-b border-neutral-300 pb-0.5"
+            className="text-[0.58rem] tracking-[0.16em] uppercase text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors border-b border-neutral-300 dark:border-neutral-700 pb-0.5"
           >
             Réinitialiser
           </button>

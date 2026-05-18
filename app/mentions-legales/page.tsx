@@ -47,7 +47,7 @@ https://www.hostinger.fr`,
 
 export default function MentionsLegalesPage() {
   return (
-    <div style={{ background: "#fafaf7", color: "#1a1a1a" }} className="min-h-screen pt-32 pb-32">
+    <div className="min-h-screen pt-32 pb-32 bg-[#fafaf7] dark:bg-neutral-950 text-[#1a1a1a] dark:text-neutral-100">
       <div className="max-w-3xl mx-auto px-8">
 
         <div className="mb-20">
@@ -62,7 +62,7 @@ export default function MentionsLegalesPage() {
           </p>
         </div>
 
-        <div className="w-16 h-px bg-neutral-300 mb-20" />
+        <div className="w-16 h-px bg-neutral-300 dark:bg-neutral-700 mb-20" />
 
         <div className="flex flex-col gap-16">
           {SECTIONS.map((section, i) => (
@@ -71,16 +71,16 @@ export default function MentionsLegalesPage() {
                 <div className="font-mono text-[0.58rem] tracking-[0.25em] uppercase text-neutral-400 mb-2">
                   {String(i + 1).padStart(2, "0")}
                 </div>
-                <h2 className="font-serif italic text-lg text-neutral-800">{section.title}</h2>
+                <h2 className="font-serif italic text-lg text-neutral-800 dark:text-neutral-200">{section.title}</h2>
               </div>
-              <p className="text-sm leading-relaxed text-neutral-600 pt-1 whitespace-pre-line">
+              <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 pt-1 whitespace-pre-line">
                 {section.content}
               </p>
             </div>
           ))}
         </div>
 
-        <div className="mt-24 pt-12 border-t border-neutral-200">
+        <div className="mt-24 pt-12 border-t border-neutral-200 dark:border-neutral-800">
           <p className="font-mono text-[0.6rem] tracking-[0.25em] uppercase text-neutral-400">
             SADSAT · Auto-entrepreneur · France
           </p>
