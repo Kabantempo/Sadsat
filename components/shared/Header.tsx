@@ -53,6 +53,11 @@ const NAV: NavItem[] = [
       { label: "Fondants", href: "/bougies/fondants" },
     ],
   },
+  {
+    label: "Habillement",
+    href: "/habillement",
+    comingSoon: true,
+  },
   { label: "Créateurs", href: "/createurs" },
   { label: "Contact", href: "/contact" },
 ];
