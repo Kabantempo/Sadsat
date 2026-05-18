@@ -1,107 +1,77 @@
 import 'server-only'
+import { Resend } from 'resend'
 
-export async function sendSetPasswordEmail(
-  to: string,
-  name: string,
-  token: string
-): Promise<boolean> {
-  const apiKey = process.env.RESEND_API_KEY
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
-  const link = `${baseUrl}/set-password?token=${token}`
+const resend = new Resend(process.env.RESEND_API_KEY)
+const FROM = 'SADSAT <noreply@sadsat.fr>'
+const BASE = () => process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
 
-  if (!apiKey) {
-    console.log(`[SADSAT] Pas de RESEND_API_KEY — lien de création de mot de passe pour ${to} :\n${link}`)
-    return false
-  }
+export async function sendVerificationEmail(to: string, name: string, token: string) {
+  const link = `${BASE()}/verify-email?token=${token}`
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: 'Confirmez votre adresse email — SADSAT',
+    html: emailLayout(`
+      <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
+      <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
+        Merci de vous être inscrit sur SADSAT. Cliquez sur le bouton ci-dessous pour confirmer votre adresse email et activer votre compte.
+      </p>
+      <a href="${link}" style="${btnStyle}">Confirmer mon email</a>
+      <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
+        Ce lien expire dans 24 heures.<br/>Si vous n'avez pas créé de compte, ignorez cet email.
+      </p>
+    `),
+  })
+}
 
-  const from = process.env.RESEND_FROM_EMAIL ?? 'SADSAT <noreply@sadsat.fr>'
-
+export async function sendSetPasswordEmail(to: string, name: string, token: string): Promise<boolean> {
+  const link = `${BASE()}/set-password?token=${token}`
   try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from,
-        to: [to],
-        subject: 'Créez votre mot de passe — SADSAT',
-        html: buildHtml(name, link),
-      }),
+    await resend.emails.send({
+      from: FROM,
+      to,
+      subject: 'Créez votre mot de passe — SADSAT',
+      html: emailLayout(`
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
+          Votre compte SADSAT a été créé. Cliquez ci-dessous pour définir votre mot de passe.
+        </p>
+        <a href="${link}" style="${btnStyle}">Créer mon mot de passe</a>
+        <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
+          Ce lien expire dans 24 heures.
+        </p>
+      `),
     })
-    return res.ok
+    return true
   } catch {
     return false
   }
 }
 
-type ContactPayload = { name: string; email: string; subject: string; message: string }
-
-export async function sendContactEmail(payload: ContactPayload): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY
-  const to = process.env.CONTACT_EMAIL ?? 'contact@sadsat.fr'
-  const from = process.env.RESEND_FROM_EMAIL ?? 'SADSAT <noreply@sadsat.fr>'
-
-  if (!apiKey) {
-    console.log(`[SADSAT] Contact de ${payload.name} <${payload.email}>\nSujet: ${payload.subject}\n${payload.message}`)
-    return
-  }
-
-  await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      reply_to: payload.email,
-      subject: `[SADSAT Contact] ${payload.subject}`,
-      html: `<div style="font-family:sans-serif;max-width:600px;padding:32px 20px;">
-        <p style="color:#999;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;margin:0 0 20px;">Message de contact — SADSAT</p>
-        <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
-          <tr><td style="padding:8px 0;color:#777;font-size:0.8rem;width:80px;">Nom</td><td style="padding:8px 0;font-size:0.88rem;color:#333;">${payload.name}</td></tr>
-          <tr><td style="padding:8px 0;color:#777;font-size:0.8rem;">Email</td><td style="padding:8px 0;font-size:0.88rem;color:#333;"><a href="mailto:${payload.email}" style="color:#333;">${payload.email}</a></td></tr>
-          <tr><td style="padding:8px 0;color:#777;font-size:0.8rem;">Sujet</td><td style="padding:8px 0;font-size:0.88rem;color:#333;">${payload.subject}</td></tr>
-        </table>
-        <div style="background:#f5f5f5;padding:20px;border-left:3px solid #ddd;">
-          <p style="font-size:0.88rem;color:#444;line-height:1.7;white-space:pre-wrap;margin:0;">${payload.message}</p>
-        </div>
-      </div>`,
-    }),
-  }).catch(() => null)
+export async function sendContactEmail(data: { name: string; email: string; subject: string; message: string }) {
+  await resend.emails.send({
+    from: FROM,
+    to: 'contact@sadsat.fr',
+    replyTo: data.email,
+    subject: `[Contact] ${data.subject} — ${data.name}`,
+    html: emailLayout(`
+      <p style="font-size:14px;color:#a3a3a3;margin-bottom:8px;"><strong style="color:#d4d4d4;">De :</strong> ${data.name} (${data.email})</p>
+      <p style="font-size:14px;color:#a3a3a3;margin-bottom:24px;"><strong style="color:#d4d4d4;">Sujet :</strong> ${data.subject}</p>
+      <p style="font-size:14px;color:#a3a3a3;line-height:1.8;white-space:pre-wrap;">${data.message}</p>
+    `),
+  })
 }
 
-function buildHtml(name: string, link: string): string {
-  return `<!DOCTYPE html>
-<html lang="fr">
-<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /></head>
-<body style="margin:0;padding:0;background:#f5f5f5;font-family:sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 16px;">
-    <tr><td align="center">
-      <table width="520" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e5e5;padding:40px;">
-        <tr><td>
-          <p style="font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:#999;margin:0 0 24px;">SADSAT</p>
-          <h1 style="font-size:1.4rem;font-weight:300;color:#171717;margin:0 0 12px;">Bienvenue, ${name}</h1>
-          <p style="font-size:0.88rem;color:#555;line-height:1.6;margin:0 0 28px;">
-            Votre compte a été créé sur SADSAT.<br/>
-            Cliquez sur le bouton ci-dessous pour choisir votre mot de passe.<br/>
-            Ce lien est valable <strong>24 heures</strong>.
-          </p>
-          <a href="${link}" style="display:inline-block;background:#171717;color:#fff;padding:14px 28px;text-decoration:none;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;">
-            Créer mon mot de passe →
-          </a>
-          <p style="font-size:0.72rem;color:#aaa;margin:28px 0 0;line-height:1.5;">
-            Si ce bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br/>
-            <span style="color:#666;">${link}</span>
-          </p>
-          <hr style="border:none;border-top:1px solid #eee;margin:24px 0;" />
-          <p style="font-size:0.68rem;color:#bbb;margin:0;">
-            Si vous n'attendiez pas cet email, ignorez-le simplement.
-          </p>
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`
+const btnStyle = 'display:inline-block;background:#e5e5e5;color:#0a0a0a;text-decoration:none;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;padding:14px 32px;font-family:Georgia,serif;'
+
+function emailLayout(content: string) {
+  return `
+    <div style="font-family:Georgia,serif;max-width:480px;margin:0 auto;padding:48px 24px;background:#0a0a0a;color:#e5e5e5;">
+      <h1 style="font-size:28px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;">SADSAT</h1>
+      <hr style="border:none;border-top:1px solid #262626;margin:24px 0 32px;" />
+      ${content}
+      <hr style="border:none;border-top:1px solid #262626;margin:40px 0;" />
+      <p style="font-size:11px;color:#404040;letter-spacing:0.1em;">SADSAT · Taxidermie · Bijoux · Bougies</p>
+    </div>
+  `
 }

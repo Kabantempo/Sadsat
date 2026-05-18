@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(npx prisma *)",
+      "Bash(npx tsx *)",
+      "Bash(npm install *)",
+      "Bash(New-Item -ItemType File -Path \"lib\\\\email.ts\" -Force)",
+      "Bash(Out-Null)",
+      "PowerShell(New-Item *)"
     ]
   }
 }

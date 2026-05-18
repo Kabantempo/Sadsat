@@ -2,9 +2,10 @@
 import { redirect } from 'next/navigation'
 import bcrypt from 'bcryptjs'
 import { SignupFormSchema, LoginFormSchema, type FormState } from '@/lib/definitions'
-import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword, getUserByPasswordToken, clearPasswordToken } from '@/lib/db'
+import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword, getUserByPasswordToken, clearPasswordToken, saveVerificationToken, getUserByVerificationToken, verifyUserEmail } from '@/lib/db'
 import { verifySession } from '@/lib/dal'
 import { createSession, deleteSession } from '@/lib/session'
+import { sendVerificationEmail } from '@/lib/email'
 
 export async function signup(state: FormState, formData: FormData): Promise<FormState> {
   const validated = SignupFormSchema.safeParse({
@@ -33,8 +34,13 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
     createdAt: new Date().toISOString(),
   }
   await createUser(user)
-  await createSession(user.id, 'client')
-  redirect('/compte')
+
+  const token = crypto.randomUUID()
+  const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+  await saveVerificationToken(user.id, token, expiry)
+  await sendVerificationEmail(email, name, token)
+
+  redirect('/inscription/confirmer')
 }
 
 export async function login(state: FormState, formData: FormData): Promise<FormState> {
@@ -56,6 +62,10 @@ export async function login(state: FormState, formData: FormData): Promise<FormS
   const match = await bcrypt.compare(password, user.passwordHash)
   if (!match) {
     return { message: 'Email ou mot de passe incorrect.' }
+  }
+
+  if (!user.emailVerified) {
+    return { message: 'Veuillez confirmer votre email avant de vous connecter.' }
   }
 
   await createSession(user.id, user.role)

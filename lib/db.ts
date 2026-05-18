@@ -13,6 +13,9 @@ function rowToUser(row: {
   createdAt: string
   setPasswordToken: string | null
   setPasswordTokenExpiry: string | null
+  emailVerified?: boolean
+  verificationToken?: string | null
+  verificationTokenExpiry?: string | null
 }): User {
   return {
     id: row.id,
@@ -25,6 +28,9 @@ function rowToUser(row: {
     createdAt: row.createdAt,
     setPasswordToken: row.setPasswordToken ?? undefined,
     setPasswordTokenExpiry: row.setPasswordTokenExpiry ?? undefined,
+    emailVerified: row.emailVerified ?? false,
+    verificationToken: row.verificationToken ?? undefined,
+    verificationTokenExpiry: row.verificationTokenExpiry ?? undefined,
   }
 }
 
@@ -142,4 +148,23 @@ export async function clearPasswordToken(id: string): Promise<boolean> {
   } catch {
     return false
   }
+}
+
+export async function saveVerificationToken(id: string, token: string, expiry: string): Promise<void> {
+  await prisma.user.update({
+    where: { id },
+    data: { verificationToken: token, verificationTokenExpiry: expiry },
+  })
+}
+
+export async function getUserByVerificationToken(token: string): Promise<User | undefined> {
+  const row = await prisma.user.findFirst({ where: { verificationToken: token } })
+  return row ? rowToUser(row) : undefined
+}
+
+export async function verifyUserEmail(id: string): Promise<void> {
+  await prisma.user.update({
+    where: { id },
+    data: { emailVerified: true, verificationToken: null, verificationTokenExpiry: null },
+  })
 }

@@ -44,6 +44,9 @@ export type User = {
   createdAt: string
   setPasswordToken?: string
   setPasswordTokenExpiry?: string
+  emailVerified?: boolean
+  verificationToken?: string
+  verificationTokenExpiry?: string
 }
 
 export type SafeUser = Omit<User, 'passwordHash'>

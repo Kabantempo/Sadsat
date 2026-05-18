@@ -18,6 +18,9 @@ model User {
   createdAt              String
   setPasswordToken       String?
   setPasswordTokenExpiry String?
+  emailVerified          Boolean @default(false)
+  verificationToken      String?
+  verificationTokenExpiry String?
 
   @@map("users")
 }
