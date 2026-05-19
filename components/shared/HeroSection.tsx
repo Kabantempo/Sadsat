@@ -1,12 +1,11 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import { motion, type PanInfo } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import MatrixRain from "@/components/shared/MatrixRain";
 import { BRAND_PORTALS } from "@/lib/definitions";
 import { TaxidermieAnim, BijouxAnim, HackcycleAnim } from "@/components/shared/BrandAnimations";
 
-function BrandSlide({ brand }: { brand: typeof BRAND_PORTALS[0] }) {
+function BrandPanel({ brand }: { brand: typeof BRAND_PORTALS[0] }) {
   const anim =
     brand.special === "matrix" ? <MatrixRain /> :
     brand.slug === "taxidermie" ? <TaxidermieAnim /> :
@@ -14,178 +13,85 @@ function BrandSlide({ brand }: { brand: typeof BRAND_PORTALS[0] }) {
     brand.slug === "habillement" ? <HackcycleAnim /> :
     null;
 
-  return (
-    <div className="absolute inset-0" style={{ background: brand.bg }}>
-      {anim}
-      <div
-        className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 z-10"
-        style={{ color: brand.color }}
+  const titleClass =
+    brand.font === "serif"
+      ? "font-serif italic font-normal text-4xl md:text-5xl mb-3 transition-all duration-500 group-hover:tracking-wider"
+      : brand.font === "mono"
+      ? "font-mono font-normal text-4xl md:text-5xl mb-3"
+      : "font-sans font-bold uppercase text-4xl md:text-5xl mb-3 tracking-wider";
+
+  const inner = (
+    <div
+      className="relative z-10 text-center px-6 transition-transform duration-700 group-hover:scale-105"
+      style={{ color: brand.color }}
+    >
+      <h2
+        className={titleClass}
+        style={
+          brand.font === "sans"
+            ? { textShadow: `2px 0 ${brand.accent}, -2px 0 #1a1a1a` }
+            : undefined
+        }
       >
+        {brand.label}
+      </h2>
+      <p
+        className="text-[0.7rem] tracking-[0.25em] uppercase"
+        style={{ color: brand.accent, opacity: 0.7 }}
+      >
+        {brand.subtitle}
+      </p>
+      {brand.cta && !brand.special ? (
         <p
-          className="font-mono text-[0.52rem] tracking-[0.38em] uppercase mb-6"
-          style={{ color: brand.accent, opacity: 0.6 }}
+          className="inline-block mt-8 text-[0.65rem] tracking-[0.35em] uppercase pb-1 border-b border-current opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500"
+          style={{ color: brand.color }}
         >
-          {brand.index} / {String(BRAND_PORTALS.length).padStart(2, "0")}
+          {brand.cta} →
         </p>
-        <h2
-          className={
-            brand.font === "serif"
-              ? "font-serif italic font-normal text-5xl md:text-7xl mb-4 leading-none"
-              : brand.font === "mono"
-              ? "font-mono font-normal text-5xl md:text-7xl mb-4 leading-none"
-              : "font-sans font-bold uppercase text-5xl md:text-7xl mb-4 leading-none tracking-wider"
-          }
-          style={{
-            color: brand.color,
-            ...(brand.font === "sans"
-              ? { textShadow: `3px 0 ${brand.accent}, -3px 0 #1a1a1a` }
-              : {}),
-          }}
+      ) : (
+        <div
+          className="inline-flex items-center gap-2 mt-6 border px-4 py-2"
+          style={{ borderColor: `${brand.accent}66`, color: brand.color }}
         >
-          {brand.label}
-        </h2>
-        <p
-          className="font-mono text-[0.62rem] tracking-[0.25em] uppercase mb-10"
-          style={{ color: brand.accent, opacity: 0.7 }}
-        >
-          {brand.subtitle}
-        </p>
-        {brand.cta && !brand.special ? (
-          <Link
-            href={`/${brand.slug}`}
-            className="inline-block text-[0.62rem] tracking-[0.3em] uppercase pb-1 border-b transition-all duration-300 hover:pb-2"
-            style={{ color: brand.color, borderColor: `${brand.accent}88` }}
-          >
-            {brand.cta} →
-          </Link>
-        ) : !brand.cta || brand.special === "comingSoon" ? (
-          <div
-            className="inline-flex items-center gap-2 border px-4 py-2"
-            style={{ borderColor: `${brand.accent}55`, color: brand.color }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
-            <span className="font-mono text-[0.58rem] tracking-[0.3em] uppercase">En cours</span>
-          </div>
-        ) : null}
-      </div>
+          <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+          <span className="font-mono text-[0.6rem] tracking-[0.3em] uppercase">En cours</span>
+        </div>
+      )}
     </div>
   );
-}
 
-function BrandCarousel() {
-  const [current, setCurrent] = useState(0);
-  const [containerW, setContainerW] = useState(0);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const total = BRAND_PORTALS.length;
+  const panelClass =
+    "relative group flex items-center justify-center flex-1 min-h-[60vh] md:min-h-screen overflow-hidden transition-all duration-700";
 
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    const update = () => setContainerW(sectionRef.current!.offsetWidth);
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(sectionRef.current);
-    return () => ro.disconnect();
-  }, []);
-
-  // Slide occupe 80% du container, gap 3%, les voisins débordent ~8.5% de chaque côté
-  const slideW  = containerW > 0 ? containerW * 0.80 : 0;
-  const gap     = containerW > 0 ? containerW * 0.03 : 0;
-  const slotW   = slideW + gap;
-  const startX  = containerW > 0 ? (containerW - slideW) / 2 : 0;
-  const trackX  = containerW > 0 ? startX - current * slotW : 0;
-
-  const prev = () => setCurrent((c) => Math.max(0, c - 1));
-  const next = () => setCurrent((c) => Math.min(total - 1, c + 1));
-
-  const handleDragEnd = (_: unknown, info: PanInfo) => {
-    if (info.offset.x < -50 || info.velocity.x < -400) next();
-    else if (info.offset.x > 50 || info.velocity.x > 400) prev();
-  };
-
-  const brand = BRAND_PORTALS[current];
+  if (brand.cta && !brand.special) {
+    return (
+      <Link
+        href={`/${brand.slug}`}
+        className={panelClass}
+        style={{ background: brand.bg }}
+      >
+        {anim}
+        {inner}
+      </Link>
+    );
+  }
 
   return (
-    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-neutral-950 select-none">
-      {/* Track */}
-      <motion.div
-        className="absolute inset-y-0 left-0 flex items-center"
-        style={{ gap: `${gap}px` }}
-        drag="x"
-        dragConstraints={{
-          left:  containerW > 0 ? startX - (total - 1) * slotW : 0,
-          right: containerW > 0 ? startX : 0,
-        }}
-        dragElastic={0.04}
-        dragMomentum={false}
-        onDragEnd={handleDragEnd}
-        animate={{ x: trackX }}
-        transition={{ type: "spring", stiffness: 340, damping: 38 }}
-      >
-        {BRAND_PORTALS.map((b, i) => (
-          <motion.div
-            key={b.slug}
-            className="relative flex-shrink-0 rounded-2xl overflow-hidden h-[82vh]"
-            style={{ width: slideW > 0 ? `${slideW}px` : "80vw" }}
-            animate={{
-              scale:   i === current ? 1    : 0.93,
-              opacity: i === current ? 1    : 0.45,
-            }}
-            transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
-          >
-            <BrandSlide brand={b} />
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Dégradé bords gauche / droite pour fondre les voisins */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-neutral-950 to-transparent z-10" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-neutral-950 to-transparent z-10" />
-
-      {/* Flèches desktop */}
-      {current > 0 && (
-        <button
-          onClick={prev}
-          className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 items-center justify-center rounded-full border transition-all duration-200 hover:bg-white/10 text-sm"
-          style={{ borderColor: `${brand.accent}55`, color: brand.color }}
-          aria-label="Précédent"
-        >
-          ←
-        </button>
-      )}
-      {current < total - 1 && (
-        <button
-          onClick={next}
-          className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 items-center justify-center rounded-full border transition-all duration-200 hover:bg-white/10 text-sm"
-          style={{ borderColor: `${brand.accent}55`, color: brand.color }}
-          aria-label="Suivant"
-        >
-          →
-        </button>
-      )}
-
-      {/* Dots */}
-      <div className="absolute bottom-7 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
-        {BRAND_PORTALS.map((b, i) => (
-          <button
-            key={b.slug}
-            onClick={() => setCurrent(i)}
-            aria-label={b.label}
-          >
-            <span
-              className={`block rounded-full transition-all duration-300 ${
-                i === current ? "w-6 h-1.5" : "w-1.5 h-1.5 opacity-35"
-              }`}
-              style={{ background: brand.accent }}
-            />
-          </button>
-        ))}
-      </div>
-    </section>
+    <div className={`${panelClass} cursor-default`} style={{ background: brand.bg }}>
+      {anim}
+      {inner}
+    </div>
   );
 }
 
 export default function HeroSection() {
   const subtitle = BRAND_PORTALS.map((b) => b.label).join(" · ");
+
+  const cols =
+    BRAND_PORTALS.length === 2 ? "md:grid-cols-2" :
+    BRAND_PORTALS.length === 3 ? "md:grid-cols-3" :
+    BRAND_PORTALS.length === 4 ? "md:grid-cols-4" :
+    "md:grid-cols-3 lg:grid-cols-4";
 
   return (
     <>
@@ -217,8 +123,12 @@ export default function HeroSection() {
         </motion.div>
       </section>
 
-      {/* CAROUSEL AVEC APERÇU */}
-      <BrandCarousel />
+      {/* 4 PANNEAUX */}
+      <section className={`grid grid-cols-1 ${cols}`}>
+        {BRAND_PORTALS.map((brand) => (
+          <BrandPanel key={brand.slug} brand={brand} />
+        ))}
+      </section>
     </>
   );
 }
