@@ -99,11 +99,6 @@ export default function ScrollStory() {
                     "repeating-linear-gradient(0deg, transparent 0px, transparent 40px, rgba(255,255,255,0.04) 40px, rgba(255,255,255,0.04) 41px), repeating-linear-gradient(90deg, transparent 0px, transparent 40px, rgba(255,255,255,0.04) 40px, rgba(255,255,255,0.04) 41px)",
                 }}
               />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-serif text-[22vw] text-neutral-800 select-none leading-none pointer-events-none">
-                  S
-                </span>
-              </div>
             </div>
             {/* Masque qui glisse vers le bas = révèle l'image depuis le haut */}
             <motion.div
