@@ -239,7 +239,7 @@ export default function Header({ user }: { user?: UserProp }) {
                         </Link>
                       )}
                       <Link
-                        href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/mon-compte'}
+                        href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/compte'}
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-2.5 px-5 py-2.5 text-[0.6rem] tracking-[0.12em] uppercase text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors"
                       >
@@ -465,7 +465,7 @@ export default function Header({ user }: { user?: UserProp }) {
                       </Link>
                     )}
                     <Link
-                      href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/mon-compte'}
+                      href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/compte'}
                       onClick={() => setMobileOpen(false)}
                       className="flex items-center gap-2.5 px-2 py-2.5 rounded-lg text-[0.65rem] tracking-[0.12em] uppercase text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
                     >

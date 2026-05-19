@@ -1,8 +1,11 @@
 import Link from 'next/link'
-import { LayoutDashboard, Package, Users, LogOut } from 'lucide-react'
+import { LayoutDashboard, Package, Users, LogOut, Database } from 'lucide-react'
 import { logout } from '@/app/actions/auth'
+import { verifyAdmin } from '@/lib/dal'
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  await verifyAdmin()
+
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Barre admin */}
@@ -32,6 +35,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             >
               <Users size={12} strokeWidth={1.5} />
               Comptes
+            </Link>
+            <Link
+              href="/admin/db"
+              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors"
+            >
+              <Database size={12} strokeWidth={1.5} />
+              DB
             </Link>
           </nav>
         </div>
