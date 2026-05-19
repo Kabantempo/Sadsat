@@ -1,5 +1,6 @@
 "use client";
 import { useRef } from "react";
+import Link from "next/link";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { BRAND_PORTALS, type BrandPortal } from "@/lib/definitions";
 
