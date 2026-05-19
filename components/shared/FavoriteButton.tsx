@@ -1,5 +1,6 @@
 "use client";
 import { Heart } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useFavorites } from "./FavoritesProvider";
 
 type Props = {
@@ -9,12 +10,23 @@ type Props = {
 };
 
 export default function FavoriteButton({ productId, className = "", size = 16 }: Props) {
-  const { toggle, isFavorite } = useFavorites();
+  const { toggle, isFavorite, isLoggedIn } = useFavorites();
+  const router = useRouter();
   const active = isFavorite(productId);
+
+  function handleClick(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isLoggedIn) {
+      router.push("/connexion");
+      return;
+    }
+    toggle(productId);
+  }
 
   return (
     <button
-      onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(productId); }}
+      onClick={handleClick}
       aria-label={active ? "Retirer des favoris" : "Ajouter aux favoris"}
       className={`transition-all duration-200 ${
         active

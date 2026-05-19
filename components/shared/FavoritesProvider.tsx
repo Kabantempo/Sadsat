@@ -6,6 +6,7 @@ type FavoritesContext = {
   toggle: (id: string) => void;
   isFavorite: (id: string) => boolean;
   count: number;
+  isLoggedIn: boolean;
 };
 
 const Ctx = createContext<FavoritesContext | null>(null);
@@ -16,7 +17,7 @@ export function useFavorites() {
   return ctx;
 }
 
-export default function FavoritesProvider({ children }: { children: React.ReactNode }) {
+export default function FavoritesProvider({ children, isLoggedIn = false }: { children: React.ReactNode; isLoggedIn?: boolean }) {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function FavoritesProvider({ children }: { children: React.ReactN
   const isFavorite = useCallback((id: string) => favorites.includes(id), [favorites]);
 
   return (
-    <Ctx.Provider value={{ favorites, toggle, isFavorite, count: favorites.length }}>
+    <Ctx.Provider value={{ favorites, toggle, isFavorite, count: favorites.length, isLoggedIn }}>
       {children}
     </Ctx.Provider>
   );

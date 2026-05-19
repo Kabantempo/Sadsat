@@ -55,7 +55,7 @@ export default async function RootLayout({
       <body
         className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable} antialiased bg-black text-neutral-200`}
       >
-        <FavoritesProvider>
+        <FavoritesProvider isLoggedIn={!!user}>
         <CartProvider>
           <Header user={user ? { name: user.name, role: user.role } : null} />
           <main className="min-h-screen">{children}</main>
