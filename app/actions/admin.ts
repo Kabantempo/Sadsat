@@ -81,7 +81,7 @@ async function createAccountAction(
     createdAt: new Date().toISOString(),
   })
 
-  const emailSent = await sendSetPasswordEmail(email, name, token)
+  const emailSent = await sendSetPasswordEmail(email, name, token, role)
 
   return {
     success: true,

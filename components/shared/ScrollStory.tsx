@@ -11,7 +11,7 @@ function BrandCard({ brand, scrollYProgress, index }: {
   index: number;
 }) {
   const start   = Math.min(0.78 + index * 0.04, 0.88);
-  const end     = Math.min(start + 0.09, 1.0);
+  const end     = Math.min(start + 0.16, 1.0);
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
   const scale   = useTransform(scrollYProgress, [start, end], [0.94, 1]);
 

@@ -36,18 +36,28 @@ export async function sendVerificationEmail(to: string, name: string, token: str
   })
 }
 
-export async function sendSetPasswordEmail(to: string, name: string, token: string): Promise<boolean> {
+export async function sendSetPasswordEmail(to: string, name: string, token: string, role: 'créateur' | 'grossiste' | 'admin' = 'admin'): Promise<boolean> {
   const link = `${BASE()}/set-password?token=${token}`
+  const isCreateur = role === 'créateur'
   try {
     await transporter.sendMail({
       from: FROM,
       to,
-      subject: 'Créez votre mot de passe — SADSAT',
+      subject: isCreateur ? 'Bienvenue dans le collectif SADSAT — Créez votre mot de passe' : 'Créez votre mot de passe — SADSAT',
       html: emailLayout(`
         <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
+        ${isCreateur ? `
+        <p style="font-size:18px;font-style:italic;color:#e5e5e5;line-height:1.6;margin-bottom:16px;">
+          Bienvenue dans le collectif SADSAT.
+        </p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
+          Tu es maintenant créateur au sein du collectif. Crée ton mot de passe ci-dessous pour accéder à ton espace et commencer à partager ton univers.
+        </p>
+        ` : `
         <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
           Votre compte SADSAT a été créé. Cliquez ci-dessous pour définir votre mot de passe.
         </p>
+        `}
         <a href="${link}" style="${btnStyle}">Créer mon mot de passe</a>
         <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
           Ce lien expire dans 24 heures.
