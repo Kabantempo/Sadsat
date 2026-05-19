@@ -1,11 +1,24 @@
 "use client";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import MatrixRain from "@/components/shared/MatrixRain";
 import { BRAND_PORTALS } from "@/lib/definitions";
 import { TaxidermieAnim, BijouxAnim, HackcycleAnim } from "@/components/shared/BrandAnimations";
 
-function BrandPanel({ brand }: { brand: typeof BRAND_PORTALS[0] }) {
+const COLLAPSED_PX = 54; // largeur des panneaux repliés (px)
+
+function BrandPanel({
+  brand,
+  total,
+  state,
+  onEnter,
+}: {
+  brand: typeof BRAND_PORTALS[0];
+  total: number;
+  state: "expanded" | "collapsed" | "default";
+  onEnter: () => void;
+}) {
   const anim =
     brand.special === "matrix" ? <MatrixRain /> :
     brand.slug === "taxidermie" ? <TaxidermieAnim /> :
@@ -13,62 +26,114 @@ function BrandPanel({ brand }: { brand: typeof BRAND_PORTALS[0] }) {
     brand.slug === "habillement" ? <HackcycleAnim /> :
     null;
 
+  const isExpanded  = state === "expanded";
+  const isCollapsed = state === "collapsed";
+
+  const width =
+    isExpanded  ? `calc(100% - ${(total - 1) * COLLAPSED_PX}px)` :
+    isCollapsed ? `${COLLAPSED_PX}px` :
+                  `${100 / total}%`;
+
   const titleClass =
     brand.font === "serif"
-      ? "font-serif italic font-normal text-4xl md:text-5xl mb-3 transition-all duration-500 group-hover:tracking-wider"
+      ? "font-serif italic font-normal text-4xl md:text-6xl mb-3"
       : brand.font === "mono"
-      ? "font-mono font-normal text-4xl md:text-5xl mb-3"
-      : "font-sans font-bold uppercase text-4xl md:text-5xl mb-3 tracking-wider";
+      ? "font-mono font-normal text-4xl md:text-6xl mb-3"
+      : "font-sans font-bold uppercase text-4xl md:text-6xl mb-3 tracking-wider";
 
   const inner = (
-    <div
-      className="relative z-10 text-center px-6 transition-transform duration-700 group-hover:scale-105"
-      style={{ color: brand.color }}
-    >
-      <h2
-        className={titleClass}
-        style={
-          brand.font === "sans"
-            ? { textShadow: `2px 0 ${brand.accent}, -2px 0 #1a1a1a` }
-            : undefined
-        }
+    <>
+      {/* Contenu principal — visible en état normal / étendu */}
+      <div
+        className="relative z-10 text-center px-8 pointer-events-none"
+        style={{
+          color: brand.color,
+          opacity: isCollapsed ? 0 : 1,
+          transform: isCollapsed ? "scale(0.92)" : "scale(1)",
+          transition: "opacity 0.35s ease, transform 0.35s ease",
+        }}
       >
-        {brand.label}
-      </h2>
-      <p
-        className="text-[0.7rem] tracking-[0.25em] uppercase"
-        style={{ color: brand.accent, opacity: 0.7 }}
-      >
-        {brand.subtitle}
-      </p>
-      {brand.cta && !brand.special ? (
+        <h2
+          className={titleClass}
+          style={
+            brand.font === "sans"
+              ? { textShadow: `2px 0 ${brand.accent}, -2px 0 #1a1a1a` }
+              : undefined
+          }
+        >
+          {brand.label}
+        </h2>
         <p
-          className="inline-block mt-8 text-[0.65rem] tracking-[0.35em] uppercase pb-1 border-b border-current opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500"
-          style={{ color: brand.color }}
+          className="text-[0.7rem] tracking-[0.25em] uppercase mb-8"
+          style={{ color: brand.accent, opacity: 0.7 }}
         >
-          {brand.cta} →
+          {brand.subtitle}
         </p>
-      ) : (
-        <div
-          className="inline-flex items-center gap-2 mt-6 border px-4 py-2"
-          style={{ borderColor: `${brand.accent}66`, color: brand.color }}
+        {brand.cta && !brand.special && (
+          <span
+            className="inline-block text-[0.65rem] tracking-[0.35em] uppercase pb-1 border-b"
+            style={{
+              color: brand.color,
+              borderColor: `${brand.accent}88`,
+              opacity: isExpanded ? 1 : 0,
+              transform: isExpanded ? "translateY(0)" : "translateY(8px)",
+              transition: "opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s",
+            }}
+          >
+            {brand.cta} →
+          </span>
+        )}
+        {(!brand.cta || brand.special === "comingSoon") && (
+          <div
+            className="inline-flex items-center gap-2 border px-4 py-2"
+            style={{ borderColor: `${brand.accent}66`, color: brand.color }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+            <span className="font-mono text-[0.6rem] tracking-[0.3em] uppercase">En cours</span>
+          </div>
+        )}
+      </div>
+
+      {/* Étiquette verticale — visible seulement quand replié */}
+      <div
+        className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
+        style={{
+          opacity: isCollapsed ? 1 : 0,
+          transition: "opacity 0.3s ease",
+        }}
+      >
+        <span
+          className="font-mono text-[0.5rem] tracking-[0.3em] uppercase whitespace-nowrap"
+          style={{
+            color: brand.accent,
+            writingMode: "vertical-rl",
+            textOrientation: "mixed",
+            transform: "rotate(180deg)",
+          }}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
-          <span className="font-mono text-[0.6rem] tracking-[0.3em] uppercase">En cours</span>
-        </div>
-      )}
-    </div>
+          {brand.label}
+        </span>
+      </div>
+    </>
   );
 
-  const panelClass =
-    "relative group flex items-center justify-center flex-1 min-h-[60vh] md:min-h-screen overflow-hidden transition-all duration-700";
+  const sharedStyle: React.CSSProperties = {
+    width,
+    flexShrink: 0,
+    background: brand.bg,
+    transition: "width 0.65s cubic-bezier(0.4, 0, 0.2, 1)",
+  };
+
+  const sharedClass =
+    "relative hidden md:flex items-center justify-center min-h-screen overflow-hidden cursor-pointer";
 
   if (brand.cta && !brand.special) {
     return (
       <Link
         href={`/${brand.slug}`}
-        className={panelClass}
-        style={{ background: brand.bg }}
+        className={sharedClass}
+        style={sharedStyle}
+        onMouseEnter={onEnter}
       >
         {anim}
         {inner}
@@ -77,7 +142,11 @@ function BrandPanel({ brand }: { brand: typeof BRAND_PORTALS[0] }) {
   }
 
   return (
-    <div className={`${panelClass} cursor-default`} style={{ background: brand.bg }}>
+    <div
+      className={sharedClass}
+      style={sharedStyle}
+      onMouseEnter={onEnter}
+    >
       {anim}
       {inner}
     </div>
@@ -85,13 +154,15 @@ function BrandPanel({ brand }: { brand: typeof BRAND_PORTALS[0] }) {
 }
 
 export default function HeroSection() {
+  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const subtitle = BRAND_PORTALS.map((b) => b.label).join(" · ");
+  const total = BRAND_PORTALS.length;
 
   const cols =
-    BRAND_PORTALS.length === 2 ? "md:grid-cols-2" :
-    BRAND_PORTALS.length === 3 ? "md:grid-cols-3" :
-    BRAND_PORTALS.length === 4 ? "md:grid-cols-4" :
-    "md:grid-cols-3 lg:grid-cols-4";
+    total === 2 ? "grid-cols-2" :
+    total === 3 ? "grid-cols-3" :
+    total === 4 ? "grid-cols-2" :
+    "grid-cols-2";
 
   return (
     <>
@@ -123,11 +194,70 @@ export default function HeroSection() {
         </motion.div>
       </section>
 
-      {/* 4 PANNEAUX */}
-      <section className={`grid grid-cols-1 ${cols}`}>
-        {BRAND_PORTALS.map((brand) => (
-          <BrandPanel key={brand.slug} brand={brand} />
-        ))}
+      {/* ACCORDÉON — desktop uniquement */}
+      <section
+        className="hidden md:flex min-h-screen"
+        onMouseLeave={() => setHoveredSlug(null)}
+      >
+        {BRAND_PORTALS.map((brand) => {
+          const state =
+            hoveredSlug === null     ? "default" :
+            hoveredSlug === brand.slug ? "expanded" :
+            "collapsed";
+          return (
+            <BrandPanel
+              key={brand.slug}
+              brand={brand}
+              total={total}
+              state={state}
+              onEnter={() => setHoveredSlug(brand.slug)}
+            />
+          );
+        })}
+      </section>
+
+      {/* GRILLE — mobile uniquement */}
+      <section className={`grid ${cols} md:hidden`}>
+        {BRAND_PORTALS.map((brand) => {
+          const anim =
+            brand.special === "matrix" ? <MatrixRain /> :
+            brand.slug === "taxidermie" ? <TaxidermieAnim /> :
+            brand.slug === "bijoux" ? <BijouxAnim /> :
+            brand.slug === "habillement" ? <HackcycleAnim /> :
+            null;
+
+          const inner = (
+            <div className="relative z-10 text-center px-4" style={{ color: brand.color }}>
+              <h2
+                className={
+                  brand.font === "serif" ? "font-serif italic text-2xl mb-2" :
+                  brand.font === "mono"  ? "font-mono text-2xl mb-2" :
+                  "font-sans font-bold uppercase text-2xl mb-2 tracking-wider"
+                }
+              >
+                {brand.label}
+              </h2>
+              <p className="text-[0.6rem] tracking-[0.2em] uppercase" style={{ color: brand.accent, opacity: 0.7 }}>
+                {brand.subtitle}
+              </p>
+            </div>
+          );
+
+          if (brand.cta && !brand.special) {
+            return (
+              <Link key={brand.slug} href={`/${brand.slug}`} className="relative flex items-center justify-center min-h-[45vw] overflow-hidden" style={{ background: brand.bg }}>
+                {anim}
+                {inner}
+              </Link>
+            );
+          }
+          return (
+            <div key={brand.slug} className="relative flex items-center justify-center min-h-[45vw] overflow-hidden" style={{ background: brand.bg }}>
+              {anim}
+              {inner}
+            </div>
+          );
+        })}
       </section>
     </>
   );
