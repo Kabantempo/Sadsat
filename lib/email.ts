@@ -1,13 +1,22 @@
 import 'server-only'
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-const FROM = 'SADSAT <onboarding@resend.dev>'
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST ?? 'smtp.hostinger.com',
+  port: Number(process.env.SMTP_PORT ?? 465),
+  secure: true, // SSL sur le port 465
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+})
+
+const FROM = process.env.SMTP_FROM ?? `SADSAT <${process.env.SMTP_USER}>`
 const BASE = () => process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
 
 export async function sendVerificationEmail(to: string, name: string, token: string) {
   const link = `${BASE()}/verify-email?token=${token}`
-  await resend.emails.send({
+  await transporter.sendMail({
     from: FROM,
     to,
     subject: 'Confirmez votre adresse email — SADSAT',
@@ -27,7 +36,7 @@ export async function sendVerificationEmail(to: string, name: string, token: str
 export async function sendSetPasswordEmail(to: string, name: string, token: string): Promise<boolean> {
   const link = `${BASE()}/set-password?token=${token}`
   try {
-    await resend.emails.send({
+    await transporter.sendMail({
       from: FROM,
       to,
       subject: 'Créez votre mot de passe — SADSAT',
@@ -49,9 +58,9 @@ export async function sendSetPasswordEmail(to: string, name: string, token: stri
 }
 
 export async function sendContactEmail(data: { name: string; email: string; subject: string; message: string }) {
-  await resend.emails.send({
+  await transporter.sendMail({
     from: FROM,
-    to: 'contact@sadsat.fr',
+    to: process.env.SMTP_USER, // reçu sur la même boîte
     replyTo: data.email,
     subject: `[Contact] ${data.subject} — ${data.name}`,
     html: emailLayout(`
