@@ -36,10 +36,10 @@ function BrandPanel({
 
   const titleClass =
     brand.font === "serif"
-      ? "font-serif italic font-normal text-4xl md:text-6xl mb-3"
+      ? `font-serif italic font-normal mb-3 ${isExpanded ? "text-5xl md:text-7xl" : "text-2xl md:text-4xl"}`
       : brand.font === "mono"
-      ? "font-mono font-normal text-4xl md:text-6xl mb-3"
-      : "font-sans font-bold uppercase text-4xl md:text-6xl mb-3 tracking-wider";
+      ? `font-mono font-normal mb-3 ${isExpanded ? "text-5xl md:text-7xl" : "text-2xl md:text-4xl"}`
+      : `font-sans font-bold uppercase mb-3 tracking-wider ${isExpanded ? "text-5xl md:text-7xl" : "text-xl md:text-3xl"}`;
 
   const inner = (
     <>
