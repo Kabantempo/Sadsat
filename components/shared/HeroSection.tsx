@@ -22,12 +22,6 @@ function BrandPanel({ brand, index, total }: { brand: BrandPortal; index: number
       className="relative text-center px-8 transition-transform duration-700 group-hover:scale-105"
       style={{ color: brand.color }}
     >
-      <div
-        className="font-mono text-[0.7rem] tracking-[0.3em] mb-6"
-        style={{ color: brand.accent }}
-      >
-        {isMatrix ? '> SYS_0' + brand.index : `— ${brand.index} —`}
-      </div>
       <h2
         className={titleClass}
         style={brand.font === 'sans' ? { textShadow: `2px 0 ${brand.accent}, -2px 0 #1a1a1a` } : undefined}
