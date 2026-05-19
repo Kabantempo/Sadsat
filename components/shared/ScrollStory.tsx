@@ -62,7 +62,7 @@ export default function ScrollStory() {
         {/* ── SCÈNE 1 — Grand titre ── */}
         <motion.div
           style={{ opacity: s1TitleOpacity }}
-          className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+          className="absolute inset-0 z-10 bg-neutral-950 flex flex-col items-center justify-center pointer-events-none"
         >
           <motion.p
             style={{ y: s1SubY, opacity: s1SubOpacity }}
@@ -87,7 +87,7 @@ export default function ScrollStory() {
         {/* ── SCÈNE 2 — Révélation image + texte ── */}
         <motion.div
           style={{ opacity: s2Opacity }}
-          className="absolute inset-0 grid grid-cols-1 md:grid-cols-2 pointer-events-none"
+          className="absolute inset-0 z-20 bg-neutral-950 grid grid-cols-1 md:grid-cols-2 pointer-events-none"
         >
           {/* Gauche : visuel révélé de haut en bas */}
           <div className="relative h-full overflow-hidden">
@@ -139,7 +139,7 @@ export default function ScrollStory() {
         {/* ── SCÈNE 3 — Marques en cascade ── */}
         <motion.div
           style={{ opacity: s3Opacity }}
-          className="absolute inset-0 flex flex-col items-center justify-center gap-5 md:gap-7 px-8 pointer-events-none"
+          className="absolute inset-0 z-30 bg-neutral-950 flex flex-col items-center justify-center gap-5 md:gap-7 px-8 pointer-events-none"
         >
           <p className="font-mono text-[0.56rem] tracking-[0.32em] uppercase text-neutral-600 mb-2">
             Les univers
