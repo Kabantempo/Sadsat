@@ -31,10 +31,14 @@ export default async function Home() {
       };
     });
 
+  const instagrams = createurs
+    .filter((c) => c.instagram)
+    .map((c) => ({ name: c.name, handle: c.instagram! }));
+
   return (
     <>
       <HeroSection />
-      <ScrollStory />
+      <ScrollStory instagrams={instagrams} />
 
       {/* QUI SOMMES NOUS */}
       <section className="py-32 px-8 max-w-5xl mx-auto text-center">

@@ -3,13 +3,14 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { BRAND_PORTALS, type BrandPortal } from "@/lib/definitions";
 
+// ── Scene 3 fallback: brand names ──────────────────────────────────────────────
 function BrandLine({ brand, scrollYProgress, index }: {
   brand: BrandPortal;
   scrollYProgress: MotionValue<number>;
   index: number;
 }) {
-  const start = 0.72 + index * 0.05;
-  const end   = start + 0.10;
+  const start = Math.min(0.78 + index * 0.05, 0.89);
+  const end   = Math.min(start + 0.10, 1.0);
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
   const y       = useTransform(scrollYProgress, [start, end], ["18px", "0px"]);
 
@@ -28,7 +29,41 @@ function BrandLine({ brand, scrollYProgress, index }: {
   );
 }
 
-export default function ScrollStory() {
+// ── Scene 3 with instagrams ────────────────────────────────────────────────────
+function InstaLine({ creator, scrollYProgress, index }: {
+  creator: { name: string; handle: string };
+  scrollYProgress: MotionValue<number>;
+  index: number;
+}) {
+  const start = Math.min(0.78 + index * 0.06, 0.89);
+  const end   = Math.min(start + 0.10, 1.0);
+  const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
+  const y       = useTransform(scrollYProgress, [start, end], ["18px", "0px"]);
+
+  return (
+    <motion.div style={{ opacity, y }} className="text-center">
+      <a
+        href={`https://instagram.com/${creator.handle}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-serif italic text-3xl md:text-5xl text-neutral-100 hover:text-neutral-400 transition-colors pointer-events-auto"
+      >
+        @{creator.handle}
+      </a>
+      <span className="font-mono text-[0.5rem] tracking-[0.22em] uppercase ml-4 hidden md:inline text-neutral-600">
+        {creator.name}
+      </span>
+    </motion.div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+
+export default function ScrollStory({
+  instagrams,
+}: {
+  instagrams?: Array<{ name: string; handle: string }>;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -36,24 +71,26 @@ export default function ScrollStory() {
     offset: ["start start", "end end"],
   });
 
-  // Scène 1 — titre
-  const s1TitleY       = useTransform(scrollYProgress, [0, 0.28], ["0%", "-18%"]);
-  const s1TitleOpacity = useTransform(scrollYProgress, [0, 0.20, 0.28], [1, 1, 0]);
-  const s1SubOpacity   = useTransform(scrollYProgress, [0, 0.16, 0.26], [1, 1, 0]);
-  const s1SubY         = useTransform(scrollYProgress, [0, 0.28], ["0%", "-24%"]);
+  // Scène 1 — titre (dwell until ~35%)
+  const s1TitleY       = useTransform(scrollYProgress, [0, 0.35], ["0%", "-18%"]);
+  const s1TitleOpacity = useTransform(scrollYProgress, [0, 0.24, 0.33], [1, 1, 0]);
+  const s1SubOpacity   = useTransform(scrollYProgress, [0, 0.20, 0.30], [1, 1, 0]);
+  const s1SubY         = useTransform(scrollYProgress, [0, 0.35], ["0%", "-24%"]);
 
-  // Scène 2 — révélation
-  const s2Opacity   = useTransform(scrollYProgress, [0.22, 0.34, 0.64, 0.74], [0, 1, 1, 0]);
-  const maskY       = useTransform(scrollYProgress, [0.28, 0.58], ["100%", "0%"]);
-  const textX       = useTransform(scrollYProgress, [0.42, 0.60], ["50px", "0px"]);
-  const textOpacity = useTransform(scrollYProgress, [0.42, 0.58], [0, 1]);
-  const lineScale   = useTransform(scrollYProgress, [0.40, 0.56], [0, 1]);
+  // Scène 2 — révélation (démarre à 0.35, gris + texte arrivent ensemble)
+  const s2Opacity   = useTransform(scrollYProgress, [0.35, 0.44, 0.72, 0.80], [0, 1, 1, 0]);
+  const maskY       = useTransform(scrollYProgress, [0.35, 0.52], ["0%", "100%"]);
+  const lineScale   = useTransform(scrollYProgress, [0.36, 0.50], [0, 1]);
+  const textOpacity = useTransform(scrollYProgress, [0.40, 0.52], [0, 1]);
+  const textX       = useTransform(scrollYProgress, [0.40, 0.53], ["50px", "0px"]);
 
-  // Scène 3 — marques
-  const s3Opacity = useTransform(scrollYProgress, [0.68, 0.78, 0.95, 1], [0, 1, 1, 0]);
+  // Scène 3 — instagram / marques (démarre à 0.78)
+  const s3Opacity = useTransform(scrollYProgress, [0.78, 0.86, 0.95, 1], [0, 1, 1, 0]);
 
-  // Indicateur scroll + barre progression
+  // Indicateur scroll
   const arrowOpacity = useTransform(scrollYProgress, [0, 0.07], [1, 0]);
+
+  const showInstas = instagrams && instagrams.length > 0;
 
   return (
     <div ref={containerRef} className="relative h-[500vh] bg-neutral-950">
@@ -100,7 +137,6 @@ export default function ScrollStory() {
                 }}
               />
             </div>
-            {/* Masque qui glisse vers le bas = révèle l'image depuis le haut */}
             <motion.div
               style={{ y: maskY }}
               className="absolute inset-0 bg-neutral-950"
@@ -131,22 +167,31 @@ export default function ScrollStory() {
           </div>
         </motion.div>
 
-        {/* ── SCÈNE 3 — Marques en cascade ── */}
+        {/* ── SCÈNE 3 — Instagram ou marques ── */}
         <motion.div
           style={{ opacity: s3Opacity }}
           className="absolute inset-0 z-30 bg-neutral-950 flex flex-col items-center justify-center gap-5 md:gap-7 px-8 pointer-events-none"
         >
           <p className="font-mono text-[0.56rem] tracking-[0.32em] uppercase text-neutral-600 mb-2">
-            Les univers
+            {showInstas ? "Nous suivre" : "Les univers"}
           </p>
-          {BRAND_PORTALS.map((brand, i) => (
-            <BrandLine
-              key={brand.slug}
-              brand={brand}
-              scrollYProgress={scrollYProgress}
-              index={i}
-            />
-          ))}
+          {showInstas
+            ? instagrams.map((creator, i) => (
+                <InstaLine
+                  key={creator.handle}
+                  creator={creator}
+                  scrollYProgress={scrollYProgress}
+                  index={i}
+                />
+              ))
+            : BRAND_PORTALS.map((brand, i) => (
+                <BrandLine
+                  key={brand.slug}
+                  brand={brand}
+                  scrollYProgress={scrollYProgress}
+                  index={i}
+                />
+              ))}
         </motion.div>
 
         {/* Indicateur de scroll */}
@@ -157,7 +202,7 @@ export default function ScrollStory() {
           ↓ scroll
         </motion.div>
 
-        {/* Barre de progression en bas */}
+        {/* Barre de progression */}
         <motion.div
           style={{ scaleX: scrollYProgress }}
           className="absolute bottom-0 left-0 right-0 h-px bg-neutral-700 origin-left"
