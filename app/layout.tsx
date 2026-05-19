@@ -32,8 +32,6 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
-export const dynamic = 'force-dynamic'
-
 export const metadata: Metadata = {
   title: "SADSAT — Taxidermie · Bijoux · Bougies",
   description:
