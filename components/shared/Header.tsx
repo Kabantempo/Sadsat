@@ -302,28 +302,49 @@ export default function Header({ user }: { user?: UserProp }) {
             </motion.button>
           </div>
 
-          {/* Droite mobile : favoris + panier */}
-          <div className="md:hidden flex items-center gap-3">
-            <Link href="/favoris" className="relative p-1.5 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
-              <Heart size={20} strokeWidth={1.5} />
-              {favCount > 0 && (
-                <span className="absolute top-0 right-0 bg-red-500 text-white text-[0.42rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
-                  {favCount}
-                </span>
-              )}
-            </Link>
-            <button
-              aria-label="Panier"
-              onClick={openDrawer}
-              className="relative p-1.5 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
-            >
-              <ShoppingBag size={20} strokeWidth={1.5} />
-              {count > 0 && (
-                <span className="absolute top-0 right-0 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.42rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
-                  {count}
-                </span>
-              )}
-            </button>
+          {/* Droite mobile */}
+          <div className="md:hidden flex items-center gap-1">
+            {!user ? (
+              <Link
+                href="/connexion"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.6rem] tracking-[0.1em] uppercase font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 transition-colors"
+              >
+                <User size={13} strokeWidth={1.5} />
+                Connexion
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/favoris"
+                  className="relative p-1.5 rounded-full text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                >
+                  <Heart size={19} strokeWidth={1.5} />
+                  {favCount > 0 && (
+                    <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[0.4rem] leading-none rounded-full w-[12px] h-[12px] flex items-center justify-center font-bold">
+                      {favCount}
+                    </span>
+                  )}
+                </Link>
+                <button
+                  aria-label="Boutique"
+                  onClick={openDrawer}
+                  className="relative p-1.5 rounded-full text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                >
+                  <ShoppingBag size={19} strokeWidth={1.5} />
+                  {count > 0 && (
+                    <span className="absolute top-0.5 right-0.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.4rem] leading-none rounded-full w-[12px] h-[12px] flex items-center justify-center font-bold">
+                      {count}
+                    </span>
+                  )}
+                </button>
+                <Link
+                  href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/compte'}
+                  className="p-1.5 rounded-full text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                >
+                  <User size={19} strokeWidth={1.5} />
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </motion.header>
