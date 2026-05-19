@@ -61,7 +61,7 @@ export default function ConnexionPage() {
 
           <button
             type="submit" disabled={pending}
-            className="w-full mt-8 py-3.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-neutral-700 dark:hover:bg-neutral-300 transition-colors disabled:opacity-50"
+            className="w-full mt-8 py-3.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-neutral-700 dark:hover:bg-neutral-300 transition-colors disabled:opacity-50 rounded-lg"
           >
             {pending ? 'Connexion...' : 'Se connecter'}
           </button>

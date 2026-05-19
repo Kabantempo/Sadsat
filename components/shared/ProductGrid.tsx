@@ -28,7 +28,7 @@ export default function ProductGrid({ products, theme = 'light', emptyMessage }:
         <div key={product.id} className="group">
           {/* Image */}
           <Link href={`/produits/${product.id}`} className="block relative">
-            <div className={`relative aspect-[3/4] overflow-hidden mb-5 ${light ? 'bg-neutral-100' : 'bg-neutral-900'}`}>
+            <div className={`relative aspect-[3/4] overflow-hidden mb-5 rounded-xl ${light ? 'bg-neutral-100' : 'bg-neutral-900'}`}>
               {product.images[0] ? (
                 <Image
                   src={product.images[0]}

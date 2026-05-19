@@ -71,7 +71,7 @@ export default function CreateurCarousel({ createurs }: Props) {
               }}
             >
               {/* Photo / Avatar */}
-              <div className={`relative aspect-[3/4] overflow-hidden bg-neutral-800 ${pos === "center" ? "group" : ""}`}>
+              <div className={`relative aspect-[3/4] overflow-hidden bg-neutral-800 rounded-xl ${pos === "center" ? "group" : ""}`}>
                 {c.avatar ? (
                   <Image
                     src={c.avatar}

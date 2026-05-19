@@ -18,7 +18,7 @@ export default function AddToCartButton({ disabled, ...item }: Props) {
 
   if (disabled) {
     return (
-      <div className="w-full py-4 bg-neutral-200 text-neutral-500 text-[0.62rem] tracking-[0.24em] uppercase text-center">
+      <div className="w-full py-4 bg-neutral-200 text-neutral-500 text-[0.62rem] tracking-[0.24em] uppercase text-center rounded-lg">
         Pièce vendue
       </div>
     );
@@ -27,7 +27,7 @@ export default function AddToCartButton({ disabled, ...item }: Props) {
   return (
     <button
       onClick={handleClick}
-      className={`w-full py-4 text-[0.62rem] tracking-[0.24em] uppercase font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
+      className={`w-full py-4 text-[0.62rem] tracking-[0.24em] uppercase font-medium transition-all duration-300 flex items-center justify-center gap-2 rounded-lg ${
         added
           ? "bg-neutral-700 text-neutral-100"
           : "bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-white"

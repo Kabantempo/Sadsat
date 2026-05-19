@@ -99,7 +99,7 @@ export default function Header({ user }: { user?: UserProp }) {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: hidden ? 0 : 1, y: hidden ? "-100%" : 0 }}
         transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="sticky top-0 z-50 bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors duration-300"
+        className="sticky top-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 transition-colors duration-300"
       >
         {/* ── Barre principale ── */}
         <div className="relative flex items-center px-5 py-4 md:justify-center md:px-12 md:py-10">
@@ -179,7 +179,7 @@ export default function Header({ user }: { user?: UserProp }) {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
                       transition={{ duration: 0.18, ease: "easeOut" }}
-                      className="absolute top-full right-0 mt-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 min-w-[200px] py-3 z-50 shadow-lg"
+                      className="absolute top-full right-0 mt-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 min-w-[200px] py-3 z-50 shadow-2xl rounded-xl overflow-hidden"
                     >
                       <p className="px-5 pb-2 text-[0.55rem] tracking-[0.18em] uppercase text-neutral-400 border-b border-neutral-100 dark:border-neutral-800 mb-2">
                         {user.name}
@@ -302,7 +302,7 @@ export default function Header({ user }: { user?: UserProp }) {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
                       transition={{ duration: 0.18, ease: "easeOut" }}
-                      className="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 min-w-[190px] py-4 z-50 shadow-lg"
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 min-w-[190px] py-4 z-50 shadow-2xl rounded-xl overflow-hidden"
                     >
                       {item.dropdown.map((sub, i) => (
                         <motion.div
@@ -348,7 +348,7 @@ export default function Header({ user }: { user?: UserProp }) {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ duration: 0.35, ease }}
-              className="fixed top-0 left-0 bottom-0 z-[70] w-[82vw] max-w-[340px] bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col md:hidden overflow-y-auto shadow-2xl"
+              className="fixed top-0 left-0 bottom-0 z-[70] w-[82vw] max-w-[340px] bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col md:hidden overflow-y-auto shadow-2xl rounded-r-2xl"
             >
               {/* Header du drawer */}
               <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100 dark:border-neutral-800">

@@ -23,7 +23,7 @@ export default function ProfilCreateurPage() {
   }
 
   const fieldClass =
-    'w-full border border-neutral-700 bg-neutral-900 px-4 py-2.5 text-[0.85rem] text-neutral-100 outline-none focus:border-neutral-400 transition-colors placeholder:text-neutral-600'
+    'w-full border border-neutral-700 bg-neutral-900 px-4 py-2.5 text-[0.85rem] text-neutral-100 outline-none focus:border-neutral-400 transition-colors placeholder:text-neutral-600 rounded-lg'
   const labelClass = 'block text-[0.6rem] tracking-[0.16em] uppercase text-neutral-500 mb-1.5'
 
   return (
@@ -135,7 +135,7 @@ export default function ProfilCreateurPage() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full py-3 bg-neutral-100 text-neutral-900 text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-white transition-colors disabled:opacity-50"
+          className="w-full py-3 bg-neutral-100 text-neutral-900 text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-white transition-colors disabled:opacity-50 rounded-lg"
         >
           {pending ? 'Enregistrement...' : 'Mettre à jour mon profil'}
         </button>

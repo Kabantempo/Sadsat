@@ -8,7 +8,7 @@ import type { Universe, Product } from "@/lib/definitions";
 
 function ProductCard({ p }: { p: Product }) {
   return (
-    <Link href={`/produits/${p.id}`} className="group relative overflow-hidden bg-neutral-900 block">
+    <Link href={`/produits/${p.id}`} className="group relative overflow-hidden bg-neutral-900 block rounded-xl">
       <div className="relative aspect-[3/4] overflow-hidden">
         {p.images[0] ? (
           <Image

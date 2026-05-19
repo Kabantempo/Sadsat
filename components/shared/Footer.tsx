@@ -74,18 +74,18 @@ export default function Footer() {
               Merci — vous recevrez nos actualités en avant-première.
             </p>
           ) : (
-            <form onSubmit={handleNewsletter} className="flex gap-0">
+            <form onSubmit={handleNewsletter} className="flex gap-2">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="votre@email.com"
-                className="flex-1 bg-transparent border border-neutral-800 border-r-0 px-4 py-3 text-[0.72rem] text-neutral-300 placeholder:text-neutral-700 outline-none focus:border-neutral-600 transition-colors"
+                className="flex-1 bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-3 text-[0.72rem] text-neutral-300 placeholder:text-neutral-700 outline-none focus:border-neutral-600 transition-colors"
               />
               <button
                 type="submit"
-                className="px-5 py-3 border border-neutral-800 text-[0.6rem] tracking-[0.22em] uppercase text-neutral-500 hover:bg-neutral-900 hover:text-neutral-100 transition-colors duration-200 whitespace-nowrap"
+                className="px-5 py-3 border border-neutral-800 rounded-lg text-[0.6rem] tracking-[0.22em] uppercase text-neutral-500 hover:bg-neutral-900 hover:text-neutral-100 transition-colors duration-200 whitespace-nowrap"
               >
                 S'inscrire
               </button>

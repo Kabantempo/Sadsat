@@ -30,7 +30,7 @@ export default function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.38, ease }}
-            className="fixed top-0 right-0 bottom-0 z-[90] w-full max-w-[420px] bg-white dark:bg-neutral-950 flex flex-col shadow-2xl"
+            className="fixed top-0 right-0 bottom-0 z-[90] w-full max-w-[420px] bg-white dark:bg-neutral-950 flex flex-col shadow-2xl rounded-l-2xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-200 dark:border-neutral-800">
@@ -74,7 +74,7 @@ export default function CartDrawer() {
                     <div key={item.id} className="flex gap-4">
                       {/* Image */}
                       <Link href={`/produits/${item.id}`} onClick={closeDrawer} className="shrink-0">
-                        <div className="w-20 h-24 bg-neutral-100 dark:bg-neutral-900 overflow-hidden relative">
+                        <div className="w-20 h-24 bg-neutral-100 dark:bg-neutral-900 overflow-hidden relative rounded-lg">
                           {item.image ? (
                             <Image src={item.image} alt={item.name} fill className="object-cover" />
                           ) : (
@@ -99,7 +99,7 @@ export default function CartDrawer() {
 
                         {/* Quantité + supprimer */}
                         <div className="flex items-center justify-between mt-2">
-                          <div className="flex items-center border border-neutral-200 dark:border-neutral-700">
+                          <div className="flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden">
                             <button
                               onClick={() => setQty(item.id, item.quantity - 1)}
                               className="w-8 h-8 flex items-center justify-center text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
@@ -144,7 +144,7 @@ export default function CartDrawer() {
                       items.map((i) => `- ${i.name} x${i.quantity} — ${(i.price / 100).toFixed(2)}€`).join("\n") +
                       `\n\nTotal : ${(total / 100).toFixed(2)}€`
                     )}`}
-                    className="block w-full text-center py-3.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-neutral-700 dark:hover:bg-white transition-colors"
+                    className="block w-full text-center py-3.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-neutral-700 dark:hover:bg-white transition-colors rounded-lg"
                   >
                     Envoyer ma demande
                   </a>

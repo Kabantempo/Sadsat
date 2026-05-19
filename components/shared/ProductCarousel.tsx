@@ -84,7 +84,7 @@ export default function ProductCarousel({
             >
               {/* Image — cliquable via Link sur la carte centrale */}
               {isCenter && item.href ? (
-                <Link href={item.href} className={`block relative overflow-hidden group ${aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"} ${dark ? "bg-neutral-800" : "bg-neutral-200"}`}>
+                <Link href={item.href} className={`block relative overflow-hidden group rounded-xl ${aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"} ${dark ? "bg-neutral-800" : "bg-neutral-200"}`}>
                   {item.image ? (
                     <Image src={item.image} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
@@ -94,7 +94,7 @@ export default function ProductCarousel({
                   )}
                 </Link>
               ) : (
-                <div className={`relative overflow-hidden ${aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"} ${dark ? "bg-neutral-800" : "bg-neutral-200"}`}>
+                <div className={`relative overflow-hidden rounded-xl ${aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"} ${dark ? "bg-neutral-800" : "bg-neutral-200"}`}>
                   {item.image ? (
                     <Image src={item.image} alt={item.title} fill className="object-cover" />
                   ) : (
