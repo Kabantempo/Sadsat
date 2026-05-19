@@ -2,7 +2,7 @@ import 'server-only'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const FROM = 'SADSAT <noreply@sadsat.fr>'
+const FROM = 'SADSAT <onboarding@resend.dev>'
 const BASE = () => process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
 
 export async function sendVerificationEmail(to: string, name: string, token: string) {
