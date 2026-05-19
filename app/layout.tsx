@@ -8,6 +8,7 @@ import CartProvider from "@/components/shared/CartProvider";
 import CartDrawer from "@/components/shared/CartDrawer";
 import FavoritesProvider from "@/components/shared/FavoritesProvider";
 import { getCurrentUser } from "@/lib/dal";
+import PageLoader from "@/components/shared/PageLoader";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -55,6 +56,7 @@ export default async function RootLayout({
       <body
         className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable} antialiased bg-black text-neutral-200`}
       >
+        <PageLoader />
         <FavoritesProvider isLoggedIn={!!user}>
         <CartProvider>
           <Header user={user ? { name: user.name, role: user.role } : null} />
