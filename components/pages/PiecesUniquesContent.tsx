@@ -1,18 +1,12 @@
 "use client";
 import { useState, useMemo } from "react";
 import type { Product, Universe } from "@/lib/definitions";
-import { UNIVERSE_LABELS } from "@/lib/definitions";
+import { UNIVERSES as ALL_UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 import ProductGrid from "@/components/shared/ProductGrid";
 import { SlidersHorizontal } from "lucide-react";
 
-const UNIVERSES: Array<Universe | "tous"> = ["tous", "taxidermie", "bijoux", "bougies", "pieces-uniques"];
-const UNIVERS_LABELS: Record<Universe | "tous", string> = {
-  tous: "Tous",
-  taxidermie: "Taxidermie",
-  bijoux: "Bijoux",
-  bougies: "Bougies",
-  "pieces-uniques": "Pièces uniques",
-};
+const UNIVERSES: Array<Universe | "tous"> = ["tous", ...ALL_UNIVERSES];
+const UNIVERS_LABELS: Record<Universe | "tous", string> = { tous: "Tous", ...UNIVERSE_LABELS };
 
 type Props = {
   products: Product[];

@@ -1,11 +1,16 @@
 import Link from "next/link";
+import { getProducts } from "@/lib/products";
+import ProductGrid from "@/components/shared/ProductGrid";
 
 export const metadata = {
   title: "Habillement — SADSAT × HACKCYCLE",
   description: "HACKCYCLE : un sabotage textile. Créations originales à partir de récupération et bio-matériaux.",
 };
 
-export default function Habillement() {
+export default async function Habillement() {
+  const products = (await getProducts()).filter(
+    (p) => p.universe === "habillement" && p.status !== "masqué"
+  );
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-200 pt-32 pb-32">
       <div className="max-w-3xl mx-auto px-8">
@@ -113,8 +118,21 @@ export default function Habillement() {
           </div>
         </div>
 
+        {/* Produits */}
+        {products.length > 0 && (
+          <>
+            <div className="w-full h-px bg-neutral-800 mb-16 mt-8" />
+            <div className="mb-24">
+              <p className="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-neutral-600 mb-10">
+                Les pièces
+              </p>
+              <ProductGrid products={products} theme="dark" />
+            </div>
+          </>
+        )}
+
         {/* Footer manifeste */}
-        <div className="mt-24 pt-12 border-t border-neutral-800 text-center">
+        <div className="mt-8 pt-12 border-t border-neutral-800 text-center">
           <p className="font-mono text-[0.55rem] tracking-[0.28em] uppercase text-neutral-600">
             Moins de déchets · Plus d'identité · Plus de liberté
           </p>

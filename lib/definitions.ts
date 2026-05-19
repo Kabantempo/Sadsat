@@ -54,7 +54,19 @@ export type SafeUser = Omit<User, 'passwordHash'>
 
 // ── Produits ────────────────────────────────────────────────
 
-export const UNIVERSES = ['taxidermie', 'bijoux', 'bougies', 'pieces-uniques'] as const
+// ── Pour ajouter un nouvel univers/marque : ──────────────────────────────────
+// 1. Ajoute le slug dans UNIVERSES ci-dessous
+// 2. Ajoute le label dans UNIVERSE_LABELS
+// 3. Ajoute les catégories dans CATEGORIES
+// 4. Crée app/[slug]/page.tsx  →  tout le reste (admin, filtres) se met à jour seul
+
+export const UNIVERSES = [
+  'taxidermie',
+  'bijoux',
+  'bougies',
+  'pieces-uniques',
+  'habillement',
+] as const
 export type Universe = (typeof UNIVERSES)[number]
 
 export const UNIVERSE_LABELS: Record<Universe, string> = {
@@ -62,6 +74,7 @@ export const UNIVERSE_LABELS: Record<Universe, string> = {
   bijoux: 'Bijoux',
   bougies: 'Bougies',
   'pieces-uniques': 'Pièces uniques',
+  habillement: 'Habillement',
 }
 
 export const CATEGORIES: Record<Universe, string[]> = {
@@ -69,6 +82,7 @@ export const CATEGORIES: Record<Universe, string[]> = {
   bijoux: ['Bagues', 'Colliers', 'Bracelets', "Boucles d'oreilles"],
   bougies: ['Cire de soja', "Cire d'abeille", 'Piliers', 'Fondants'],
   'pieces-uniques': ['Sculptures', 'Céramiques', 'Tableaux', 'Textiles', 'Mixed media', 'Autre'],
+  habillement: ['Hauts', 'Bas', 'Robes', 'Vestes', 'Accessoires', 'Autre'],
 }
 
 export const STATUS_LABELS = {
