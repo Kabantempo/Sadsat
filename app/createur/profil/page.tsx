@@ -114,6 +114,24 @@ export default function ProfilCreateurPage() {
           </p>
         </div>
 
+        {/* Instagram */}
+        <div>
+          <label htmlFor="instagram" className={labelClass}>Instagram</label>
+          <div className="relative">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 text-[0.85rem] select-none">@</span>
+            <input
+              id="instagram"
+              name="instagram"
+              type="text"
+              placeholder="votre_pseudo"
+              className={`${fieldClass} pl-8`}
+            />
+          </div>
+          <p className="mt-1 text-[0.6rem] text-neutral-600">
+            Affiché sur votre page publique et dans le carousel de l'accueil.
+          </p>
+        </div>
+
         <button
           type="submit"
           disabled={pending}

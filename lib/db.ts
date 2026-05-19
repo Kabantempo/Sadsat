@@ -16,6 +16,7 @@ function rowToUser(row: {
   emailVerified?: boolean
   verificationToken?: string | null
   verificationTokenExpiry?: string | null
+  instagram?: string | null
 }): User {
   return {
     id: row.id,
@@ -31,6 +32,7 @@ function rowToUser(row: {
     emailVerified: row.emailVerified ?? false,
     verificationToken: row.verificationToken ?? undefined,
     verificationTokenExpiry: row.verificationTokenExpiry ?? undefined,
+    instagram: row.instagram ?? undefined,
   }
 }
 
@@ -82,7 +84,7 @@ export async function updateUserRole(id: string, role: 'admin' | 'client'): Prom
 
 export async function updateUser(
   id: string,
-  data: Partial<Pick<User, 'name' | 'bio' | 'avatar'>>
+  data: Partial<Pick<User, 'name' | 'bio' | 'avatar' | 'instagram'>>
 ): Promise<boolean> {
   try {
     await prisma.user.update({
@@ -91,6 +93,7 @@ export async function updateUser(
         ...(data.name !== undefined && { name: data.name }),
         ...(data.bio !== undefined && { bio: data.bio ?? null }),
         ...(data.avatar !== undefined && { avatar: data.avatar ?? null }),
+        ...(data.instagram !== undefined && { instagram: data.instagram ?? null }),
       },
     })
     return true

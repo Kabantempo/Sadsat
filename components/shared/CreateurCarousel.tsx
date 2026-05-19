@@ -11,6 +11,7 @@ export type CreateurCard = {
   bio?: string;
   avatar?: string;
   universes: string[];
+  instagram?: string;
 };
 
 type Props = { createurs: CreateurCard[] };
@@ -102,6 +103,17 @@ export default function CreateurCarousel({ createurs }: Props) {
                     <p className="text-[0.58rem] tracking-[0.18em] uppercase text-neutral-600 mb-3">
                       {c.universes.join(" · ")}
                     </p>
+                  )}
+                  {c.instagram && (
+                    <a
+                      href={`https://instagram.com/${c.instagram}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="block text-[0.62rem] text-neutral-500 hover:text-pink-400 transition-colors mb-3"
+                    >
+                      @{c.instagram}
+                    </a>
                   )}
                   <span className="inline-block text-[0.58rem] tracking-[0.2em] uppercase pb-0.5 border-b border-neutral-600 hover:border-neutral-200 transition-colors text-neutral-400 hover:text-neutral-100">
                     Voir ses créations →

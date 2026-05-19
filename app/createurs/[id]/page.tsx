@@ -110,9 +110,25 @@ export default async function CreateurPublicPage({
           </div>
 
           {user.bio && (
-            <p className="text-[0.9rem] leading-relaxed text-neutral-400 max-w-2xl">
+            <p className="text-[0.9rem] leading-relaxed text-neutral-400 max-w-2xl mb-4">
               {user.bio}
             </p>
+          )}
+
+          {user.instagram && (
+            <a
+              href={`https://instagram.com/${user.instagram}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-[0.72rem] tracking-[0.12em] text-neutral-500 hover:text-pink-400 transition-colors"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+              </svg>
+              @{user.instagram}
+            </a>
           )}
         </div>
 

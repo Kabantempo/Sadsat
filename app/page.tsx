@@ -26,6 +26,7 @@ export default async function Home() {
         bio: u.bio,
         avatar: u.avatar,
         universes,
+        instagram: u.instagram,
       };
     });
 

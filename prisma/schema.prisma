@@ -21,6 +21,7 @@ model User {
   emailVerified          Boolean @default(false)
   verificationToken      String?
   verificationTokenExpiry String?
+  instagram              String?
 
   @@map("users")
 }
