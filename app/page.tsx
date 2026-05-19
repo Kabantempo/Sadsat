@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getUsers } from "@/lib/db";
 import { getProducts } from "@/lib/products";
 import HeroSection from "@/components/shared/HeroSection";
+import ScrollStory from "@/components/shared/ScrollStory";
 import CreateurCarousel, { type CreateurCard } from "@/components/shared/CreateurCarousel";
 import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 
@@ -33,6 +34,7 @@ export default async function Home() {
   return (
     <>
       <HeroSection />
+      <ScrollStory />
 
       {/* QUI SOMMES NOUS */}
       <section className="py-32 px-8 max-w-5xl mx-auto text-center">
