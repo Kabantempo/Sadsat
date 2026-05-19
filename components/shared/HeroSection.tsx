@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import MatrixRain from "@/components/shared/MatrixRain";
 import { BRAND_PORTALS, type BrandPortal } from "@/lib/definitions";
+import { TaxidermieAnim, BijouxAnim, HackcycleAnim } from "@/components/shared/BrandAnimations";
 
 function BrandPanel({ brand, index, total }: { brand: BrandPortal; index: number; total: number }) {
   const isMatrix = brand.special === 'matrix';
@@ -57,19 +58,25 @@ function BrandPanel({ brand, index, total }: { brand: BrandPortal; index: number
 
   const panelClass = `relative overflow-hidden group flex items-center justify-center min-h-[60vh] md:min-h-screen`;
 
-  if (isComingSoon || (!brand.cta && !isMatrix)) {
-    return (
-      <div className={`${panelClass} cursor-default`} style={panelStyle}>
-        {isMatrix && <MatrixRain />}
-        <div className="relative z-10">{inner}</div>
-      </div>
-    );
-  }
+  const anim =
+    brand.slug === 'taxidermie' ? <TaxidermieAnim /> :
+    brand.slug === 'bijoux'     ? <BijouxAnim /> :
+    brand.slug === 'habillement' ? <HackcycleAnim /> :
+    null;
 
   if (isMatrix) {
     return (
       <div className={`${panelClass} cursor-default`} style={panelStyle}>
         <MatrixRain />
+        <div className="relative z-10">{inner}</div>
+      </div>
+    );
+  }
+
+  if (isComingSoon || !brand.cta) {
+    return (
+      <div className={`${panelClass} cursor-default`} style={panelStyle}>
+        {anim}
         <div className="relative z-10">{inner}</div>
       </div>
     );
@@ -81,15 +88,7 @@ function BrandPanel({ brand, index, total }: { brand: BrandPortal; index: number
       className={`${panelClass} transition-all duration-700`}
       style={panelStyle}
     >
-      {brand.slug === 'bijoux' && (
-        <div
-          className="absolute inset-0 opacity-50 pointer-events-none"
-          style={{
-            backgroundImage:
-              'repeating-linear-gradient(45deg, transparent 0 6px, rgba(139,0,0,0.04) 6px 7px), radial-gradient(circle at 30% 70%, rgba(139,0,0,0.15), transparent 60%)',
-          }}
-        />
-      )}
+      {anim}
       <div className="relative z-10">{inner}</div>
     </Link>
   );
