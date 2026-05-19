@@ -20,7 +20,7 @@ type NavItem = {
 };
 
 const NAV: NavItem[] = [
-  { label: "✦ Pièces uniques", href: "/pieces-uniques", bordeaux: true },
+  { label: "Pièces uniques", href: "/pieces-uniques", bordeaux: true },
   {
     label: "Taxidermie",
     href: "/taxidermie",
@@ -141,12 +141,13 @@ export default function Header({ user }: { user?: UserProp }) {
                 ) : (
                   <Link
                     href={item.href}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[0.6rem] tracking-[0.12em] uppercase transition-all duration-200 ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.6rem] tracking-[0.12em] uppercase transition-all duration-200 ${
                       item.bordeaux
                         ? "text-[#8b0000] hover:bg-[#8b0000]/8"
                         : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800/70"
                     }`}
                   >
+                    {item.bordeaux && <span className="w-1 h-1 rounded-full bg-[#8b0000] shrink-0" />}
                     {item.label}
                     {item.dropdown && (
                       <ChevronDown
