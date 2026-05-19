@@ -124,19 +124,29 @@ export default function Header({ user }: { user?: UserProp }) {
             </Link>
           </div>
 
-          {/* Droite mobile : panier uniquement */}
-          <button
-            aria-label="Panier"
-            onClick={openDrawer}
-            className="md:hidden relative text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
-          >
-            <ShoppingBag size={20} strokeWidth={1.5} />
-            {count > 0 && (
-              <span className="absolute -top-1.5 -right-2 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.42rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
-                {count}
-              </span>
-            )}
-          </button>
+          {/* Droite mobile : favoris + panier */}
+          <div className="md:hidden flex items-center gap-4">
+            <Link href="/favoris" className="relative text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+              <Heart size={20} strokeWidth={1.5} />
+              {favCount > 0 && (
+                <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[0.42rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
+                  {favCount}
+                </span>
+              )}
+            </Link>
+            <button
+              aria-label="Panier"
+              onClick={openDrawer}
+              className="relative text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+            >
+              <ShoppingBag size={20} strokeWidth={1.5} />
+              {count > 0 && (
+                <span className="absolute -top-1.5 -right-2 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.42rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
+                  {count}
+                </span>
+              )}
+            </button>
+          </div>
 
           {/* Actions desktop — absolues à droite */}
           <div className="hidden md:flex absolute right-12 items-center gap-7 text-neutral-600 dark:text-neutral-400">
