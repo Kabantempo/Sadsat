@@ -3,28 +3,79 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { BRAND_PORTALS, type BrandPortal } from "@/lib/definitions";
 
-// ── Scene 3 fallback: brand names ──────────────────────────────────────────────
-function BrandLine({ brand, scrollYProgress, index }: {
+// ── Scene 3 : carte de marque ─────────────────────────────────────────────────
+function BrandCard({ brand, scrollYProgress, index }: {
   brand: BrandPortal;
   scrollYProgress: MotionValue<number>;
   index: number;
 }) {
-  const start = Math.min(0.78 + index * 0.05, 0.89);
-  const end   = Math.min(start + 0.10, 1.0);
+  const start   = Math.min(0.78 + index * 0.04, 0.88);
+  const end     = Math.min(start + 0.09, 1.0);
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-  const y       = useTransform(scrollYProgress, [start, end], ["18px", "0px"]);
+  const scale   = useTransform(scrollYProgress, [start, end], [0.94, 1]);
 
-  return (
-    <motion.div style={{ opacity, y }} className="text-center">
-      <span className="font-serif italic text-3xl md:text-5xl" style={{ color: brand.color }}>
-        {brand.label}
-      </span>
+  const inner = (
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
       <span
-        className="font-mono text-[0.5rem] tracking-[0.22em] uppercase ml-4 hidden md:inline"
-        style={{ color: brand.accent, opacity: 0.65 }}
+        className="font-mono text-[0.48rem] tracking-[0.3em] uppercase mb-3"
+        style={{ color: brand.accent, opacity: 0.55 }}
+      >
+        {brand.index}
+      </span>
+      <h3
+        className={
+          brand.font === "serif"
+            ? "font-serif italic text-2xl md:text-3xl mb-2 leading-tight"
+            : brand.font === "mono"
+            ? "font-mono text-xl md:text-2xl mb-2 leading-tight"
+            : "font-sans font-bold uppercase text-lg md:text-2xl mb-2 tracking-wider leading-tight"
+        }
+        style={{ color: brand.color }}
+      >
+        {brand.label}
+      </h3>
+      <p
+        className="font-mono text-[0.52rem] tracking-[0.18em] uppercase leading-relaxed"
+        style={{ color: brand.accent, opacity: 0.55 }}
       >
         {brand.subtitle}
-      </span>
+      </p>
+      {brand.cta && !brand.special && (
+        <span
+          className="font-mono text-[0.5rem] tracking-[0.22em] uppercase mt-5 pb-px border-b"
+          style={{ color: brand.color, borderColor: `${brand.accent}55` }}
+        >
+          {brand.cta} →
+        </span>
+      )}
+      {(!brand.cta || brand.special) && (
+        <span
+          className="font-mono text-[0.48rem] tracking-[0.2em] uppercase mt-5 opacity-30"
+          style={{ color: brand.color }}
+        >
+          Bientôt
+        </span>
+      )}
+    </div>
+  );
+
+  const cardClass = "relative rounded-xl overflow-hidden aspect-square";
+
+  return (
+    <motion.div style={{ opacity, scale }}>
+      {brand.cta && !brand.special ? (
+        <Link
+          href={`/${brand.slug}`}
+          className={`${cardClass} block pointer-events-auto hover:brightness-110 transition-all duration-300`}
+          style={{ background: brand.bg }}
+        >
+          {inner}
+        </Link>
+      ) : (
+        <div className={cardClass} style={{ background: brand.bg }}>
+          {inner}
+        </div>
+      )}
     </motion.div>
   );
 }
@@ -167,31 +218,38 @@ export default function ScrollStory({
           </div>
         </motion.div>
 
-        {/* ── SCÈNE 3 — Instagram ou marques ── */}
+        {/* ── SCÈNE 3 — Grille univers (+ instagrams si dispo) ── */}
         <motion.div
           style={{ opacity: s3Opacity }}
-          className="absolute inset-0 z-30 bg-neutral-950 flex flex-col items-center justify-center gap-5 md:gap-7 px-8 pointer-events-none"
+          className="absolute inset-0 z-30 bg-neutral-950 flex flex-col items-center justify-center px-8 pointer-events-none"
         >
-          <p className="font-mono text-[0.56rem] tracking-[0.32em] uppercase text-neutral-600 mb-2">
-            {showInstas ? "Nous suivre" : "Les univers"}
+          <p className="font-mono text-[0.52rem] tracking-[0.36em] uppercase text-neutral-600 mb-8">
+            {showInstas ? "Nous suivre" : "Nos univers"}
           </p>
-          {showInstas
-            ? instagrams.map((creator, i) => (
+
+          {showInstas ? (
+            <div className="flex flex-col items-center gap-5 md:gap-6">
+              {instagrams.map((creator, i) => (
                 <InstaLine
                   key={creator.handle}
                   creator={creator}
                   scrollYProgress={scrollYProgress}
                   index={i}
                 />
-              ))
-            : BRAND_PORTALS.map((brand, i) => (
-                <BrandLine
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 w-full max-w-md">
+              {BRAND_PORTALS.map((brand, i) => (
+                <BrandCard
                   key={brand.slug}
                   brand={brand}
                   scrollYProgress={scrollYProgress}
                   index={i}
                 />
               ))}
+            </div>
+          )}
         </motion.div>
 
         {/* Indicateur de scroll */}
