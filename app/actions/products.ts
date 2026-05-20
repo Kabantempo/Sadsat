@@ -1,36 +1,24 @@
 'use server'
-import { mkdir, writeFile, unlink } from 'fs/promises'
-import path from 'path'
 import { redirect } from 'next/navigation'
 import { verifyAdmin } from '@/lib/dal'
 import { createProduct, updateProduct, deleteProduct, getProductById } from '@/lib/products'
 import type { ProductFormState, Universe, ProductStatus, Dimensions } from '@/lib/definitions'
 import { UNIVERSES } from '@/lib/definitions'
-
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'products')
+import { uploadFile, deleteFile } from '@/lib/cloudinary'
 
 async function saveFiles(files: File[]): Promise<string[]> {
-  await mkdir(UPLOAD_DIR, { recursive: true })
-  const paths: string[] = []
+  const urls: string[] = []
   for (const file of files) {
     if (file.size === 0) continue
-    const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
-    const filename = `${crypto.randomUUID()}.${ext}`
-    const buffer = Buffer.from(await file.arrayBuffer())
-    await writeFile(path.join(UPLOAD_DIR, filename), buffer)
-    paths.push(`/uploads/products/${filename}`)
+    const url = await uploadFile(file, 'sadsat/products')
+    urls.push(url)
   }
-  return paths
+  return urls
 }
 
 async function saveVideo(file: File): Promise<string | null> {
   if (!file || file.size === 0) return null
-  await mkdir(UPLOAD_DIR, { recursive: true })
-  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'mp4'
-  const filename = `${crypto.randomUUID()}.${ext}`
-  const buffer = Buffer.from(await file.arrayBuffer())
-  await writeFile(path.join(UPLOAD_DIR, filename), buffer)
-  return `/uploads/products/${filename}`
+  return uploadFile(file, 'sadsat/products/videos')
 }
 
 function parseProduct(formData: FormData) {
@@ -146,9 +134,8 @@ export async function deleteProductAction(formData: FormData): Promise<void> {
   const id = String(formData.get('productId') ?? '')
   const product = await getProductById(id)
   if (product) {
-    for (const imgPath of product.images) {
-      const fullPath = path.join(process.cwd(), 'public', imgPath)
-      unlink(fullPath).catch(() => null)
+    for (const imgUrl of product.images) {
+      await deleteFile(imgUrl).catch(() => null)
     }
     await deleteProduct(id)
   }
