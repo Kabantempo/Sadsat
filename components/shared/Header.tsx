@@ -43,7 +43,7 @@ const NAV: NavItem[] = [
     ],
   },
   {
-    label: "Bougies",
+    label: "Spectrum N°3",
     href: "/bougies",
     comingSoon: true,
     dropdown: [
