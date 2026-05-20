@@ -3,10 +3,9 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, User, ShoppingBag, ChevronDown, Menu, X, LayoutDashboard, LogOut, Heart } from "lucide-react";
+import { Search, User, ChevronDown, Menu, X, LayoutDashboard, LogOut, Heart } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import ThemeToggle from "@/components/shared/ThemeToggle";
-import { useCart } from "@/components/shared/CartProvider";
 import { useFavorites } from "@/components/shared/FavoritesProvider";
 
 type SubItem = { label: string; href: string };
@@ -63,7 +62,6 @@ type UserProp = { name: string; role: 'admin' | 'client' | 'créateur' | 'grossi
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Header({ user }: { user?: UserProp }) {
-  const { count, openDrawer } = useCart();
   const { count: favCount } = useFavorites();
   const [openMenu, setOpenMenu]         = useState<string | null>(null);
   const [mobileOpen, setMobileOpen]     = useState(false);
@@ -286,20 +284,6 @@ export default function Header({ user }: { user?: UserProp }) {
               </motion.div>
             </Link>
 
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.15 }}
-              aria-label="Panier"
-              onClick={openDrawer}
-              className="relative p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 transition-all"
-            >
-              <ShoppingBag size={15} strokeWidth={1.5} />
-              {count > 0 && (
-                <span className="absolute top-0.5 right-0.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.4rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
-                  {count}
-                </span>
-              )}
-            </motion.button>
           </div>
 
           {/* Droite mobile */}
@@ -325,18 +309,6 @@ export default function Header({ user }: { user?: UserProp }) {
                     </span>
                   )}
                 </Link>
-                <button
-                  aria-label="Boutique"
-                  onClick={openDrawer}
-                  className="relative p-1.5 rounded-full text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
-                >
-                  <ShoppingBag size={19} strokeWidth={1.5} />
-                  {count > 0 && (
-                    <span className="absolute top-0.5 right-0.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.4rem] leading-none rounded-full w-[12px] h-[12px] flex items-center justify-center font-bold">
-                      {count}
-                    </span>
-                  )}
-                </button>
                 <Link
                   href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/compte'}
                   className="p-1.5 rounded-full text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
