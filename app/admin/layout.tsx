@@ -9,36 +9,36 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Barre admin */}
-      <div className="bg-neutral-900 text-white px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          <span className="text-[0.58rem] tracking-[0.24em] uppercase text-neutral-400 font-medium">
+      <div className="bg-neutral-900 text-white px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-4">
+          <span className="text-[0.58rem] tracking-[0.24em] uppercase text-neutral-400 font-medium whitespace-nowrap">
             Admin SADSAT
           </span>
-          <nav className="flex items-center gap-6">
+          <nav className="flex flex-wrap items-center gap-4">
             <Link
               href="/admin"
-              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors whitespace-nowrap"
             >
               <LayoutDashboard size={12} strokeWidth={1.5} />
               Tableau de bord
             </Link>
             <Link
               href="/admin/produits"
-              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors whitespace-nowrap"
             >
               <Package size={12} strokeWidth={1.5} />
               Produits
             </Link>
             <Link
               href="/admin/comptes"
-              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors whitespace-nowrap"
             >
               <Users size={12} strokeWidth={1.5} />
               Comptes
             </Link>
             <Link
               href="/admin/db"
-              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors whitespace-nowrap"
             >
               <Database size={12} strokeWidth={1.5} />
               DB
@@ -48,7 +48,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <form action={logout}>
           <button
             type="submit"
-            className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-500 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-500 hover:text-white transition-colors whitespace-nowrap"
           >
             <LogOut size={12} strokeWidth={1.5} />
             Déconnexion
