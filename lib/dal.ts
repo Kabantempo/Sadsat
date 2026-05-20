@@ -36,7 +36,8 @@ export const getCurrentUser = cache(async (): Promise<SafeUser | null> => {
   try {
     const session = await getSession()
     if (!session?.userId) return null
-    const user = await getUserById(session.userId)
+    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 3000))
+    const user = await Promise.race([getUserById(session.userId), timeout])
     if (!user) return null
     const { passwordHash: _, ...safeUser } = user
     return safeUser
