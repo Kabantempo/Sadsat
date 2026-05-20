@@ -77,18 +77,24 @@ export async function sendSetPasswordEmail(to: string, name: string, token: stri
   }
 }
 
-export async function sendContactEmail(data: { name: string; email: string; subject: string; message: string }) {
-  await transporter.sendMail({
-    from: FROM,
-    to: process.env.SMTP_USER, // reçu sur la même boîte
-    replyTo: data.email,
-    subject: `[Contact] ${data.subject} — ${data.name}`,
-    html: emailLayout(`
-      <p style="font-size:14px;color:#a3a3a3;margin-bottom:8px;"><strong style="color:#d4d4d4;">De :</strong> ${data.name} (${data.email})</p>
-      <p style="font-size:14px;color:#a3a3a3;margin-bottom:24px;"><strong style="color:#d4d4d4;">Sujet :</strong> ${data.subject}</p>
-      <p style="font-size:14px;color:#a3a3a3;line-height:1.8;white-space:pre-wrap;">${data.message}</p>
-    `),
-  })
+export async function sendContactEmail(data: { name: string; email: string; subject: string; message: string }): Promise<boolean> {
+  try {
+    await transporter.sendMail({
+      from: FROM,
+      to: 'contact@sadsat.com',
+      replyTo: data.email,
+      subject: `[Contact] ${data.subject} — ${data.name}`,
+      html: emailLayout(`
+        <p style="font-size:14px;color:#a3a3a3;margin-bottom:8px;"><strong style="color:#d4d4d4;">De :</strong> ${data.name} (${data.email})</p>
+        <p style="font-size:14px;color:#a3a3a3;margin-bottom:24px;"><strong style="color:#d4d4d4;">Sujet :</strong> ${data.subject}</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.8;white-space:pre-wrap;">${data.message}</p>
+      `),
+    })
+    return true
+  } catch (err) {
+    console.error('[email] sendContactEmail failed:', err)
+    return false
+  }
 }
 
 const btnStyle = 'display:inline-block;background:#e5e5e5;color:#0a0a0a;text-decoration:none;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;padding:14px 32px;font-family:Georgia,serif;'

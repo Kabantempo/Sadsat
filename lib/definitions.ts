@@ -71,11 +71,11 @@ export const UNIVERSES = [
 export type Universe = (typeof UNIVERSES)[number]
 
 export const UNIVERSE_LABELS: Record<Universe, string> = {
-  taxidermie: 'Taxidermie',
-  bijoux: 'Bijoux',
-  bougies: 'Bougies',
+  taxidermie: 'Crystal Pets',
+  bijoux: 'L0vers.cult',
+  bougies: 'Spectrum N°3',
   'pieces-uniques': 'Pièces uniques',
-  habillement: 'Habillement',
+  habillement: 'Hackcycle',
 }
 
 export const CATEGORIES: Record<Universe, string[]> = {

@@ -17,7 +17,7 @@ export default async function PiecesUniquesPage() {
             Pièces uniques
           </h1>
           <p className="text-sm tracking-[0.2em] uppercase text-neutral-400">
-            Taxidermie · Bijoux · Bougies
+            Crystal Pets · L0vers.cult · Spectrum N°3 · Hackcycle
           </p>
         </div>
 

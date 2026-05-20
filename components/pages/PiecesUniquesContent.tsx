@@ -5,7 +5,7 @@ import { UNIVERSES as ALL_UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 import ProductGrid from "@/components/shared/ProductGrid";
 import { SlidersHorizontal } from "lucide-react";
 
-const UNIVERSES: Array<Universe | "tous"> = ["tous", ...ALL_UNIVERSES];
+const UNIVERSES: Array<Universe | "tous"> = ["tous", ...ALL_UNIVERSES.filter((u) => u !== "pieces-uniques")];
 const UNIVERS_LABELS: Record<Universe | "tous", string> = { tous: "Tous", ...UNIVERSE_LABELS };
 
 type Props = {
