@@ -71,7 +71,8 @@ export async function sendSetPasswordEmail(to: string, name: string, token: stri
       `),
     })
     return true
-  } catch {
+  } catch (err) {
+    console.error('[email] sendSetPasswordEmail failed:', err)
     return false
   }
 }
