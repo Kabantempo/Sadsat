@@ -36,7 +36,8 @@ export async function sendVerificationEmail(to: string, name: string, token: str
       `),
     })
     return true
-  } catch {
+  } catch (err) {
+    console.error('[email] sendVerificationEmail failed:', err)
     return false
   }
 }

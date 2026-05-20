@@ -13,7 +13,12 @@ export default async function VerifyEmailPage({
     return <Result success={false} message="Lien de confirmation invalide." />
   }
 
-  const user = await getUserByVerificationToken(token)
+  let user
+  try {
+    user = await getUserByVerificationToken(token)
+  } catch {
+    return <Result success={false} message="Erreur serveur. Réessayez dans quelques instants." />
+  }
 
   if (!user || !user.verificationTokenExpiry) {
     return <Result success={false} message="Ce lien est invalide ou a déjà été utilisé." />
@@ -23,7 +28,11 @@ export default async function VerifyEmailPage({
     return <Result success={false} message="Ce lien a expiré. Créez un nouveau compte." />
   }
 
-  await verifyUserEmail(user.id)
+  try {
+    await verifyUserEmail(user.id)
+  } catch {
+    return <Result success={false} message="Erreur serveur. Réessayez dans quelques instants." />
+  }
 
   return <Result success={true} message="Votre email est confirmé. Vous pouvez maintenant vous connecter." />
 }
