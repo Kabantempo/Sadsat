@@ -1,3 +1,5 @@
+export const revalidate = 30;
+
 import ScrollReveal from "@/components/shared/ScrollReveal";
 import ProductCarousel, { type CarouselItem } from "@/components/shared/ProductCarousel";
 import BijouxDetails from "@/components/pages/BijouxDetails";

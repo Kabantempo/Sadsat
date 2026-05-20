@@ -1,3 +1,5 @@
+export const revalidate = 30;
+
 import Link from "next/link";
 import { getProducts } from "@/lib/products";
 import ProductGrid from "@/components/shared/ProductGrid";

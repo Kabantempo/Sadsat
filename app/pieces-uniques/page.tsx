@@ -1,3 +1,5 @@
+export const revalidate = 30;
+
 import { getProducts } from "@/lib/products";
 import PiecesUniquesContent from "@/components/pages/PiecesUniquesContent";
 

@@ -1,3 +1,5 @@
+export const revalidate = 30;
+
 import { getProducts } from "@/lib/products";
 import BougiesContent from "@/components/pages/BougiesContent";
 import type { CarouselItem } from "@/components/shared/ProductCarousel";

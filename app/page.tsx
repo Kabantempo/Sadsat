@@ -1,3 +1,5 @@
+export const revalidate = 30;
+
 import Link from "next/link";
 import { getUsers } from "@/lib/db";
 import { getProducts } from "@/lib/products";
