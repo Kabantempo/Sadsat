@@ -240,7 +240,7 @@ export default function HeroSection() {
           ref={carouselRef}
           onScroll={onScroll}
           className="flex overflow-x-scroll snap-x snap-mandatory"
-          style={{ scrollbarWidth: "none", paddingLeft: "10vw", paddingRight: "10vw", gap: "12px" }}
+          style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch", touchAction: "pan-x", paddingLeft: "10vw", paddingRight: "10vw", gap: "12px" }}
         >
           {BRAND_PORTALS.map((brand) => {
             const anim =

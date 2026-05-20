@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -23,6 +23,7 @@ export default function CreateurCarousel({ createurs }: Props) {
   const [current, setCurrent] = useState(0);
   const router = useRouter();
   const n = createurs.length;
+  const touchStartX = useRef(0);
 
   if (n === 0) return null;
 
@@ -55,7 +56,15 @@ export default function CreateurCarousel({ createurs }: Props) {
       </div>
 
       {/* Scène */}
-      <div className="relative overflow-hidden h-[340px] md:h-[420px]" style={{ perspective: "1000px" }}>
+      <div
+        className="relative overflow-hidden h-[340px] md:h-[420px]"
+        style={{ perspective: "1000px" }}
+        onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
+        onTouchEnd={(e) => {
+          const dx = touchStartX.current - e.changedTouches[0].clientX
+          if (Math.abs(dx) > 50) go(dx > 0 ? 1 : -1)
+        }}
+      >
         {createurs.map((c, i) => {
           const pos = getPos(i);
           return (

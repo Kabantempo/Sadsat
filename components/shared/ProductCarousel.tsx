@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -49,6 +49,7 @@ export default function ProductCarousel({
   const router = useRouter();
   const n = items.length;
   const dark = theme === "dark";
+  const touchStartX = useRef(0);
 
   const go = (dir: -1 | 1) => setCurrent((c) => (c + dir + n) % n);
 
@@ -63,6 +64,11 @@ export default function ProductCarousel({
       <div
         className="relative overflow-hidden h-[340px] md:h-[420px]"
         style={{ perspective: "1000px" }}
+        onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
+        onTouchEnd={(e) => {
+          const dx = touchStartX.current - e.changedTouches[0].clientX
+          if (Math.abs(dx) > 50) go(dx > 0 ? 1 : -1)
+        }}
       >
         {items.map((item, i) => {
           const pos = getPos(i, current, n);
