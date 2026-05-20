@@ -109,7 +109,7 @@ export type BrandPortal = {
 export const BRAND_PORTALS: BrandPortal[] = [
   {
     slug: 'taxidermie',
-    label: 'Taxidermie',
+    label: 'Crystal Pets',
     subtitle: 'Pièces uniques · Éthique',
     cta: 'Entrer dans la galerie',
     index: '01',
@@ -120,7 +120,7 @@ export const BRAND_PORTALS: BrandPortal[] = [
   },
   {
     slug: 'bijoux',
-    label: 'Bijoux',
+    label: 'L0vers.cult',
     subtitle: 'Mailles · Métal · Contre-culture',
     cta: 'Pénétrer la collection',
     index: '02',
@@ -131,7 +131,7 @@ export const BRAND_PORTALS: BrandPortal[] = [
   },
   {
     slug: 'bougies',
-    label: 'Bougies',
+    label: 'Spectrum N°3',
     subtitle: '> system.boot',
     cta: '',
     index: '03',

@@ -260,9 +260,9 @@ export default function HeroSection() {
                 </p>
                 <h2
                   className={
-                    brand.font === "serif" ? "font-serif italic text-6xl mb-3" :
-                    brand.font === "mono"  ? "font-mono text-6xl mb-3" :
-                    "font-sans font-bold uppercase text-5xl mb-3 tracking-wider"
+                    brand.font === "serif" ? "font-serif italic text-6xl mb-3 whitespace-nowrap" :
+                    brand.font === "mono"  ? "font-mono text-4xl mb-3 whitespace-nowrap" :
+                    "font-sans font-bold uppercase text-5xl mb-3 tracking-wider whitespace-nowrap"
                   }
                   style={brand.font === "sans" ? { textShadow: `2px 0 ${brand.accent}, -2px 0 #1a1a1a` } : undefined}
                 >
