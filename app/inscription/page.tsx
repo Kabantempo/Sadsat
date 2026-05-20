@@ -5,6 +5,73 @@ import Link from 'next/link'
 import { Eye, EyeOff } from 'lucide-react'
 import { signup } from '@/app/actions/auth'
 
+/* ── Floating label field ── */
+function FloatField({
+  id,
+  name,
+  label,
+  type = 'text',
+  autoComplete,
+  value,
+  onChange,
+  onBlur,
+  error,
+  rightSlot,
+}: {
+  id: string
+  name?: string
+  label: string
+  type?: string
+  autoComplete?: string
+  value: string
+  onChange: (v: string) => void
+  onBlur?: () => void
+  error?: string | null
+  rightSlot?: React.ReactNode
+}) {
+  const [focused, setFocused] = useState(false)
+  const floated = focused || value.length > 0
+
+  return (
+    <div>
+      <div className="relative pb-1.5">
+        <label
+          htmlFor={id}
+          className={`absolute left-0 pointer-events-none font-sans transition-all duration-200 ease-out ${
+            floated
+              ? 'top-0 text-[0.58rem] tracking-[0.16em] uppercase text-neutral-400'
+              : 'top-[18px] text-[0.9rem] text-neutral-400'
+          }`}
+        >
+          {label}
+        </label>
+        <input
+          id={id}
+          name={name}
+          type={type}
+          autoComplete={autoComplete}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => { setFocused(false); onBlur?.() }}
+          className={`w-full border-b bg-transparent pt-6 pb-2 ${rightSlot ? 'pr-8' : 'pr-0'} text-[0.9rem] text-neutral-900 font-sans outline-none transition-colors ${
+            error ? 'border-red-400' : focused ? 'border-neutral-900' : 'border-neutral-300'
+          }`}
+        />
+        {rightSlot && (
+          <div className="absolute right-0 bottom-3">
+            {rightSlot}
+          </div>
+        )}
+      </div>
+      {error && (
+        <p className="mt-1 text-[0.62rem] text-red-500 font-sans">{error}</p>
+      )}
+    </div>
+  )
+}
+
+/* ── Password strength ── */
 function passwordStrength(pwd: string): 0 | 1 | 2 | 3 {
   if (pwd.length === 0) return 0
   if (pwd.length < 8) return 1
@@ -13,10 +80,10 @@ function passwordStrength(pwd: string): 0 | 1 | 2 | 3 {
   if (hasLetter && hasDigit) return 3
   return 2
 }
-
 const STRENGTH_LABEL = ['', 'Faible', 'Moyen', 'Fort'] as const
 const STRENGTH_COLOR = ['', 'bg-red-400', 'bg-amber-400', 'bg-emerald-400'] as const
 
+/* ── Page ── */
 export default function InscriptionPage() {
   const [state, action, pending] = useActionState(signup, undefined)
 
@@ -24,23 +91,41 @@ export default function InscriptionPage() {
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPwd, setConfirmPwd] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
   const [cgv, setCgv] = useState(false)
   const [newsletter, setNewsletter] = useState(false)
 
   const [firstNameTouched, setFirstNameTouched] = useState(false)
   const [lastNameTouched, setLastNameTouched] = useState(false)
   const [emailTouched, setEmailTouched] = useState(false)
-  const [passwordTouched, setPasswordTouched] = useState(false)
+  const [confirmTouched, setConfirmTouched] = useState(false)
+
+  const [confirmError, setConfirmError] = useState<string | null>(null)
 
   const strength = passwordStrength(password)
-
-  const emailInvalid = emailTouched && email.length > 0 && !/^[^@]+@[^@]+\.[^@]+$/.test(email)
-  const firstNameInvalid = firstNameTouched && firstName.trim().length < 2
-  const lastNameInvalid = lastNameTouched && lastName.trim().length < 2
-  const passwordWeak = passwordTouched && password.length > 0 && password.length < 8
-
   const combinedName = `${firstName.trim()} ${lastName.trim()}`.trim()
+
+  const firstNameError = firstNameTouched && firstName.trim().length < 2 ? 'Prénom requis.' : null
+  const lastNameError = lastNameTouched && lastName.trim().length < 2 ? 'Nom requis.' : null
+  const emailError =
+    emailTouched && email.length > 0 && !/^[^@]+@[^@]+\.[^@]+$/.test(email)
+      ? 'Adresse email invalide.'
+      : (state?.errors?.email?.[0] ?? null)
+  const confirmFieldError =
+    confirmTouched && confirmPwd.length > 0 && confirmPwd !== password
+      ? 'Les mots de passe ne correspondent pas.'
+      : (confirmError ?? null)
+
+  function handleSubmit(e: React.FormEvent) {
+    if (password !== confirmPwd) {
+      e.preventDefault()
+      setConfirmError('Les mots de passe ne correspondent pas.')
+    } else {
+      setConfirmError(null)
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-[60] flex">
@@ -77,7 +162,6 @@ export default function InscriptionPage() {
           transition={{ duration: 0.55, ease: 'easeOut' }}
           className="w-full max-w-[400px] py-16"
         >
-          {/* Mobile — logo */}
           <Link
             href="/"
             className="md:hidden block font-serif text-xl tracking-[0.25em] uppercase text-neutral-900 mb-12"
@@ -95,131 +179,68 @@ export default function InscriptionPage() {
             Rejoignez le collectif SADSAT.
           </p>
 
-          {/* Hidden combined name field for the server action */}
-          <form action={action} className="space-y-7" noValidate>
+          <form action={action} onSubmit={handleSubmit} className="space-y-6" noValidate>
             <input type="hidden" name="name" value={combinedName} />
 
             {/* Prénom + Nom */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="prenom"
-                  className="block text-[0.6rem] tracking-[0.18em] uppercase text-neutral-400 mb-2 font-sans"
-                >
-                  Prénom
-                </label>
-                <input
-                  id="prenom"
-                  type="text"
-                  autoComplete="given-name"
-                  required
-                  aria-label="Prénom"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  onBlur={() => setFirstNameTouched(true)}
-                  className="w-full border-b border-neutral-300 bg-transparent py-3 text-[0.9rem] text-neutral-900 font-sans outline-none focus:border-neutral-900 transition-colors placeholder:text-neutral-300"
-                  placeholder="Marie"
-                />
-                {firstNameInvalid && (
-                  <p className="mt-1.5 text-[0.62rem] text-red-500 font-sans">
-                    2 caractères minimum.
-                  </p>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor="nom"
-                  className="block text-[0.6rem] tracking-[0.18em] uppercase text-neutral-400 mb-2 font-sans"
-                >
-                  Nom
-                </label>
-                <input
-                  id="nom"
-                  type="text"
-                  autoComplete="family-name"
-                  required
-                  aria-label="Nom de famille"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  onBlur={() => setLastNameTouched(true)}
-                  className="w-full border-b border-neutral-300 bg-transparent py-3 text-[0.9rem] text-neutral-900 font-sans outline-none focus:border-neutral-900 transition-colors placeholder:text-neutral-300"
-                  placeholder="Dupont"
-                />
-                {lastNameInvalid && (
-                  <p className="mt-1.5 text-[0.62rem] text-red-500 font-sans">
-                    Requis.
-                  </p>
-                )}
-              </div>
+            <div className="grid grid-cols-2 gap-5">
+              <FloatField
+                id="prenom"
+                label="Prénom"
+                autoComplete="given-name"
+                value={firstName}
+                onChange={setFirstName}
+                onBlur={() => setFirstNameTouched(true)}
+                error={firstNameError}
+              />
+              <FloatField
+                id="nom"
+                label="Nom"
+                autoComplete="family-name"
+                value={lastName}
+                onChange={setLastName}
+                onBlur={() => setLastNameTouched(true)}
+                error={lastNameError}
+              />
             </div>
 
             {/* Email */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-[0.6rem] tracking-[0.18em] uppercase text-neutral-400 mb-2 font-sans"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                aria-label="Adresse email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={() => setEmailTouched(true)}
-                className="w-full border-b border-neutral-300 bg-transparent py-3 text-[0.9rem] text-neutral-900 font-sans outline-none focus:border-neutral-900 transition-colors placeholder:text-neutral-300"
-                placeholder="votre@email.com"
-              />
-              {(emailInvalid || state?.errors?.email) && (
-                <p className="mt-1.5 text-[0.65rem] text-red-500 font-sans">
-                  {emailInvalid ? 'Adresse email invalide.' : state?.errors?.email?.[0]}
-                </p>
-              )}
-            </div>
+            <FloatField
+              id="email"
+              name="email"
+              label="Email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={setEmail}
+              onBlur={() => setEmailTouched(true)}
+              error={emailError}
+            />
 
             {/* Mot de passe */}
             <div>
-              <label
-                htmlFor="password"
-                className="block text-[0.6rem] tracking-[0.18em] uppercase text-neutral-400 mb-2 font-sans"
-              >
-                Mot de passe
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  required
-                  aria-label="Mot de passe"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onBlur={() => setPasswordTouched(true)}
-                  className="w-full border-b border-neutral-300 bg-transparent py-3 pr-10 text-[0.9rem] text-neutral-900 font-sans outline-none focus:border-neutral-900 transition-colors placeholder:text-neutral-300"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 transition-colors"
-                  aria-label={showPassword ? 'Masquer' : 'Afficher le mot de passe'}
-                >
-                  {showPassword ? (
-                    <EyeOff size={16} strokeWidth={1.5} />
-                  ) : (
-                    <Eye size={16} strokeWidth={1.5} />
-                  )}
-                </button>
-              </div>
-
-              {/* Indicateur de force */}
+              <FloatField
+                id="password"
+                name="password"
+                label="Mot de passe"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                value={password}
+                onChange={setPassword}
+                error={state?.errors?.password?.[0] ?? null}
+                rightSlot={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="text-neutral-400 hover:text-neutral-700 transition-colors"
+                    aria-label={showPassword ? 'Masquer' : 'Afficher'}
+                  >
+                    {showPassword ? <EyeOff size={15} strokeWidth={1.5} /> : <Eye size={15} strokeWidth={1.5} />}
+                  </button>
+                }
+              />
               {password.length > 0 && (
-                <div className="mt-2.5 flex items-center gap-2">
+                <div className="flex items-center gap-2 mt-2">
                   <div className="flex gap-1">
                     {[1, 2, 3].map((level) => (
                       <div
@@ -235,24 +256,30 @@ export default function InscriptionPage() {
                   </span>
                 </div>
               )}
-
-              {(passwordWeak || state?.errors?.password) && (
-                <ul className="mt-1.5 space-y-0.5">
-                  {passwordWeak && (
-                    <li className="text-[0.62rem] text-red-500 font-sans">
-                      — 8 caractères minimum.
-                    </li>
-                  )}
-                  {state?.errors?.password?.map((err) => (
-                    <li key={err} className="text-[0.62rem] text-red-500 font-sans">
-                      — {err}
-                    </li>
-                  ))}
-                </ul>
-              )}
             </div>
 
-            {/* Erreur globale */}
+            {/* Confirmer le mot de passe */}
+            <FloatField
+              id="confirmPwd"
+              label="Confirmer le mot de passe"
+              type={showConfirm ? 'text' : 'password'}
+              autoComplete="new-password"
+              value={confirmPwd}
+              onChange={setConfirmPwd}
+              onBlur={() => setConfirmTouched(true)}
+              error={confirmFieldError}
+              rightSlot={
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm((v) => !v)}
+                  className="text-neutral-400 hover:text-neutral-700 transition-colors"
+                  aria-label={showConfirm ? 'Masquer' : 'Afficher'}
+                >
+                  {showConfirm ? <EyeOff size={15} strokeWidth={1.5} /> : <Eye size={15} strokeWidth={1.5} />}
+                </button>
+              }
+            />
+
             {state?.message && (
               <p className="text-[0.7rem] text-red-600 font-sans">{state.message}</p>
             )}
@@ -278,13 +305,9 @@ export default function InscriptionPage() {
                 </div>
                 <span className="text-[0.7rem] text-neutral-500 leading-relaxed font-sans">
                   J'accepte les{' '}
-                  <Link href="/cgv" className="underline underline-offset-2 hover:text-neutral-800 transition-colors">
-                    CGV
-                  </Link>{' '}
-                  et la{' '}
-                  <Link href="/confidentialite" className="underline underline-offset-2 hover:text-neutral-800 transition-colors">
-                    politique de confidentialité
-                  </Link>
+                  <Link href="/cgv" className="underline underline-offset-2 hover:text-neutral-800 transition-colors">CGV</Link>
+                  {' '}et la{' '}
+                  <Link href="/confidentialite" className="underline underline-offset-2 hover:text-neutral-800 transition-colors">politique de confidentialité</Link>
                 </span>
               </label>
 
@@ -306,12 +329,12 @@ export default function InscriptionPage() {
                   )}
                 </div>
                 <span className="text-[0.7rem] text-neutral-500 leading-relaxed font-sans">
-                  Je souhaite recevoir les nouveautés par email <span className="text-neutral-400">(optionnel)</span>
+                  Recevoir les nouveautés par email{' '}
+                  <span className="text-neutral-400">(optionnel)</span>
                 </span>
               </label>
             </div>
 
-            {/* Bouton */}
             <button
               type="submit"
               disabled={pending || !cgv}
@@ -328,13 +351,9 @@ export default function InscriptionPage() {
             </button>
           </form>
 
-          {/* Lien connexion */}
           <p className="mt-10 text-center text-[0.65rem] tracking-[0.12em] text-neutral-400 font-sans">
             Déjà membre ?{' '}
-            <Link
-              href="/connexion"
-              className="text-neutral-700 hover:text-neutral-900 underline underline-offset-2 transition-colors"
-            >
+            <Link href="/connexion" className="text-neutral-700 hover:text-neutral-900 underline underline-offset-2 transition-colors">
               Se connecter
             </Link>
           </p>

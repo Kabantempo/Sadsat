@@ -5,14 +5,83 @@ import Link from 'next/link'
 import { Eye, EyeOff } from 'lucide-react'
 import { login } from '@/app/actions/auth'
 
+function FloatField({
+  id,
+  name,
+  label,
+  type = 'text',
+  autoComplete,
+  value,
+  onChange,
+  onBlur,
+  error,
+  rightSlot,
+}: {
+  id: string
+  name: string
+  label: string
+  type?: string
+  autoComplete?: string
+  value: string
+  onChange: (v: string) => void
+  onBlur?: () => void
+  error?: string | null
+  rightSlot?: React.ReactNode
+}) {
+  const [focused, setFocused] = useState(false)
+  const floated = focused || value.length > 0
+
+  return (
+    <div>
+      <div className="relative pb-1.5">
+        <label
+          htmlFor={id}
+          className={`absolute left-0 pointer-events-none font-sans transition-all duration-200 ease-out ${
+            floated
+              ? 'top-0 text-[0.58rem] tracking-[0.16em] uppercase text-neutral-400'
+              : 'top-[18px] text-[0.9rem] text-neutral-400'
+          }`}
+        >
+          {label}
+        </label>
+        <input
+          id={id}
+          name={name}
+          type={type}
+          autoComplete={autoComplete}
+          required
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => { setFocused(false); onBlur?.() }}
+          className={`w-full border-b bg-transparent pt-6 pb-2 pr-${rightSlot ? '10' : '0'} text-[0.9rem] text-neutral-900 font-sans outline-none transition-colors ${
+            error ? 'border-red-400' : focused ? 'border-neutral-900' : 'border-neutral-300'
+          }`}
+        />
+        {rightSlot && (
+          <div className="absolute right-0 top-1/2 translate-y-1">
+            {rightSlot}
+          </div>
+        )}
+      </div>
+      {error && (
+        <p className="mt-1 text-[0.62rem] text-red-500 font-sans">{error}</p>
+      )}
+    </div>
+  )
+}
+
 export default function ConnexionPage() {
   const [state, action, pending] = useActionState(login, undefined)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [emailVal, setEmailVal] = useState('')
   const [emailTouched, setEmailTouched] = useState(false)
 
-  const emailInvalid =
-    emailTouched && emailVal.length > 0 && !/^[^@]+@[^@]+\.[^@]+$/.test(emailVal)
+  const emailError =
+    emailTouched && email.length > 0 && !/^[^@]+@[^@]+\.[^@]+$/.test(email)
+      ? 'Adresse email invalide.'
+      : state?.errors?.email?.[0] ?? null
 
   return (
     <div className="fixed inset-0 z-[60] flex">
@@ -67,92 +136,62 @@ export default function ConnexionPage() {
             Connectez-vous à votre espace.
           </p>
 
-          <form action={action} className="space-y-8" noValidate>
-            {/* Email */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-[0.6rem] tracking-[0.18em] uppercase text-neutral-400 mb-2 font-sans"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                aria-label="Adresse email"
-                value={emailVal}
-                onChange={(e) => setEmailVal(e.target.value)}
-                onBlur={() => setEmailTouched(true)}
-                className="w-full border-b border-neutral-300 bg-transparent py-3 text-[0.9rem] text-neutral-900 font-sans outline-none focus:border-neutral-900 transition-colors placeholder:text-neutral-300"
-                placeholder="votre@email.com"
-              />
-              {(emailInvalid || state?.errors?.email) && (
-                <p className="mt-1.5 text-[0.65rem] text-red-500 font-sans">
-                  {emailInvalid ? 'Adresse email invalide.' : state?.errors?.email?.[0]}
-                </p>
-              )}
-            </div>
+          <form action={action} className="space-y-6" noValidate>
+            <FloatField
+              id="email"
+              name="email"
+              label="Email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={setEmail}
+              onBlur={() => setEmailTouched(true)}
+              error={emailError}
+            />
 
-            {/* Mot de passe */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label
-                  htmlFor="password"
-                  className="text-[0.6rem] tracking-[0.18em] uppercase text-neutral-400 font-sans"
-                >
-                  Mot de passe
-                </label>
+              <div className="flex items-end justify-between">
+                <div className="flex-1">
+                  <FloatField
+                    id="password"
+                    name="password"
+                    label="Mot de passe"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={setPassword}
+                    error={state?.errors?.password?.[0] ?? null}
+                    rightSlot={
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        className="text-neutral-400 hover:text-neutral-700 transition-colors"
+                        aria-label={showPassword ? 'Masquer' : 'Afficher le mot de passe'}
+                      >
+                        {showPassword ? <EyeOff size={15} strokeWidth={1.5} /> : <Eye size={15} strokeWidth={1.5} />}
+                      </button>
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end mt-1.5">
                 <Link
                   href="/mot-de-passe-oublie"
-                  className="text-[0.6rem] text-neutral-400 hover:text-neutral-700 transition-colors font-sans"
+                  className="text-[0.58rem] text-neutral-400 hover:text-neutral-700 transition-colors font-sans"
                 >
                   Mot de passe oublié&nbsp;?
                 </Link>
               </div>
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  required
-                  aria-label="Mot de passe"
-                  className="w-full border-b border-neutral-300 bg-transparent py-3 pr-10 text-[0.9rem] text-neutral-900 font-sans outline-none focus:border-neutral-900 transition-colors placeholder:text-neutral-300"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 transition-colors"
-                  aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
-                >
-                  {showPassword ? (
-                    <EyeOff size={16} strokeWidth={1.5} />
-                  ) : (
-                    <Eye size={16} strokeWidth={1.5} />
-                  )}
-                </button>
-              </div>
-              {state?.errors?.password && (
-                <p className="mt-1.5 text-[0.65rem] text-red-500 font-sans">
-                  {state.errors.password[0]}
-                </p>
-              )}
             </div>
 
-            {/* Erreur globale */}
             {state?.message && (
               <p className="text-[0.7rem] text-red-600 font-sans">{state.message}</p>
             )}
 
-            {/* Bouton submit */}
             <button
               type="submit"
               disabled={pending}
-              className="w-full h-12 bg-neutral-900 text-white text-[0.6rem] tracking-widest uppercase font-sans hover:bg-neutral-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2.5"
+              className="w-full h-12 bg-neutral-900 text-white text-[0.6rem] tracking-widest uppercase font-sans hover:bg-neutral-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2.5 mt-4"
             >
               {pending ? (
                 <>
@@ -168,9 +207,7 @@ export default function ConnexionPage() {
           {/* Séparateur */}
           <div className="flex items-center gap-4 my-8">
             <div className="flex-1 h-px bg-neutral-200" />
-            <span className="text-[0.56rem] tracking-[0.18em] uppercase text-neutral-400 font-sans">
-              ou
-            </span>
+            <span className="text-[0.56rem] tracking-[0.18em] uppercase text-neutral-400 font-sans">ou</span>
             <div className="flex-1 h-px bg-neutral-200" />
           </div>
 
@@ -199,13 +236,9 @@ export default function ConnexionPage() {
             </a>
           </div>
 
-          {/* Lien inscription */}
           <p className="mt-10 text-center text-[0.65rem] tracking-[0.12em] text-neutral-400 font-sans">
             Pas encore membre ?{' '}
-            <Link
-              href="/inscription"
-              className="text-neutral-700 hover:text-neutral-900 underline underline-offset-2 transition-colors"
-            >
+            <Link href="/inscription" className="text-neutral-700 hover:text-neutral-900 underline underline-offset-2 transition-colors">
               Créer un compte
             </Link>
           </p>
