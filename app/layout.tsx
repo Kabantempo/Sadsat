@@ -7,7 +7,7 @@ import RandomPieceButton from "@/components/shared/RandomPieceButton";
 import CartProvider from "@/components/shared/CartProvider";
 import CartDrawer from "@/components/shared/CartDrawer";
 import FavoritesProvider from "@/components/shared/FavoritesProvider";
-import { getCurrentUser } from "@/lib/dal";
+import { getSession } from "@/lib/session";
 import PageLoader from "@/components/shared/PageLoader";
 
 const cormorant = Cormorant_Garamond({
@@ -47,7 +47,8 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const user = await getCurrentUser();
+  const session = await getSession();
+  const user = session ? { name: session.name ?? '', role: session.role } : null;
 
   return (
     <html lang="fr">

@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
       await createUser(user)
     }
 
-    await createSession(user.id, user.role)
+    await createSession(user.id, user.role, user.name)
     const dest = user.role === 'admin' ? '/admin' : '/compte'
     return NextResponse.redirect(new URL(dest, base))
   } catch {
