@@ -47,3 +47,11 @@ model Product {
 
   @@map("products")
 }
+
+model ProductImage {
+  id       String @id
+  data     Bytes  @db.LongBlob
+  mimeType String
+
+  @@map("product_images")
+}
