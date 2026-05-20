@@ -155,8 +155,7 @@ function BrandPanel({
 
 export default function HeroSection() {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
-  const initialIndex = useRef(Math.floor(Math.random() * BRAND_PORTALS.length));
-  const [activeIndex, setActiveIndex] = useState(initialIndex.current);
+  const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const subtitle = BRAND_PORTALS.map((b) => b.label).join(" · ");
   const total = BRAND_PORTALS.length;
@@ -169,9 +168,10 @@ export default function HeroSection() {
   }
 
   useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * BRAND_PORTALS.length);
     const el = carouselRef.current;
-    if (!el) return;
-    el.scrollLeft = initialIndex.current * el.clientWidth;
+    if (el) el.scrollLeft = randomIndex * el.clientWidth;
+    setActiveIndex(randomIndex);
   }, []);
 
   function onScroll() {
