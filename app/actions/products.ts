@@ -23,6 +23,16 @@ async function saveFiles(files: File[]): Promise<string[]> {
   return paths
 }
 
+async function saveVideo(file: File): Promise<string | null> {
+  if (!file || file.size === 0) return null
+  await mkdir(UPLOAD_DIR, { recursive: true })
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'mp4'
+  const filename = `${crypto.randomUUID()}.${ext}`
+  const buffer = Buffer.from(await file.arrayBuffer())
+  await writeFile(path.join(UPLOAD_DIR, filename), buffer)
+  return `/uploads/products/${filename}`
+}
+
 function parseProduct(formData: FormData) {
   const name = String(formData.get('name') ?? '').trim()
   const description = String(formData.get('description') ?? '').trim()
@@ -77,16 +87,24 @@ export async function createProductAction(
   const parsed = parseProduct(formData)
   if (!parsed.valid || !parsed.data) return parsed.errors ?? undefined
 
-  const newFiles = formData.getAll('newImages') as File[]
-  const imagePaths = await saveFiles(newFiles)
+  try {
+    const newFiles = formData.getAll('newImages') as File[]
+    const imagePaths = await saveFiles(newFiles)
+    const videoFile = formData.get('video') as File | null
+    const videoPath = videoFile ? await saveVideo(videoFile) : null
 
-  await createProduct({
-    id: crypto.randomUUID(),
-    ...parsed.data,
-    images: imagePaths,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  })
+    await createProduct({
+      id: crypto.randomUUID(),
+      ...parsed.data,
+      images: imagePaths,
+      ...(videoPath ? { video: videoPath } : {}),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    })
+  } catch (err) {
+    console.error('[createProductAction]', err)
+    return { message: 'Erreur lors de la création du produit. Vérifiez la connexion à la base de données.' }
+  }
   redirect('/admin/produits')
 }
 
@@ -101,14 +119,25 @@ export async function updateProductAction(
   const parsed = parseProduct(formData)
   if (!parsed.valid || !parsed.data) return parsed.errors ?? undefined
 
-  const existingImages = formData.getAll('existingImages') as string[]
-  const newFiles = formData.getAll('newImages') as File[]
-  const newPaths = await saveFiles(newFiles)
+  try {
+    const existingImages = formData.getAll('existingImages') as string[]
+    const newFiles = formData.getAll('newImages') as File[]
+    const newPaths = await saveFiles(newFiles)
 
-  await updateProduct(id, {
-    ...parsed.data,
-    images: [...existingImages, ...newPaths],
-  })
+    const videoFile = formData.get('video') as File | null
+    const existingVideo = String(formData.get('existingVideo') ?? '') || undefined
+    const newVideoPath = videoFile ? await saveVideo(videoFile) : null
+    const videoPath = newVideoPath ?? existingVideo ?? null
+
+    await updateProduct(id, {
+      ...parsed.data,
+      images: [...existingImages, ...newPaths],
+      ...(videoPath !== null ? { video: videoPath } : { video: undefined }),
+    })
+  } catch (err) {
+    console.error('[updateProductAction]', err)
+    return { message: 'Erreur lors de la mise à jour. Vérifiez la connexion à la base de données.' }
+  }
   redirect('/admin/produits')
 }
 
