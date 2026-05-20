@@ -94,9 +94,24 @@ export default function ProfilCreateurPage() {
             name="name"
             type="text"
             required
-            placeholder="Votre nom ou pseudonyme"
+            placeholder="Votre nom complet"
             className={fieldClass}
           />
+        </div>
+
+        {/* Pseudo */}
+        <div>
+          <label htmlFor="pseudo" className={labelClass}>Pseudo public</label>
+          <input
+            id="pseudo"
+            name="pseudo"
+            type="text"
+            placeholder="Nom affiché sur le site (ex: CrystalPets)"
+            className={fieldClass}
+          />
+          <p className="mt-1 text-[0.6rem] text-neutral-600">
+            Si renseigné, ce nom remplace votre nom réel sur les pages publiques.
+          </p>
         </div>
 
         {/* Bio */}

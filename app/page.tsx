@@ -26,6 +26,7 @@ export default async function Home() {
       return {
         id: u.id,
         name: u.name,
+        pseudo: u.pseudo,
         bio: u.bio,
         avatar: u.avatar,
         universes,

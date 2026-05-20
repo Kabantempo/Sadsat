@@ -73,7 +73,7 @@ export default async function CreateursPage() {
                 {/* Infos */}
                 <div>
                   <h2 className="font-serif italic text-xl text-neutral-100 group-hover:text-white transition-colors mb-1">
-                    {c.name}
+                    {c.pseudo ?? c.name}
                   </h2>
                   {c.bio && (
                     <p className="text-[0.78rem] text-neutral-500 leading-relaxed mb-3 line-clamp-2">

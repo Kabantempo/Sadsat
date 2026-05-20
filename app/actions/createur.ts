@@ -20,6 +20,7 @@ export async function updateProfileAction(
   const session = await verifyCreateur()
 
   const name = String(formData.get('name') ?? '').trim()
+  const pseudo = String(formData.get('pseudo') ?? '').trim()
   const bio = String(formData.get('bio') ?? '').trim()
   const instagramRaw = String(formData.get('instagram') ?? '').trim().replace(/^@/, '')
   const avatarFile = formData.get('avatar') as File | null
@@ -40,6 +41,7 @@ export async function updateProfileAction(
 
   await updateUser(session.userId, {
     name,
+    pseudo: pseudo || undefined,
     bio: bio || undefined,
     instagram: instagramRaw || undefined,
     ...(avatarPath ? { avatar: avatarPath } : {}),

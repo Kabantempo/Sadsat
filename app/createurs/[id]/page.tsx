@@ -95,7 +95,7 @@ export default async function CreateurPublicPage({
             Créateur SADSAT
           </p>
           <h1 className="font-serif font-light text-6xl md:text-8xl italic text-neutral-100 mb-6 leading-none">
-            {user.name}
+            {user.pseudo ?? user.name}
           </h1>
 
           {/* Tags univers */}
@@ -223,7 +223,7 @@ export default async function CreateurPublicPage({
         <p className="font-mono text-[0.56rem] tracking-[0.3em] uppercase text-neutral-600 mb-6">
           SADSAT · Créateur
         </p>
-        <p className="font-serif italic text-3xl text-neutral-300 mb-10">{user.name}</p>
+        <p className="font-serif italic text-3xl text-neutral-300 mb-10">{user.pseudo ?? user.name}</p>
         <Link
           href="/"
           className="text-[0.6rem] tracking-[0.2em] uppercase text-neutral-600 hover:text-neutral-200 transition-colors border-b border-neutral-800 hover:border-neutral-400 pb-0.5"

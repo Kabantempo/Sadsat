@@ -22,7 +22,7 @@ type NavItem = {
 const NAV: NavItem[] = [
   { label: "Pièces uniques", href: "/pieces-uniques", bordeaux: true },
   {
-    label: "Taxidermie",
+    label: "CrystalPet",
     href: "/taxidermie",
     dropdown: [
       { label: "Oiseaux", href: "/taxidermie/oiseaux" },
@@ -33,7 +33,7 @@ const NAV: NavItem[] = [
     ],
   },
   {
-    label: "Bijoux",
+    label: "L0vers.cult",
     href: "/bijoux",
     dropdown: [
       { label: "Bagues", href: "/bijoux/bagues" },
@@ -53,7 +53,7 @@ const NAV: NavItem[] = [
       { label: "Fondants", href: "/bougies/fondants" },
     ],
   },
-  { label: "Habillement", href: "/habillement" },
+  { label: "Hackcycle", href: "/habillement" },
   { label: "Créateurs", href: "/createurs" },
   { label: "Contact", href: "/contact" },
 ];

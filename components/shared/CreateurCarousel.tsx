@@ -8,6 +8,7 @@ import Image from "next/image";
 export type CreateurCard = {
   id: string;
   name: string;
+  pseudo?: string;
   bio?: string;
   avatar?: string;
   universes: string[];
@@ -82,7 +83,7 @@ export default function CreateurCarousel({ createurs }: Props) {
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <span className="text-5xl font-serif text-neutral-500">
-                      {c.name.charAt(0).toUpperCase()}
+                      {(c.pseudo ?? c.name).charAt(0).toUpperCase()}
                     </span>
                   </div>
                 )}
@@ -92,7 +93,7 @@ export default function CreateurCarousel({ createurs }: Props) {
               {pos === "center" && (
                 <div className="text-center mt-5">
                   <p className="font-serif italic text-xl text-neutral-100 hover:opacity-60 transition-opacity mb-1">
-                    {c.name}
+                    {c.pseudo ?? c.name}
                   </p>
                   {c.bio && (
                     <p className="text-[0.68rem] text-neutral-500 leading-relaxed max-w-[200px] mx-auto mb-3 line-clamp-2">
