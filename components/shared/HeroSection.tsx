@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import MatrixRain from "@/components/shared/MatrixRain";
@@ -155,14 +155,31 @@ function BrandPanel({
 
 export default function HeroSection() {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+  const initialIndex = useRef(Math.floor(Math.random() * BRAND_PORTALS.length));
+  const [activeIndex, setActiveIndex] = useState(initialIndex.current);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const subtitle = BRAND_PORTALS.map((b) => b.label).join(" · ");
   const total = BRAND_PORTALS.length;
 
-  const cols =
-    total === 2 ? "grid-cols-2" :
-    total === 3 ? "grid-cols-3" :
-    total === 4 ? "grid-cols-2" :
-    "grid-cols-2";
+  function scrollToIndex(i: number) {
+    const el = carouselRef.current;
+    if (!el) return;
+    el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
+    setActiveIndex(i);
+  }
+
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    el.scrollLeft = initialIndex.current * el.clientWidth;
+  }, []);
+
+  function onScroll() {
+    const el = carouselRef.current;
+    if (!el) return;
+    const i = Math.round(el.scrollLeft / el.clientWidth);
+    setActiveIndex(i);
+  }
 
   return (
     <>
@@ -216,48 +233,116 @@ export default function HeroSection() {
         })}
       </section>
 
-      {/* GRILLE — mobile uniquement */}
-      <section className={`grid ${cols} md:hidden`}>
-        {BRAND_PORTALS.map((brand) => {
-          const anim =
-            brand.special === "matrix" ? <MatrixRain /> :
-            brand.slug === "taxidermie" ? <TaxidermieAnim /> :
-            brand.slug === "bijoux" ? <BijouxAnim /> :
-            brand.slug === "habillement" ? <HackcycleAnim /> :
-            null;
+      {/* CAROUSEL — mobile uniquement */}
+      <section className="md:hidden relative">
+        {/* Pistes de défilement */}
+        <div
+          ref={carouselRef}
+          onScroll={onScroll}
+          className="flex overflow-x-scroll snap-x snap-mandatory"
+          style={{ scrollbarWidth: "none", paddingLeft: "10vw", paddingRight: "10vw", gap: "12px" }}
+        >
+          {BRAND_PORTALS.map((brand) => {
+            const anim =
+              brand.special === "matrix" ? <MatrixRain /> :
+              brand.slug === "taxidermie" ? <TaxidermieAnim /> :
+              brand.slug === "bijoux" ? <BijouxAnim /> :
+              brand.slug === "habillement" ? <HackcycleAnim /> :
+              null;
 
-          const inner = (
-            <div className="relative z-10 text-center px-4" style={{ color: brand.color }}>
-              <h2
-                className={
-                  brand.font === "serif" ? "font-serif italic text-2xl mb-2" :
-                  brand.font === "mono"  ? "font-mono text-2xl mb-2" :
-                  "font-sans font-bold uppercase text-2xl mb-2 tracking-wider"
-                }
-              >
-                {brand.label}
-              </h2>
-              <p className="text-[0.6rem] tracking-[0.2em] uppercase" style={{ color: brand.accent, opacity: 0.7 }}>
-                {brand.subtitle}
-              </p>
-            </div>
-          );
+            const inner = (
+              <div className="relative z-10 text-center px-6" style={{ color: brand.color }}>
+                <p
+                  className="font-mono text-[0.5rem] tracking-[0.35em] uppercase mb-4"
+                  style={{ color: brand.accent, opacity: 0.55 }}
+                >
+                  {brand.index}
+                </p>
+                <h2
+                  className={
+                    brand.font === "serif" ? "font-serif italic text-6xl mb-3" :
+                    brand.font === "mono"  ? "font-mono text-6xl mb-3" :
+                    "font-sans font-bold uppercase text-5xl mb-3 tracking-wider"
+                  }
+                  style={brand.font === "sans" ? { textShadow: `2px 0 ${brand.accent}, -2px 0 #1a1a1a` } : undefined}
+                >
+                  {brand.label}
+                </h2>
+                <p className="text-[0.72rem] tracking-[0.25em] uppercase mb-8" style={{ color: brand.accent, opacity: 0.7 }}>
+                  {brand.subtitle}
+                </p>
+                {brand.cta && !brand.special && (
+                  <span
+                    className="inline-block text-[0.6rem] tracking-[0.3em] uppercase pb-1 border-b"
+                    style={{ color: brand.color, borderColor: `${brand.accent}88` }}
+                  >
+                    {brand.cta} →
+                  </span>
+                )}
+                {(!brand.cta || brand.special === "comingSoon") && (
+                  <div
+                    className="inline-flex items-center gap-2 border px-4 py-2"
+                    style={{ borderColor: `${brand.accent}66`, color: brand.color }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+                    <span className="font-mono text-[0.58rem] tracking-[0.3em] uppercase">En cours</span>
+                  </div>
+                )}
+              </div>
+            );
 
-          if (brand.cta && !brand.special) {
+            const cardClass = "relative flex-shrink-0 snap-center flex items-center justify-center overflow-hidden rounded-xl transition-all duration-500";
+            const cardStyle = { background: brand.bg, height: "82vh", width: "65vw" };
+
+            if (brand.cta && !brand.special) {
+              return (
+                <Link key={brand.slug} href={`/${brand.slug}`} className={cardClass} style={cardStyle}>
+                  {anim}
+                  {inner}
+                </Link>
+              );
+            }
             return (
-              <Link key={brand.slug} href={`/${brand.slug}`} className="relative flex items-center justify-center min-h-[45vw] overflow-hidden" style={{ background: brand.bg }}>
+              <div key={brand.slug} className={cardClass} style={cardStyle}>
                 {anim}
                 {inner}
-              </Link>
+              </div>
             );
-          }
-          return (
-            <div key={brand.slug} className="relative flex items-center justify-center min-h-[45vw] overflow-hidden" style={{ background: brand.bg }}>
-              {anim}
-              {inner}
-            </div>
-          );
-        })}
+          })}
+        </div>
+
+        {/* Flèches */}
+        {activeIndex > 0 && (
+          <button
+            onClick={() => scrollToIndex(activeIndex - 1)}
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-white transition-colors"
+            aria-label="Précédent"
+          >
+            ‹
+          </button>
+        )}
+        {activeIndex < total - 1 && (
+          <button
+            onClick={() => scrollToIndex(activeIndex + 1)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-white transition-colors"
+            aria-label="Suivant"
+          >
+            ›
+          </button>
+        )}
+
+        {/* Points indicateurs */}
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+          {BRAND_PORTALS.map((brand, i) => (
+            <button
+              key={brand.slug}
+              onClick={() => scrollToIndex(i)}
+              className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+              style={{ background: i === activeIndex ? "#e5e5e5" : "#525252" }}
+              aria-label={brand.label}
+            />
+          ))}
+        </div>
       </section>
     </>
   );

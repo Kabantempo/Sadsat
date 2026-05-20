@@ -17,23 +17,28 @@ const FROM = process.env.SMTP_FROM
   : `SADSAT <${process.env.SMTP_USER}>`
 const BASE = () => process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
 
-export async function sendVerificationEmail(to: string, name: string, token: string) {
+export async function sendVerificationEmail(to: string, name: string, token: string): Promise<boolean> {
   const link = `${BASE()}/verify-email?token=${token}`
-  await transporter.sendMail({
-    from: FROM,
-    to,
-    subject: 'Confirmez votre adresse email — SADSAT',
-    html: emailLayout(`
-      <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
-      <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
-        Merci de vous être inscrit sur SADSAT. Cliquez sur le bouton ci-dessous pour confirmer votre adresse email et activer votre compte.
-      </p>
-      <a href="${link}" style="${btnStyle}">Confirmer mon email</a>
-      <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
-        Ce lien expire dans 24 heures.<br/>Si vous n'avez pas créé de compte, ignorez cet email.
-      </p>
-    `),
-  })
+  try {
+    await transporter.sendMail({
+      from: FROM,
+      to,
+      subject: 'Confirmez votre adresse email — SADSAT',
+      html: emailLayout(`
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
+          Merci de vous être inscrit sur SADSAT. Cliquez sur le bouton ci-dessous pour confirmer votre adresse email et activer votre compte.
+        </p>
+        <a href="${link}" style="${btnStyle}">Confirmer mon email</a>
+        <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
+          Ce lien expire dans 24 heures.<br/>Si vous n'avez pas créé de compte, ignorez cet email.
+        </p>
+      `),
+    })
+    return true
+  } catch {
+    return false
+  }
 }
 
 export async function sendSetPasswordEmail(to: string, name: string, token: string, role: 'créateur' | 'grossiste' | 'admin' = 'admin'): Promise<boolean> {
