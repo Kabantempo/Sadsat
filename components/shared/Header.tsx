@@ -22,7 +22,7 @@ type NavItem = {
 const NAV: NavItem[] = [
   { label: "Pièces uniques", href: "/pieces-uniques", bordeaux: true },
   {
-    label: "CrystalPet",
+    label: "Crystal Pets",
     href: "/taxidermie",
     dropdown: [
       { label: "Oiseaux", href: "/taxidermie/oiseaux" },
