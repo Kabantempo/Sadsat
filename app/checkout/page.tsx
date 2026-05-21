@@ -1,41 +1,11 @@
 'use client'
 import { useCart } from '@/components/shared/CartProvider'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
-import { ArrowLeft, Loader2, Lock } from 'lucide-react'
+import { ArrowLeft, Mail } from 'lucide-react'
 
 export default function CheckoutPage() {
-  const { items, total, closeDrawer } = useCart()
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-
-  async function handleCheckout() {
-    if (!items.length) return
-    setLoading(true)
-    setError('')
-    try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: items.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
-        }),
-      })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        setError(data.error || 'Erreur inattendue.')
-        setLoading(false)
-      }
-    } catch {
-      setError('Impossible de contacter le serveur de paiement.')
-      setLoading(false)
-    }
-  }
+  const { items, total } = useCart()
 
   if (!items.length) {
     return (
@@ -52,6 +22,13 @@ export default function CheckoutPage() {
       </div>
     )
   }
+
+  const subject = encodeURIComponent('Commande SADSAT')
+  const body = encodeURIComponent(
+    items.map(i => `- ${i.name} x${i.quantity} — ${((i.price * i.quantity) / 100).toFixed(2)} €`).join('\n') +
+    `\n\nTotal : ${(total / 100).toFixed(2)} €`
+  )
+  const mailto = `mailto:contact@sadsat.com?subject=${subject}&body=${body}`
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-200 py-16 px-6">
@@ -71,7 +48,6 @@ export default function CheckoutPage() {
           {items.length} article{items.length > 1 ? 's' : ''}
         </p>
 
-        {/* Articles */}
         <div className="divide-y divide-neutral-900 mb-8">
           {items.map(item => (
             <div key={item.id} className="flex items-center gap-4 py-5">
@@ -95,43 +71,31 @@ export default function CheckoutPage() {
           ))}
         </div>
 
-        {/* Totaux */}
-        <div className="border-t border-neutral-800 pt-6 mb-8 space-y-3">
-          <div className="flex justify-between text-[0.72rem] text-neutral-500">
-            <span>Sous-total</span>
-            <span>{(total / 100).toFixed(2)} €</span>
-          </div>
-          <div className="flex justify-between text-[0.72rem] text-neutral-500">
-            <span>Livraison</span>
-            <span className="italic">calculée à l'étape suivante</span>
-          </div>
-          <div className="flex justify-between items-baseline pt-3 border-t border-neutral-800">
+        <div className="border-t border-neutral-800 pt-6 mb-10 space-y-3">
+          <div className="flex justify-between items-baseline pt-3">
             <span className="font-mono text-[0.6rem] tracking-[0.22em] uppercase text-neutral-400">Total</span>
-            <span className="font-serif text-2xl text-neutral-100">{(total / 100).toFixed(2)} € +</span>
+            <span className="font-serif text-2xl text-neutral-100">{(total / 100).toFixed(2)} €</span>
           </div>
         </div>
 
-        {error && (
-          <p className="text-red-400 text-[0.72rem] mb-4 p-3 border border-red-900 bg-red-950/30">
-            {error}
+        <div className="border border-neutral-800 bg-neutral-900/40 p-6 mb-6 text-center space-y-4">
+          <p className="font-mono text-[0.58rem] tracking-[0.22em] uppercase text-neutral-500">
+            Paiement en ligne bientôt disponible
           </p>
-        )}
+          <p className="text-[0.78rem] text-neutral-400 leading-relaxed">
+            Pour finaliser votre commande, envoyez-nous votre sélection par email et nous vous recontactons.
+          </p>
+          <a
+            href={mailto}
+            className="inline-flex items-center gap-2 py-3.5 px-8 bg-neutral-100 text-neutral-900 text-[0.62rem] tracking-[0.24em] uppercase font-medium hover:bg-white transition-colors"
+          >
+            <Mail size={13} strokeWidth={2} />
+            Envoyer ma commande
+          </a>
+        </div>
 
-        <button
-          onClick={handleCheckout}
-          disabled={loading}
-          className="w-full py-4 bg-neutral-100 text-neutral-900 text-[0.62rem] tracking-[0.24em] uppercase font-medium hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-        >
-          {loading ? (
-            <Loader2 size={14} className="animate-spin" />
-          ) : (
-            <Lock size={12} strokeWidth={2} />
-          )}
-          {loading ? 'Redirection vers le paiement...' : 'Procéder au paiement'}
-        </button>
-
-        <p className="text-center text-[0.58rem] text-neutral-700 mt-4 tracking-wider">
-          Paiement sécurisé par Stripe · Livraison via Colissimo
+        <p className="text-center text-[0.58rem] text-neutral-700 tracking-wider">
+          contact@sadsat.com
         </p>
       </div>
     </div>
