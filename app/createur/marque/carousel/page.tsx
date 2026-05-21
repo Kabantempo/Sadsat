@@ -1,0 +1,104 @@
+import { getSession } from '@/lib/session'
+import { getUserById } from '@/lib/db'
+import { getBrandSlides } from '@/lib/brand'
+import { addBrandSlideAction, deleteBrandSlideAction, reorderBrandSlideAction } from '@/app/actions/brand'
+import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowLeft, Plus, ChevronUp, ChevronDown, Trash2 } from 'lucide-react'
+import { redirect } from 'next/navigation'
+
+export default async function CarouselPage() {
+  const session = await getSession()
+  if (!session?.userId) redirect('/connexion')
+  const user = await getUserById(session.userId)
+  if (!user?.universe) redirect('/createur/marque')
+
+  const universe = user.universe
+  const slides = await getBrandSlides(universe)
+
+  return (
+    <div className="p-8 max-w-4xl mx-auto">
+      <Link href="/createur/marque" className="flex items-center gap-2 text-neutral-400 hover:text-neutral-700 text-xs mb-8">
+        <ArrowLeft size={12} /> Ma marque
+      </Link>
+      <h1 className="text-2xl font-light text-neutral-800 mb-8">Carrousel <span className="text-neutral-400 text-base">({slides.length})</span></h1>
+
+      {/* Slides existants */}
+      {slides.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+          {slides.map((slide, i) => (
+            <div key={slide.id} className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
+              {slide.mediaId && (
+                <div className="relative aspect-[3/4] bg-neutral-100">
+                  {slide.type === 'video' ? (
+                    <video src={`/api/images/${slide.mediaId}`} className="w-full h-full object-cover" muted />
+                  ) : (
+                    <Image src={`/api/images/${slide.mediaId}`} alt={slide.title ?? 'slide'} fill className="object-cover" />
+                  )}
+                </div>
+              )}
+              <div className="p-3">
+                {slide.title && <p className="text-sm font-medium text-neutral-700 truncate">{slide.title}</p>}
+                {slide.subtitle && <p className="text-xs text-neutral-400 truncate">{slide.subtitle}</p>}
+                <div className="flex items-center gap-1 mt-3">
+                  <form action={reorderBrandSlideAction}>
+                    <input type="hidden" name="id" value={slide.id} />
+                    <input type="hidden" name="direction" value="up" />
+                    <input type="hidden" name="universe" value={universe} />
+                    <button type="submit" disabled={i === 0} className="p-1 rounded text-neutral-400 hover:text-neutral-700 disabled:opacity-30">
+                      <ChevronUp size={14} />
+                    </button>
+                  </form>
+                  <form action={reorderBrandSlideAction}>
+                    <input type="hidden" name="id" value={slide.id} />
+                    <input type="hidden" name="direction" value="down" />
+                    <input type="hidden" name="universe" value={universe} />
+                    <button type="submit" disabled={i === slides.length - 1} className="p-1 rounded text-neutral-400 hover:text-neutral-700 disabled:opacity-30">
+                      <ChevronDown size={14} />
+                    </button>
+                  </form>
+                  <form action={deleteBrandSlideAction} className="ml-auto">
+                    <input type="hidden" name="id" value={slide.id} />
+                    <button type="submit" className="p-1 rounded text-neutral-300 hover:text-red-500">
+                      <Trash2 size={14} />
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Ajouter un slide */}
+      <div className="bg-white border border-neutral-200 rounded-xl p-6">
+        <h2 className="font-medium text-neutral-700 mb-5 flex items-center gap-2">
+          <Plus size={16} strokeWidth={1.5} /> Ajouter une photo ou vidéo
+        </h2>
+        <form action={addBrandSlideAction} className="space-y-4">
+          <div>
+            <label className="block text-xs text-neutral-500 mb-1">Fichier <span className="text-neutral-400">(photo ou vidéo)</span></label>
+            <input type="file" name="media" accept="image/*,video/*" required
+              className="block w-full text-sm text-neutral-600 file:mr-4 file:py-2 file:px-4 file:border file:border-neutral-200 file:rounded-lg file:text-xs file:bg-neutral-50 file:text-neutral-700 hover:file:bg-neutral-100" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs text-neutral-500 mb-1">Titre <span className="text-neutral-400">(optionnel)</span></label>
+              <input type="text" name="title" placeholder="Ex. Collection automne"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm text-neutral-700 outline-none focus:border-neutral-400" />
+            </div>
+            <div>
+              <label className="block text-xs text-neutral-500 mb-1">Sous-titre <span className="text-neutral-400">(optionnel)</span></label>
+              <input type="text" name="subtitle" placeholder="Ex. Pièces uniques"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm text-neutral-700 outline-none focus:border-neutral-400" />
+            </div>
+          </div>
+          <button type="submit"
+            className="px-6 py-2.5 bg-neutral-900 text-white text-xs tracking-[0.14em] uppercase rounded-lg hover:bg-neutral-700 transition-colors">
+            Ajouter
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}

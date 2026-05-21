@@ -97,6 +97,76 @@ export async function sendContactEmail(data: { name: string; email: string; subj
   }
 }
 
+export async function sendOrderConfirmationEmail(data: {
+  to: string
+  customerName: string
+  orderId: string
+  items: { name: string; price: number; quantity: number }[]
+  subtotal: number
+  shippingCost: number
+  total: number
+  shippingAddress: string
+}): Promise<boolean> {
+  try {
+    const itemsHtml = data.items
+      .map(i => `<tr><td style="padding:6px 0;color:#a3a3a3;font-size:13px;">${i.name} × ${i.quantity}</td><td style="padding:6px 0;color:#a3a3a3;font-size:13px;text-align:right;">${((i.price * i.quantity) / 100).toFixed(2)} €</td></tr>`)
+      .join('')
+    await transporter.sendMail({
+      from: FROM,
+      to: data.to,
+      subject: `Votre commande SADSAT est confirmée`,
+      html: emailLayout(`
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:8px;">Bonjour ${data.customerName},</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">Votre commande a bien été reçue. Nous la préparons avec soin et vous contacterons dès l'expédition.</p>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
+          ${itemsHtml}
+          <tr><td style="padding:6px 0;color:#737373;font-size:12px;">Livraison</td><td style="padding:6px 0;color:#737373;font-size:12px;text-align:right;">${(data.shippingCost / 100).toFixed(2)} €</td></tr>
+          <tr style="border-top:1px solid #262626;"><td style="padding:10px 0;color:#e5e5e5;font-size:14px;font-weight:bold;">Total</td><td style="padding:10px 0;color:#e5e5e5;font-size:14px;font-weight:bold;text-align:right;">${(data.total / 100).toFixed(2)} €</td></tr>
+        </table>
+        <p style="font-size:12px;color:#525252;margin-top:24px;">Adresse de livraison : ${data.shippingAddress}</p>
+      `),
+    })
+    return true
+  } catch (err) {
+    console.error('[email] sendOrderConfirmationEmail failed:', err)
+    return false
+  }
+}
+
+export async function sendNewOrderAdminEmail(data: {
+  orderId: string
+  customerName: string
+  customerEmail: string
+  items: { name: string; price: number; quantity: number }[]
+  total: number
+  shippingAddress: string
+}): Promise<boolean> {
+  try {
+    const itemsHtml = data.items
+      .map(i => `<tr><td style="padding:4px 0;color:#a3a3a3;font-size:13px;">${i.name} × ${i.quantity}</td><td style="padding:4px 0;color:#a3a3a3;font-size:13px;text-align:right;">${((i.price * i.quantity) / 100).toFixed(2)} €</td></tr>`)
+      .join('')
+    await transporter.sendMail({
+      from: FROM,
+      to: 'contact@sadsat.com',
+      subject: `[Commande] ${data.customerName} — ${(data.total / 100).toFixed(2)} €`,
+      html: emailLayout(`
+        <p style="font-size:15px;color:#d4d4d4;margin-bottom:16px;">Nouvelle commande reçue</p>
+        <p style="font-size:13px;color:#a3a3a3;margin-bottom:4px;"><strong style="color:#d4d4d4;">Client :</strong> ${data.customerName}</p>
+        <p style="font-size:13px;color:#a3a3a3;margin-bottom:4px;"><strong style="color:#d4d4d4;">Email :</strong> ${data.customerEmail}</p>
+        <p style="font-size:13px;color:#a3a3a3;margin-bottom:24px;"><strong style="color:#d4d4d4;">Adresse :</strong> ${data.shippingAddress}</p>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
+          ${itemsHtml}
+          <tr style="border-top:1px solid #262626;"><td style="padding:10px 0;color:#e5e5e5;font-size:14px;">Total</td><td style="padding:10px 0;color:#e5e5e5;font-size:14px;text-align:right;">${(data.total / 100).toFixed(2)} €</td></tr>
+        </table>
+      `),
+    })
+    return true
+  } catch (err) {
+    console.error('[email] sendNewOrderAdminEmail failed:', err)
+    return false
+  }
+}
+
 const btnStyle = 'display:inline-block;background:#e5e5e5;color:#0a0a0a;text-decoration:none;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;padding:14px 32px;font-family:Georgia,serif;'
 
 function emailLayout(content: string) {

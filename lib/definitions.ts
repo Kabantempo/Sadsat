@@ -50,6 +50,7 @@ export type User = {
   verificationTokenExpiry?: string
   instagram?: string
   pseudo?: string
+  universe?: string
 }
 
 export type SafeUser = Omit<User, 'passwordHash'>

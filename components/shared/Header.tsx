@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, User, ChevronDown, Menu, X, LayoutDashboard, LogOut, Heart } from "lucide-react";
+import { Search, User, ChevronDown, Menu, X, LayoutDashboard, LogOut, Heart, ShoppingBag } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import { useFavorites } from "@/components/shared/FavoritesProvider";
+import { useCart } from "@/components/shared/CartProvider";
 
 type SubItem = { label: string; href: string };
 
@@ -63,6 +64,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Header({ user }: { user?: UserProp }) {
   const { count: favCount } = useFavorites();
+  const { count: cartCount, openDrawer } = useCart();
   const [openMenu, setOpenMenu]         = useState<string | null>(null);
   const [mobileOpen, setMobileOpen]     = useState(false);
   const [mobileSub, setMobileSub]       = useState<string | null>(null);
@@ -284,10 +286,37 @@ export default function Header({ user }: { user?: UserProp }) {
               </motion.div>
             </Link>
 
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.15 }}
+              aria-label="Panier"
+              onClick={openDrawer}
+              className="relative p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 transition-all"
+            >
+              <ShoppingBag size={15} strokeWidth={1.5} />
+              {cartCount > 0 && (
+                <span className="absolute top-0.5 right-0.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.4rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
+                  {cartCount}
+                </span>
+              )}
+            </motion.button>
+
           </div>
 
           {/* Droite mobile */}
           <div className="md:hidden flex items-center gap-1">
+            <button
+              aria-label="Panier"
+              onClick={openDrawer}
+              className="relative p-1.5 rounded-full text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+            >
+              <ShoppingBag size={19} strokeWidth={1.5} />
+              {cartCount > 0 && (
+                <span className="absolute top-0.5 right-0.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.4rem] leading-none rounded-full w-[12px] h-[12px] flex items-center justify-center font-bold">
+                  {cartCount}
+                </span>
+              )}
+            </button>
             {!user ? (
               <Link
                 href="/connexion"

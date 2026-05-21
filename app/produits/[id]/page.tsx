@@ -10,6 +10,7 @@ import ProductAccordion from "@/components/shared/ProductAccordion";
 import FavoriteButton from "@/components/shared/FavoriteButton";
 import ProductVideo from "@/components/shared/ProductVideo";
 import PreviewBanner from "@/components/shared/PreviewBanner";
+import AddToCartButton from "@/components/shared/AddToCartButton";
 
 export default async function FicheProduitPage({
   params,
@@ -154,20 +155,23 @@ export default async function FicheProduitPage({
             {/* Accordéon détails / dimensions / créateur */}
             <ProductAccordion product={product} creator={creatorData} />
 
-            {/* CTA contact — toujours visible */}
-            {product.status !== "vendu" && (
-              <div className="mt-8">
-                <a
-                  href={`mailto:contact@sadsat.fr?subject=Demande — ${encodeURIComponent(product.name)}`}
-                  className="block w-full text-center py-4 bg-neutral-100 text-neutral-900 text-[0.62rem] tracking-[0.24em] uppercase font-medium hover:bg-white transition-colors"
-                >
-                  Contacter pour acquérir cette pièce
-                </a>
+            {/* CTA panier */}
+            <div className="mt-8">
+              <AddToCartButton
+                id={product.id}
+                name={product.name}
+                price={product.price}
+                image={product.images[0] ?? null}
+                category={product.category}
+                universe={product.universe}
+                disabled={product.status === "vendu"}
+              />
+              {product.status !== "vendu" && (
                 <p className="text-center text-[0.6rem] text-neutral-700 mt-3 tracking-wider">
-                  Les transactions se font par messagerie directe
+                  Paiement sécurisé · Livraison Colissimo
                 </p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

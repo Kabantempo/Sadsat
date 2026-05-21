@@ -24,8 +24,37 @@ model User {
   verificationTokenExpiry String?
   instagram              String?
   pseudo                 String?
+  universe               String?
 
   @@map("users")
+}
+
+model BrandCategory {
+  id             String  @id
+  universe       String
+  label          String
+  slug           String
+  latin          String?
+  description    String?
+  primaryImageId String?
+  hoverImageId   String?
+  order          Int     @default(0)
+
+  @@unique([universe, slug])
+  @@map("brand_categories")
+}
+
+model BrandSlide {
+  id        String  @id
+  universe  String
+  type      String  @default("image")
+  mediaId   String?
+  title     String?
+  subtitle  String?
+  order     Int     @default(0)
+  createdAt String
+
+  @@map("brand_slides")
 }
 
 model Product {
@@ -55,4 +84,37 @@ model ProductImage {
   mimeType String
 
   @@map("product_images")
+}
+
+model Order {
+  id              String      @id
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  shippingAddress String      @db.Text
+  shippingMethod  String
+  shippingCost    Int
+  subtotal        Int
+  total           Int
+  status          String      @default("en_attente")
+  stripeSessionId String?     @unique
+  boxtalRef       String?
+  notes           String?     @db.Text
+  createdAt       String
+  updatedAt       String
+  items           OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String @id
+  orderId   String
+  productId String
+  name      String
+  price     Int
+  quantity  Int
+  order     Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_items")
 }

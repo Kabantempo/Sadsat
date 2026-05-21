@@ -211,7 +211,7 @@ export default function ScrollStory({
               </p>
               <p className="text-[0.84rem] leading-relaxed text-neutral-400 max-w-sm">
                 Taxidermie éthique, bijoux en maille métallique,
-                bougies artisanales, habillement upcyclé —
+                bougies artisanales, mode Hackcycle —
                 chaque marque garde sa voix, son univers, son identité.
                 Ensemble, elles forment un collectif singulier.
               </p>

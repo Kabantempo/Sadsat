@@ -136,18 +136,13 @@ export default function CartDrawer() {
                       {(total / 100).toFixed(2)} €
                     </span>
                   </div>
-                  <p className="font-mono text-[0.54rem] tracking-[0.14em] text-neutral-400 leading-relaxed">
-                    Les transactions se font par messagerie directe avec le créateur.
-                  </p>
-                  <a
-                    href={`mailto:contact@sadsat.fr?subject=Commande SADSAT (${count} article${count > 1 ? "s" : ""})&body=${encodeURIComponent(
-                      items.map((i) => `- ${i.name} x${i.quantity} — ${(i.price / 100).toFixed(2)}€`).join("\n") +
-                      `\n\nTotal : ${(total / 100).toFixed(2)}€`
-                    )}`}
+                  <Link
+                    href="/checkout"
+                    onClick={closeDrawer}
                     className="block w-full text-center py-3.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.62rem] tracking-[0.22em] uppercase font-medium hover:bg-neutral-700 dark:hover:bg-white transition-colors rounded-lg"
                   >
-                    Envoyer ma demande
-                  </a>
+                    Commander
+                  </Link>
                 </div>
               </>
             )}

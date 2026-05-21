@@ -2,7 +2,7 @@
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
-import { createUser, getUserByEmail, deleteUser, clearUsersExcept } from '@/lib/db'
+import { createUser, getUserByEmail, deleteUser, clearUsersExcept, updateUserUniverse } from '@/lib/db'
 import { clearAllProducts } from '@/lib/products'
 import { verifyAdmin } from '@/lib/dal'
 import { sendSetPasswordEmail } from '@/lib/email'
@@ -119,6 +119,14 @@ export async function deleteUserAction(id: string): Promise<void> {
   }
 
   await deleteUser(id)
+  redirect('/admin/comptes')
+}
+
+export async function setUserUniverseAction(formData: FormData): Promise<void> {
+  await verifyAdmin()
+  const userId = String(formData.get('userId') ?? '')
+  const universe = String(formData.get('universe') ?? '') || null
+  await updateUserUniverse(userId, universe)
   redirect('/admin/comptes')
 }
 

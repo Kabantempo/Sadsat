@@ -6,15 +6,8 @@ import ScrollReveal from "@/components/shared/ScrollReveal";
 import ProductCarousel, { type CarouselItem } from "@/components/shared/ProductCarousel";
 import TaxidermieDetails from "@/components/pages/TaxidermieDetails";
 import { getProducts } from "@/lib/products";
+import { getBrandCategories, getBrandSlides } from "@/lib/brand";
 import type { AccordionItem } from "@/components/shared/Accordion";
-
-const CATEGORIES = [
-  { slug: "oiseaux",    label: "Oiseaux",    latin: "Aves",      description: "Passereaux, rapaces, exotiques",    primaryImage: "/images/taxidermie/oiseaux-1.jpg",    hoverImage: "/images/taxidermie/oiseaux-2.jpg"    },
-  { slug: "mammiferes", label: "Mammifères", latin: "Mammalia",  description: "Petits et grands mammifères",        primaryImage: "/images/taxidermie/mammiferes-1.jpg", hoverImage: "/images/taxidermie/mammiferes-2.jpg" },
-  { slug: "insectes",   label: "Insectes",   latin: "Insecta",   description: "Entomologie & sous verre",          primaryImage: "/images/taxidermie/insectes-1.jpg",   hoverImage: "/images/taxidermie/insectes-2.jpg"   },
-  { slug: "cranes",     label: "Crânes",     latin: "Crania",    description: "Crânes préparés & blanchis",        primaryImage: "/images/taxidermie/cranes-1.jpg",     hoverImage: "/images/taxidermie/cranes-2.jpg"     },
-  { slug: "reptiles",   label: "Reptiles",   latin: "Reptilia",  description: "Serpents, lézards, tortues",        primaryImage: "/images/taxidermie/reptiles-1.jpg",   hoverImage: "/images/taxidermie/reptiles-2.jpg"   },
-];
 
 const PROCESS: AccordionItem[] = [
   { question: "01 — Sélection & provenance", answer: "Chaque spécimen est sourcé exclusivement depuis des mortalités naturelles, des confiscations douanières reversées, ou des élevages éthiques. Aucun animal n'est prélevé dans le seul but de la naturalisation. Chaque pièce est accompagnée de son certificat d'origine." },
@@ -32,12 +25,26 @@ const FAQ: AccordionItem[] = [
 ];
 
 export default async function TaxidermiePage() {
-  const products = (await getProducts()).filter(
+  const [products, dbCategories] = await Promise.all([
+    getProducts(),
+    getBrandCategories('taxidermie'),
+  ])
+  const filteredProducts = products.filter(
     (p) => p.universe === "taxidermie" && p.status !== "masqué"
   );
+
+  const CATEGORIES = dbCategories.map(cat => ({
+    slug: cat.slug,
+    label: cat.label,
+    latin: cat.latin ?? '',
+    description: cat.description ?? '',
+    primaryImage: cat.primaryImageId ? `/api/images/${cat.primaryImageId}` : null,
+    hoverImage: cat.hoverImageId ? `/api/images/${cat.hoverImageId}` : null,
+  }))
+
   const carouselItems: CarouselItem[] =
-    products.length > 0
-      ? products.map((p) => ({
+    filteredProducts.length > 0
+      ? filteredProducts.map((p) => ({
           id: p.id,
           title: p.name,
           subtitle: p.category,
@@ -127,10 +134,16 @@ export default async function TaxidermiePage() {
             <ScrollReveal key={cat.slug} delay={i * 0.06}>
               <Link href={`/taxidermie/${cat.slug}`} className="group block">
                 <div className="relative aspect-[3/4] overflow-hidden mb-5 bg-neutral-200">
-                  <Image src={cat.primaryImage} alt={cat.label} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105" />
+                  {cat.primaryImage ? (
+                    <Image src={cat.primaryImage} alt={cat.label} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105" unoptimized />
+                  ) : (
+                    <div className="w-full h-full bg-neutral-200 flex items-center justify-center text-neutral-400 text-4xl">✦</div>
+                  )}
+                  {cat.hoverImage && (
                   <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
-                    <Image src={cat.hoverImage} alt={`${cat.label} — vue alternative`} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover scale-105 group-hover:scale-100 transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" />
+                    <Image src={cat.hoverImage} alt={`${cat.label} — vue alternative`} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover scale-105 group-hover:scale-100 transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" unoptimized />
                   </div>
+                  )}
                   <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/50 to-transparent px-6 py-5 translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out">
                     <p className="font-mono text-[0.58rem] tracking-[0.25em] uppercase text-white/70">{cat.description}</p>
                   </div>

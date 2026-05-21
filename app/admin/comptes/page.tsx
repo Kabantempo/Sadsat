@@ -5,6 +5,7 @@ import CreateAdminForm from '@/components/admin/CreateAdminForm'
 import CreateCreateurForm from '@/components/admin/CreateCreateurForm'
 import CreateGrossisteForm from '@/components/admin/CreateGrossisteForm'
 import DeleteUserButton from '@/components/admin/DeleteUserButton'
+import { setUserUniverseAction } from '@/app/actions/admin'
 import DangerZone from '@/components/admin/DangerZone'
 
 export default async function AdminComptesPage({
@@ -117,12 +118,39 @@ export default async function AdminComptesPage({
             <p className="px-6 py-8 text-[0.82rem] text-neutral-400 italic">Aucun créateur.</p>
           )}
           {createurs.map((u) => (
-            <div key={u.id} className="px-6 py-3.5 flex items-center justify-between gap-4">
+            <div key={u.id} className="px-6 py-4 flex items-center justify-between gap-4 flex-wrap">
               <div>
                 <p className="text-[0.83rem] text-neutral-800">{u.name}</p>
                 <p className="text-[0.68rem] text-neutral-400">{u.email}</p>
+                {u.universe && (
+                  <p className="text-[0.62rem] text-neutral-400 mt-0.5 italic">
+                    Marque : <span className="text-neutral-600 not-italic font-medium">{u.universe}</span>
+                  </p>
+                )}
               </div>
-              <DeleteUserButton id={u.id} name={u.name} />
+              <div className="flex items-center gap-3">
+                <form action={setUserUniverseAction} className="flex items-center gap-2">
+                  <input type="hidden" name="userId" value={u.id} />
+                  <select
+                    name="universe"
+                    defaultValue={u.universe ?? ''}
+                    className="text-[0.65rem] border border-neutral-200 rounded px-2 py-1.5 text-neutral-600 bg-white outline-none focus:border-neutral-400"
+                  >
+                    <option value="">— aucune marque —</option>
+                    <option value="taxidermie">Crystal Pets (taxidermie)</option>
+                    <option value="bijoux">L0vers.cult (bijoux)</option>
+                    <option value="bougies">Spectrum N°3 (bougies)</option>
+                    <option value="habillement">Hackcycle</option>
+                  </select>
+                  <button
+                    type="submit"
+                    className="text-[0.6rem] tracking-[0.14em] uppercase px-3 py-1.5 border border-neutral-300 hover:border-neutral-600 text-neutral-600 hover:text-neutral-900 transition-colors rounded"
+                  >
+                    Assigner
+                  </button>
+                </form>
+                <DeleteUserButton id={u.id} name={u.name} />
+              </div>
             </div>
           ))}
         </div>

@@ -68,7 +68,15 @@ export default function Footer() {
         </nav>
 
         {/* Newsletter */}
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-sm flex flex-col items-center gap-4">
+          <div>
+            <p className="font-mono text-[0.6rem] tracking-[0.28em] uppercase text-neutral-400 mb-1">
+              Newsletter
+            </p>
+            <p className="text-[0.72rem] text-neutral-600 tracking-wide">
+              Recevez nos nouvelles pièces en avant-première
+            </p>
+          </div>
           {sent ? (
             <p className="text-[0.72rem] tracking-wide text-neutral-500">
               Merci — vous recevrez nos actualités en avant-première.

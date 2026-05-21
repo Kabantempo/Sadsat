@@ -18,6 +18,7 @@ function rowToUser(row: {
   verificationTokenExpiry?: string | null
   instagram?: string | null
   pseudo?: string | null
+  universe?: string | null
 }): User {
   return {
     id: row.id,
@@ -35,6 +36,7 @@ function rowToUser(row: {
     verificationTokenExpiry: row.verificationTokenExpiry ?? undefined,
     instagram: row.instagram ?? undefined,
     pseudo: row.pseudo ?? undefined,
+    universe: row.universe ?? undefined,
   }
 }
 
@@ -82,6 +84,10 @@ export async function updateUserRole(id: string, role: 'admin' | 'client'): Prom
   } catch {
     return false
   }
+}
+
+export async function updateUserUniverse(id: string, universe: string | null): Promise<void> {
+  await prisma.user.update({ where: { id }, data: { universe } })
 }
 
 export async function updateUser(
