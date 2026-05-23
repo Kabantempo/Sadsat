@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const customerName = session.customer_details?.name ?? 'Client'
     const customerEmail = session.customer_details?.email ?? ''
     const customerPhone = session.customer_details?.phone ?? null
-    const shipping = session.shipping_details
+    const shipping = session.shipping
     const shippingAddress = shipping
       ? [
           shipping.address?.line1,
