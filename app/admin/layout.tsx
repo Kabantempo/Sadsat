@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LayoutDashboard, Package, Users, LogOut, Database, ShoppingBag, Store, Mail } from 'lucide-react'
+import { LayoutDashboard, Package, Users, LogOut, Database, ShoppingBag, Store, Mail, Settings } from 'lucide-react'
 import { logout } from '@/app/actions/auth'
 import { verifyAdmin } from '@/lib/dal'
 
@@ -66,6 +66,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             >
               <Database size={12} strokeWidth={1.5} />
               DB
+            </Link>
+            <Link
+              href="/admin/parametres"
+              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors whitespace-nowrap"
+            >
+              <Settings size={12} strokeWidth={1.5} />
+              Paramètres
             </Link>
           </nav>
         </div>
