@@ -176,46 +176,49 @@ export default function ScrollStory({
         {/* ── SCÈNE 2 — Révélation image + texte ── */}
         <motion.div
           style={{ opacity: s2Opacity }}
-          className="absolute inset-0 z-20 bg-neutral-950 grid grid-cols-1 md:grid-cols-2 pointer-events-none"
+          className="absolute inset-0 z-20 bg-neutral-950 pointer-events-none"
         >
-          {/* Gauche : visuel révélé de haut en bas */}
-          <div className="relative h-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-neutral-800 via-neutral-900 to-neutral-950">
-              <div
-                className="absolute inset-0 opacity-15"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(0deg, transparent 0px, transparent 40px, rgba(255,255,255,0.04) 40px, rgba(255,255,255,0.04) 41px), repeating-linear-gradient(90deg, transparent 0px, transparent 40px, rgba(255,255,255,0.04) 40px, rgba(255,255,255,0.04) 41px)",
-                }}
+          {/* Layout: flex-col sur mobile, grille 2 colonnes sur desktop */}
+          <div className="h-full flex flex-col md:grid md:grid-cols-2">
+            {/* Gauche : visuel révélé de haut en bas — caché sur mobile */}
+            <div className="hidden md:block relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-neutral-800 via-neutral-900 to-neutral-950">
+                <div
+                  className="absolute inset-0 opacity-15"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(0deg, transparent 0px, transparent 40px, rgba(255,255,255,0.04) 40px, rgba(255,255,255,0.04) 41px), repeating-linear-gradient(90deg, transparent 0px, transparent 40px, rgba(255,255,255,0.04) 40px, rgba(255,255,255,0.04) 41px)",
+                  }}
+                />
+              </div>
+              <motion.div
+                style={{ y: maskY }}
+                className="absolute inset-0 bg-neutral-950"
               />
             </div>
-            <motion.div
-              style={{ y: maskY }}
-              className="absolute inset-0 bg-neutral-950"
-            />
-          </div>
 
-          {/* Droite : texte qui glisse de la droite */}
-          <div className="relative h-full flex flex-col justify-center px-10 md:px-16">
-            <motion.div style={{ x: textX, opacity: textOpacity }}>
-              <motion.div
-                style={{ scaleX: lineScale }}
-                className="w-10 h-px bg-neutral-600 mb-8 origin-left"
-              />
-              <p className="font-mono text-[0.56rem] tracking-[0.28em] uppercase text-neutral-500 mb-5">
-                Notre histoire
-              </p>
-              <p className="font-serif italic text-2xl md:text-3xl text-neutral-100 leading-relaxed mb-6">
-                SADSAT est né d'un dialogue<br />
-                entre créateurs indépendants.
-              </p>
-              <p className="text-[0.84rem] leading-relaxed text-neutral-400 max-w-sm">
-                Taxidermie éthique, bijoux en maille métallique,
-                bougies artisanales, mode Hackcycle —
-                chaque marque garde sa voix, son univers, son identité.
-                Ensemble, elles forment un collectif singulier.
-              </p>
-            </motion.div>
+            {/* Droite : texte qui glisse de la droite */}
+            <div className="flex-1 flex flex-col justify-center px-8 md:px-16">
+              <motion.div style={{ x: textX, opacity: textOpacity }}>
+                <motion.div
+                  style={{ scaleX: lineScale }}
+                  className="w-10 h-px bg-neutral-600 mb-8 origin-left"
+                />
+                <p className="font-mono text-[0.56rem] tracking-[0.28em] uppercase text-neutral-500 mb-5">
+                  Notre histoire
+                </p>
+                <p className="font-serif italic text-2xl md:text-3xl text-neutral-100 leading-relaxed mb-6">
+                  SADSAT est né d'un dialogue<br />
+                  entre créateurs indépendants.
+                </p>
+                <p className="text-[0.84rem] leading-relaxed text-neutral-400 max-w-sm">
+                  Taxidermie éthique, bijoux en maille métallique,
+                  bougies artisanales, mode Hackcycle —
+                  chaque marque garde sa voix, son univers, son identité.
+                  Ensemble, elles forment un collectif singulier.
+                </p>
+              </motion.div>
+            </div>
           </div>
         </motion.div>
 

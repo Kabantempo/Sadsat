@@ -118,3 +118,18 @@ model OrderItem {
 
   @@map("order_items")
 }
+
+model NewsletterSubscriber {
+  id           String @id
+  email        String @unique
+  subscribedAt String
+
+  @@map("newsletter_subscribers")
+}
+
+model SiteSetting {
+  key   String @id
+  value String @db.Text
+
+  @@map("site_settings")
+}

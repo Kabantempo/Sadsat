@@ -39,7 +39,7 @@ export default async function FicheProduitPage({
       <div className={`max-w-6xl mx-auto px-6 py-16 ${isPreview && product.status === "masqué" ? "pt-28" : ""}`}>
 
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 mb-12 font-mono text-[0.55rem] tracking-[0.28em] uppercase text-neutral-600">
+        <div className="flex flex-wrap items-center gap-2 mb-12 font-mono text-[0.55rem] tracking-[0.28em] uppercase text-neutral-600">
           <Link href="/" className="hover:text-neutral-300 transition-colors">Accueil</Link>
           <span>/</span>
           <Link href={`/${product.universe}`} className="hover:text-neutral-300 transition-colors">

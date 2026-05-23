@@ -1,13 +1,12 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
+import NewsletterForm from "./NewsletterForm";
 
 const NAV = [
-  { label: "Taxidermie", href: "/taxidermie" },
-  { label: "Bijoux", href: "/bijoux" },
-  { label: "Bougies", href: "/bougies" },
   { label: "Pièces uniques", href: "/pieces-uniques" },
+  { label: "Crystal Pets", href: "/taxidermie" },
+  { label: "L0vers.cult", href: "/bijoux" },
+  { label: "Spectrum N°3", href: "/bougies", comingSoon: true },
+  { label: "Hackcycle", href: "/habillement" },
   { label: "Créateurs", href: "/createurs" },
   { label: "Contact", href: "/contact" },
   { label: "À propos", href: "/a-propos" },
@@ -24,18 +23,10 @@ function InstagramIcon() {
   );
 }
 
-export default function Footer() {
-  const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
-
-  function handleNewsletter(e: React.FormEvent) {
-    e.preventDefault();
-    if (email) setSent(true);
-  }
-
+export default function Footer({ newsletterEnabled = false }: { newsletterEnabled?: boolean }) {
   return (
     <footer className="bg-neutral-950 border-t border-neutral-900">
-      <div className="max-w-5xl mx-auto px-8 py-24 flex flex-col items-center text-center gap-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-8 py-24 flex flex-col items-center text-center gap-16">
 
         {/* Logo */}
         <Link
@@ -48,7 +39,7 @@ export default function Footer() {
         {/* Liens */}
         <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
           {NAV.map((l) =>
-            l.label === 'Bougies' ? (
+            l.comingSoon ? (
               <span
                 key={l.href}
                 className="text-[0.65rem] tracking-[0.22em] uppercase text-neutral-700 cursor-default select-none"
@@ -68,38 +59,19 @@ export default function Footer() {
         </nav>
 
         {/* Newsletter */}
-        <div className="w-full max-w-sm flex flex-col items-center gap-4">
-          <div>
-            <p className="font-mono text-[0.6rem] tracking-[0.28em] uppercase text-neutral-400 mb-1">
-              Newsletter
-            </p>
-            <p className="text-[0.72rem] text-neutral-600 tracking-wide">
-              Recevez nos nouvelles pièces en avant-première
-            </p>
+        {newsletterEnabled && (
+          <div className="w-full max-w-sm flex flex-col items-center gap-4">
+            <div>
+              <p className="font-mono text-[0.6rem] tracking-[0.28em] uppercase text-neutral-400 mb-1">
+                Newsletter
+              </p>
+              <p className="text-[0.72rem] text-neutral-600 tracking-wide">
+                Recevez nos nouvelles pièces en avant-première
+              </p>
+            </div>
+            <NewsletterForm />
           </div>
-          {sent ? (
-            <p className="text-[0.72rem] tracking-wide text-neutral-500">
-              Merci — vous recevrez nos actualités en avant-première.
-            </p>
-          ) : (
-            <form onSubmit={handleNewsletter} className="flex gap-2">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="votre@email.com"
-                className="flex-1 bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-3 text-[0.72rem] text-neutral-300 placeholder:text-neutral-700 outline-none focus:border-neutral-600 transition-colors"
-              />
-              <button
-                type="submit"
-                className="px-5 py-3 border border-neutral-800 rounded-lg text-[0.6rem] tracking-[0.22em] uppercase text-neutral-500 hover:bg-neutral-900 hover:text-neutral-100 transition-colors duration-200 whitespace-nowrap"
-              >
-                S'inscrire
-              </button>
-            </form>
-          )}
-        </div>
+        )}
 
         {/* Légal */}
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
@@ -115,14 +87,14 @@ export default function Footer() {
         </div>
 
         {/* Bas */}
-        <div className="flex items-center justify-between w-full border-t border-neutral-900 pt-8">
+        <div className="flex items-center justify-between w-full border-t border-neutral-900 pt-8 gap-4">
           <p className="text-[0.54rem] tracking-[0.22em] uppercase text-neutral-700">
             © 2026 SADSAT — France · Fait main
           </p>
           <a
             href="#"
             aria-label="Instagram SADSAT"
-            className="text-neutral-700 hover:text-neutral-400 transition-colors"
+            className="text-neutral-700 hover:text-neutral-400 transition-colors shrink-0"
           >
             <InstagramIcon />
           </a>

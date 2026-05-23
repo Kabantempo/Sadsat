@@ -73,7 +73,7 @@ export default async function BijouxPage() {
         {/* ── Valeurs ── */}
         <div className="max-w-3xl mx-auto mb-16">
           <ScrollReveal delay={0.1}>
-            <div className="grid grid-cols-3 gap-px bg-neutral-900">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-neutral-900">
               {[
                 { val: "100%", label: "Fait main" },
                 { val: "0",    label: "Moule ou fonte" },

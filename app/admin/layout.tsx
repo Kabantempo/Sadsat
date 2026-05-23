@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LayoutDashboard, Package, Users, LogOut, Database, ShoppingBag, Store } from 'lucide-react'
+import { LayoutDashboard, Package, Users, LogOut, Database, ShoppingBag, Store, Mail } from 'lucide-react'
 import { logout } from '@/app/actions/auth'
 import { verifyAdmin } from '@/lib/dal'
 
@@ -11,9 +11,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* Barre admin */}
       <div className="bg-neutral-900 text-white px-4 py-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-4">
-          <span className="text-[0.58rem] tracking-[0.24em] uppercase text-neutral-400 font-medium whitespace-nowrap">
+          <Link
+            href="/"
+            className="text-[0.58rem] tracking-[0.24em] uppercase text-neutral-400 font-medium whitespace-nowrap hover:text-white transition-colors"
+          >
             Admin SADSAT
-          </span>
+          </Link>
           <nav className="flex flex-wrap items-center gap-4">
             <Link
               href="/admin"
@@ -49,6 +52,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             >
               <Store size={12} strokeWidth={1.5} />
               Marques
+            </Link>
+            <Link
+              href="/admin/newsletter"
+              className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-300 hover:text-white transition-colors whitespace-nowrap"
+            >
+              <Mail size={12} strokeWidth={1.5} />
+              Newsletter
             </Link>
             <Link
               href="/admin/db"

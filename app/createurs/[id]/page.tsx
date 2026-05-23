@@ -135,7 +135,7 @@ export default async function CreateurPublicPage({
         </div>
 
         {/* Stats flottantes */}
-        <div className="absolute top-1/2 right-8 md:right-16 -translate-y-1/2 z-10 flex flex-col gap-6 text-right">
+        <div className="hidden md:flex absolute top-1/2 right-16 -translate-y-1/2 z-10 flex-col gap-6 text-right">
           <div>
             <p className="font-serif text-4xl text-neutral-100">{products.length}</p>
             <p className="font-mono text-[0.52rem] tracking-[0.22em] uppercase text-neutral-500 mt-0.5">

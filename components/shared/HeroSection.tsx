@@ -6,7 +6,7 @@ import MatrixRain from "@/components/shared/MatrixRain";
 import { BRAND_PORTALS } from "@/lib/definitions";
 import { TaxidermieAnim, BijouxAnim, HackcycleAnim } from "@/components/shared/BrandAnimations";
 
-const COLLAPSED_PX = 54; // largeur des panneaux repliés (px)
+const COLLAPSED_PX = 150; // largeur des panneaux repliés (px)
 
 function BrandPanel({
   brand,
@@ -103,7 +103,7 @@ function BrandPanel({
         }}
       >
         <span
-          className="font-mono text-[0.5rem] tracking-[0.3em] uppercase whitespace-nowrap"
+          className="font-mono text-[0.85rem] tracking-[0.28em] uppercase whitespace-nowrap"
           style={{
             color: brand.accent,
             writingMode: "vertical-rl",

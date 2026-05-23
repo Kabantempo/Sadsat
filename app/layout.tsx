@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
+import { Cormorant_Garamond, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
@@ -8,6 +8,7 @@ import CartProvider from "@/components/shared/CartProvider";
 import CartDrawer from "@/components/shared/CartDrawer";
 import FavoritesProvider from "@/components/shared/FavoritesProvider";
 import { getSession } from "@/lib/session";
+import { isNewsletterEnabled } from "@/lib/settings";
 import PageLoader from "@/components/shared/PageLoader";
 
 const cormorant = Cormorant_Garamond({
@@ -18,9 +19,9 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-const inter = Inter({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-inter",
   display: "swap",
 });
@@ -49,18 +50,19 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await getSession();
   const user = session ? { name: session.name ?? '', role: session.role } : null;
+  const newsletterEnabled = await isNewsletterEnabled().catch(() => false);
 
   return (
-    <html lang="fr">
+    <html lang="fr" className={`${cormorant.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
       <body
-        className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable} antialiased bg-black text-neutral-200`}
+        className="font-sans antialiased bg-black text-neutral-200"
       >
         <PageLoader />
         <FavoritesProvider isLoggedIn={!!user}>
         <CartProvider>
           <Header user={user ? { name: user.name, role: user.role } : null} />
           <main className="min-h-screen">{children}</main>
-          <Footer />
+          <Footer newsletterEnabled={newsletterEnabled} />
           <RandomPieceButton />
           <CartDrawer />
         </CartProvider>

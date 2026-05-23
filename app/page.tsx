@@ -44,7 +44,7 @@ export default async function Home() {
       <ScrollStory instagrams={instagrams} />
 
       {/* QUI SOMMES NOUS */}
-      <section className="py-32 px-8 max-w-5xl mx-auto text-center">
+      <section className="py-16 md:py-32 px-4 md:px-8 max-w-5xl mx-auto text-center">
         <h3 className="font-serif font-light text-4xl md:text-5xl mb-8 text-neutral-100">
           Qui sommes-nous
         </h3>

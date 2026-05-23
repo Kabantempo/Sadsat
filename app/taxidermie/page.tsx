@@ -92,7 +92,7 @@ export default async function TaxidermiePage() {
       {/* ── Valeurs ── */}
       <div className="max-w-3xl mx-auto px-8 mb-16">
         <ScrollReveal delay={0.1}>
-          <div className="grid grid-cols-3 gap-px bg-neutral-200">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-neutral-200">
             {[
               { label: "Provenance éthique",          detail: "Mortalités naturelles uniquement" },
               { label: "Certification CITES",          detail: "Conformité réglementaire totale"  },
