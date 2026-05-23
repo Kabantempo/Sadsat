@@ -33,9 +33,12 @@ export default async function CreateursPage() {
         </div>
 
         {creatorsWithStats.length === 0 ? (
-          <div className="py-24 text-center">
-            <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-neutral-600">
-              Les créateurs arrivent bientôt
+          <div className="py-32 text-center border border-neutral-800">
+            <p className="font-serif italic text-2xl text-neutral-600 mb-4">
+              Le collectif se constitue.
+            </p>
+            <p className="font-mono text-[0.6rem] tracking-[0.22em] uppercase text-neutral-700">
+              Les créateurs rejoignent l'atelier prochainement
             </p>
           </div>
         ) : (

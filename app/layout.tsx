@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import RandomPieceButton from "@/components/shared/RandomPieceButton";
+import NewArrivalsButton from "@/components/shared/NewArrivalsButton";
 import CartProvider from "@/components/shared/CartProvider";
 import CartDrawer from "@/components/shared/CartDrawer";
 import FavoritesProvider from "@/components/shared/FavoritesProvider";
@@ -64,6 +65,7 @@ export default async function RootLayout({
           <main className="min-h-screen">{children}</main>
           <Footer newsletterEnabled={newsletterEnabled} />
           <RandomPieceButton />
+          <NewArrivalsButton />
           <CartDrawer />
         </CartProvider>
         </FavoritesProvider>

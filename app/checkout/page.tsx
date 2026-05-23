@@ -1,11 +1,14 @@
 'use client'
+import { useState } from 'react'
 import { useCart } from '@/components/shared/CartProvider'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, Mail } from 'lucide-react'
+import { ArrowLeft, Lock } from 'lucide-react'
 
 export default function CheckoutPage() {
   const { items, total } = useCart()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   if (!items.length) {
     return (
@@ -23,12 +26,27 @@ export default function CheckoutPage() {
     )
   }
 
-  const subject = encodeURIComponent('Commande SADSAT')
-  const body = encodeURIComponent(
-    items.map(i => `- ${i.name} x${i.quantity} — ${((i.price * i.quantity) / 100).toFixed(2)} €`).join('\n') +
-    `\n\nTotal : ${(total / 100).toFixed(2)} €`
-  )
-  const mailto = `mailto:contact@sadsat.com?subject=${subject}&body=${body}`
+  async function handleCheckout() {
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: items.map((i) => ({ productId: i.id, quantity: i.quantity })),
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.url) {
+        throw new Error(data.error ?? 'Erreur inattendue')
+      }
+      window.location.href = data.url
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue.')
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-200 py-16 px-6">
@@ -48,8 +66,9 @@ export default function CheckoutPage() {
           {items.length} article{items.length > 1 ? 's' : ''}
         </p>
 
+        {/* Articles */}
         <div className="divide-y divide-neutral-900 mb-8">
-          {items.map(item => (
+          {items.map((item) => (
             <div key={item.id} className="flex items-center gap-4 py-5">
               <div className="relative w-16 h-20 shrink-0 bg-neutral-900 overflow-hidden">
                 {item.image ? (
@@ -71,31 +90,42 @@ export default function CheckoutPage() {
           ))}
         </div>
 
-        <div className="border-t border-neutral-800 pt-6 mb-10 space-y-3">
+        {/* Total */}
+        <div className="border-t border-neutral-800 pt-6 mb-10">
           <div className="flex justify-between items-baseline pt-3">
             <span className="font-mono text-[0.6rem] tracking-[0.22em] uppercase text-neutral-400">Total</span>
             <span className="font-serif text-2xl text-neutral-100">{(total / 100).toFixed(2)} €</span>
           </div>
+          <p className="text-[0.58rem] text-neutral-700 mt-2 text-right">Livraison calculée à l'étape suivante</p>
         </div>
 
-        <div className="border border-neutral-800 bg-neutral-900/40 p-6 mb-6 text-center space-y-4">
-          <p className="font-mono text-[0.58rem] tracking-[0.22em] uppercase text-neutral-500">
-            Paiement en ligne bientôt disponible
-          </p>
-          <p className="text-[0.78rem] text-neutral-400 leading-relaxed">
-            Pour finaliser votre commande, envoyez-nous votre sélection par email et nous vous recontactons.
-          </p>
-          <a
-            href={mailto}
-            className="inline-flex items-center gap-2 py-3.5 px-8 bg-neutral-100 text-neutral-900 text-[0.62rem] tracking-[0.24em] uppercase font-medium hover:bg-white transition-colors"
-          >
-            <Mail size={13} strokeWidth={2} />
-            Envoyer ma commande
-          </a>
-        </div>
+        {/* Erreur */}
+        {error && (
+          <p className="mb-4 text-[0.72rem] text-red-400 text-center">{error}</p>
+        )}
 
-        <p className="text-center text-[0.58rem] text-neutral-700 tracking-wider">
-          contact@sadsat.com
+        {/* Bouton paiement */}
+        <button
+          onClick={handleCheckout}
+          disabled={loading}
+          className="w-full h-14 bg-neutral-100 text-neutral-900 text-[0.62rem] tracking-[0.24em] uppercase font-medium hover:bg-white transition-colors disabled:opacity-50 flex items-center justify-center gap-3"
+        >
+          {loading ? (
+            <>
+              <span className="w-3.5 h-3.5 border border-neutral-400 border-t-neutral-900 rounded-full animate-spin" />
+              Redirection…
+            </>
+          ) : (
+            <>
+              <Lock size={12} strokeWidth={2} />
+              Payer en sécurité
+            </>
+          )}
+        </button>
+
+        <p className="mt-4 text-center text-[0.56rem] text-neutral-700 tracking-wider flex items-center justify-center gap-1.5">
+          <Lock size={9} strokeWidth={1.5} />
+          Paiement sécurisé par Stripe · Carte, Apple Pay, Google Pay
         </p>
       </div>
     </div>
