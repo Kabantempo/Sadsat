@@ -1,10 +1,23 @@
 export const revalidate = 30;
 
+import type { Metadata } from "next";
 import ScrollReveal from "@/components/shared/ScrollReveal";
 import ProductCarousel, { type CarouselItem } from "@/components/shared/ProductCarousel";
 import BijouxDetails from "@/components/pages/BijouxDetails";
 import { getProducts } from "@/lib/products";
 import type { AccordionItem } from "@/components/shared/Accordion";
+
+export const metadata: Metadata = {
+  title: "L0vers.cult — Bijoux en maille métallique · SADSAT",
+  description:
+    "Bijoux artisanaux en maille métallique, faits main, en édition limitée. Bagues, colliers, bracelets. Collection L0vers.cult par SADSAT.",
+  openGraph: {
+    title: "L0vers.cult — Bijoux en maille métallique · SADSAT",
+    description:
+      "Bijoux artisanaux en maille métallique, faits main, en édition limitée. Bagues, colliers, bracelets. Collection L0vers.cult par SADSAT.",
+    type: "website",
+  },
+};
 
 const FAQ: AccordionItem[] = [
   { question: "Comment nettoyer mes bijoux en maille métallique ?", answer: "Pour l'argent : utilisez un chiffon doux et sec, ou une solution d'eau tiède et de liquide vaisselle doux. Séchez immédiatement. Pour le laiton et le cuivre, du bicarbonate de soude humidifié ravive l'éclat. Évitez les produits chimiques agressifs qui altèrent la patine naturelle." },

@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, User, ChevronDown, Menu, X, LayoutDashboard, LogOut, Heart, ShoppingBag } from "lucide-react";
+import { User, ChevronDown, Menu, X, LayoutDashboard, LogOut, Heart, ShoppingBag } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import ThemeToggle from "@/components/shared/ThemeToggle";
+import SearchModal from "@/components/shared/SearchModal";
 import { useFavorites } from "@/components/shared/FavoritesProvider";
 import { useCart } from "@/components/shared/CartProvider";
 
@@ -195,14 +196,7 @@ export default function Header({ user }: { user?: UserProp }) {
           <div className="hidden md:flex ml-auto items-center gap-2 text-neutral-500 dark:text-neutral-400">
             <ThemeToggle />
 
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.15 }}
-              aria-label="Rechercher"
-              className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 transition-all"
-            >
-              <Search size={15} strokeWidth={1.5} />
-            </motion.button>
+            <SearchModal />
 
             {/* Icône utilisateur */}
             {user ? (

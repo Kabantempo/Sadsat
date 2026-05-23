@@ -1,5 +1,6 @@
 export const revalidate = 30;
 
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +12,31 @@ import FavoriteButton from "@/components/shared/FavoriteButton";
 import ProductVideo from "@/components/shared/ProductVideo";
 import PreviewBanner from "@/components/shared/PreviewBanner";
 import AddToCartButton from "@/components/shared/AddToCartButton";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const product = await getProductById(id);
+  if (!product) return { title: "Produit introuvable — SADSAT" };
+
+  const title = `${product.name} — SADSAT`;
+  const description = product.description.slice(0, 155);
+  const image = product.images[0] ?? undefined;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: image ? [{ url: image, width: 800, height: 600 }] : [],
+      type: "website",
+    },
+  };
+}
 
 export default async function FicheProduitPage({
   params,

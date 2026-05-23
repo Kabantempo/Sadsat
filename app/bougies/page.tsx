@@ -1,8 +1,21 @@
 export const revalidate = 30;
 
+import type { Metadata } from "next";
 import { getProducts } from "@/lib/products";
 import BougiesContent from "@/components/pages/BougiesContent";
 import type { CarouselItem } from "@/components/shared/ProductCarousel";
+
+export const metadata: Metadata = {
+  title: "Spectrum N°3 — Bougies artisanales · SADSAT",
+  description:
+    "Bougies artisanales en cire végétale, parfums sourcés en France, mèches coton naturel. Collection Spectrum N°3 par SADSAT.",
+  openGraph: {
+    title: "Spectrum N°3 — Bougies artisanales · SADSAT",
+    description:
+      "Bougies artisanales en cire végétale, parfums sourcés en France, mèches coton naturel. Collection Spectrum N°3 par SADSAT.",
+    type: "website",
+  },
+};
 
 export default async function BougiesPage() {
   const products = (await getProducts()).filter(

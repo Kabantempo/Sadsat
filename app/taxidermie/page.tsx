@@ -1,5 +1,6 @@
 export const revalidate = 30;
 
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import ScrollReveal from "@/components/shared/ScrollReveal";
@@ -8,6 +9,18 @@ import TaxidermieDetails from "@/components/pages/TaxidermieDetails";
 import { getProducts } from "@/lib/products";
 import { getBrandCategories, getBrandSlides } from "@/lib/brand";
 import type { AccordionItem } from "@/components/shared/Accordion";
+
+export const metadata: Metadata = {
+  title: "Crystal Pets — Taxidermie éthique · SADSAT",
+  description:
+    "Pièces de taxidermie éthique, uniques, issues de mortalités naturelles. Collection Crystal Pets par SADSAT.",
+  openGraph: {
+    title: "Crystal Pets — Taxidermie éthique · SADSAT",
+    description:
+      "Pièces de taxidermie éthique, uniques, issues de mortalités naturelles. Collection Crystal Pets par SADSAT.",
+    type: "website",
+  },
+};
 
 const PROCESS: AccordionItem[] = [
   { question: "01 — Sélection & provenance", answer: "Chaque spécimen est sourcé exclusivement depuis des mortalités naturelles, des confiscations douanières reversées, ou des élevages éthiques. Aucun animal n'est prélevé dans le seul but de la naturalisation. Chaque pièce est accompagnée de son certificat d'origine." },

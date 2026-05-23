@@ -1,12 +1,20 @@
 export const revalidate = 30;
 
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getProducts } from "@/lib/products";
 import ProductGrid from "@/components/shared/ProductGrid";
 
-export const metadata = {
-  title: "Habillement — SADSAT × HACKCYCLE",
-  description: "HACKCYCLE : un sabotage textile. Créations originales à partir de récupération et bio-matériaux.",
+export const metadata: Metadata = {
+  title: "HACKCYCLE — Mode upcycling & textile · SADSAT",
+  description:
+    "HACKCYCLE : un sabotage textile. Créations uniques en upcycling et bio-matériaux. Mode punk, libre et responsable par SADSAT.",
+  openGraph: {
+    title: "HACKCYCLE — Mode upcycling & textile · SADSAT",
+    description:
+      "HACKCYCLE : un sabotage textile. Créations uniques en upcycling et bio-matériaux. Mode punk, libre et responsable par SADSAT.",
+    type: "website",
+  },
 };
 
 export default async function Habillement() {

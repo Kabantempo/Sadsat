@@ -1,3 +1,17 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "À propos — SADSAT",
+  description:
+    "SADSAT est un atelier artisanal né de trois pratiques : taxidermie éthique, bijoux en maille métallique et bougies artisanales. Trois univers, une seule signature.",
+  openGraph: {
+    title: "À propos — SADSAT",
+    description:
+      "SADSAT est un atelier artisanal né de trois pratiques : taxidermie éthique, bijoux en maille métallique et bougies artisanales. Trois univers, une seule signature.",
+    type: "website",
+  },
+};
+
 export default function AProposPage() {
   return (
     <div className="min-h-screen pt-32 pb-24 bg-neutral-950 text-neutral-200">
@@ -36,6 +50,15 @@ export default function AProposPage() {
             <p>
               Cires végétales, parfums sourcés en France, mèches en coton naturel. Une approche
               presque algorithmique de la lumière : précise, répétable, mais toujours vivante.
+            </p>
+          </div>
+
+          <div className="border-l border-sky-600 pl-6 py-2">
+            <h3 className="font-sans uppercase font-bold text-2xl tracking-wider mb-3 text-neutral-100">Hackcycle</h3>
+            <p>
+              Vêtements repensés, matières récupérées, coupes assumées. Hackcycle ne vend pas de la mode —
+              il recycle une attitude. Chaque pièce est une seconde chance donnée à un tissu, à une forme,
+              à une idée.
             </p>
           </div>
 
