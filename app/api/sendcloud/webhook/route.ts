@@ -4,6 +4,10 @@ import { sendOrderConfirmationEmail } from '@/lib/email'
 
 export const dynamic = 'force-dynamic'
 
+export async function GET() {
+  return NextResponse.json({ ok: true })
+}
+
 // Sendcloud status IDs → notre statut commande
 const STATUS_MAP: Record<number, string> = {
   1:    'en_attente',   // Annoncé
