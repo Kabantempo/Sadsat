@@ -77,6 +77,31 @@ export async function sendSetPasswordEmail(to: string, name: string, token: stri
   }
 }
 
+export async function sendPasswordResetEmail(to: string, name: string, token: string): Promise<boolean> {
+  const link = `${BASE()}/set-password?token=${token}`
+  try {
+    await transporter.sendMail({
+      from: FROM,
+      to,
+      subject: 'Réinitialisation de votre mot de passe — SADSAT',
+      html: emailLayout(`
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
+          Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous pour en choisir un nouveau.
+        </p>
+        <a href="${link}" style="${btnStyle}">Réinitialiser mon mot de passe</a>
+        <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
+          Ce lien expire dans 1 heure.<br/>Si vous n'avez pas fait cette demande, ignorez cet email — votre mot de passe reste inchangé.
+        </p>
+      `),
+    })
+    return true
+  } catch (err) {
+    console.error('[email] sendPasswordResetEmail failed:', err)
+    return false
+  }
+}
+
 export async function sendContactEmail(data: { name: string; email: string; subject: string; message: string }): Promise<boolean> {
   try {
     await transporter.sendMail({

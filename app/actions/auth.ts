@@ -2,10 +2,10 @@
 import { redirect } from 'next/navigation'
 import bcrypt from 'bcryptjs'
 import { SignupFormSchema, LoginFormSchema, type FormState } from '@/lib/definitions'
-import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword, getUserByPasswordToken, clearPasswordToken, saveVerificationToken, getUserByVerificationToken, verifyUserEmail } from '@/lib/db'
+import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword, getUserByPasswordToken, clearPasswordToken, saveVerificationToken, getUserByVerificationToken, verifyUserEmail, savePasswordToken } from '@/lib/db'
 import { verifySession } from '@/lib/dal'
 import { createSession, deleteSession } from '@/lib/session'
-import { sendVerificationEmail } from '@/lib/email'
+import { sendVerificationEmail, sendPasswordResetEmail } from '@/lib/email'
 
 export async function signup(state: FormState, formData: FormData): Promise<FormState> {
   const validated = SignupFormSchema.safeParse({
@@ -139,6 +139,29 @@ export async function setPasswordAction(
     user.role === 'grossiste' ? '/grossiste' :
     '/compte'
   redirect(setPasswordDest)
+}
+
+export type ForgotPasswordState = { message?: string; success?: boolean } | undefined
+
+export async function forgotPasswordAction(
+  _state: ForgotPasswordState,
+  formData: FormData
+): Promise<ForgotPasswordState> {
+  const email = String(formData.get('email') ?? '').trim().toLowerCase()
+  if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
+    return { message: 'Adresse email invalide.' }
+  }
+
+  const user = await getUserByEmail(email)
+  // Toujours répondre la même chose pour ne pas révéler si l'email existe
+  if (!user) return { success: true }
+
+  const token = crypto.randomUUID()
+  const expiry = new Date(Date.now() + 60 * 60 * 1000).toISOString() // 1 heure
+  await savePasswordToken(user.id, token, expiry)
+  await sendPasswordResetEmail(email, user.name, token)
+
+  return { success: true }
 }
 
 export async function setupAdmin(state: FormState, formData: FormData): Promise<FormState> {
