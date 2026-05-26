@@ -31,20 +31,30 @@ export async function POST(req: NextRequest) {
     })
     const lineItems = expanded.line_items?.data ?? []
 
-    const customerName = session.customer_details?.name ?? 'Client'
+    const customerName  = session.customer_details?.name ?? 'Client'
     const customerEmail = session.customer_details?.email ?? ''
     const customerPhone = session.customer_details?.phone ?? null
-    const shipping = session.shipping
-    const shippingAddress = shipping
-      ? [
-          shipping.address?.line1,
-          shipping.address?.line2,
-          `${shipping.address?.postal_code} ${shipping.address?.city}`,
-          shipping.address?.country,
-        ]
+
+    // shipping_details existe dans l'API Stripe mais les types TS v22 sont en décalage
+    type ShippingDetails = {
+      address?: { line1?: string | null; line2?: string | null; postal_code?: string | null; city?: string | null; country?: string | null } | null
+    } | null
+    const shipping = ((session as unknown) as Record<string, unknown>)['shipping_details'] as ShippingDetails
+      ?? ((session as unknown) as Record<string, unknown>)['shipping'] as ShippingDetails
+
+    const addr = shipping?.address
+    const shippingAddress = addr
+      ? [addr.line1, addr.line2, `${addr.postal_code ?? ''} ${addr.city ?? ''}`.trim(), addr.country]
           .filter(Boolean)
           .join(', ')
-      : ''
+      : (session.customer_details?.address
+          ? [
+              session.customer_details.address.line1,
+              session.customer_details.address.line2,
+              `${session.customer_details.address.postal_code ?? ''} ${session.customer_details.address.city ?? ''}`.trim(),
+              session.customer_details.address.country,
+            ].filter(Boolean).join(', ')
+          : '')
 
     const subtotal = (session.amount_subtotal ?? 0)
     const total = session.amount_total ?? 0
