@@ -5,6 +5,7 @@ import { addBrandSlideAction, deleteBrandSlideAction, reorderBrandSlideAction } 
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, Plus, ChevronUp, ChevronDown, Trash2 } from 'lucide-react'
+import MediaUploadInput from '@/components/shared/MediaUploadInput'
 import { redirect } from 'next/navigation'
 
 export default async function CarouselPage() {
@@ -76,11 +77,7 @@ export default async function CarouselPage() {
           <Plus size={16} strokeWidth={1.5} /> Ajouter une photo ou vidéo
         </h2>
         <form action={addBrandSlideAction} className="space-y-4">
-          <div>
-            <label className="block text-xs text-neutral-500 mb-1">Fichier <span className="text-neutral-400">(photo ou vidéo)</span></label>
-            <input type="file" name="media" accept="image/*,video/*" required
-              className="block w-full text-sm text-neutral-600 file:mr-4 file:py-2 file:px-4 file:border file:border-neutral-200 file:rounded-lg file:text-xs file:bg-neutral-50 file:text-neutral-700 hover:file:bg-neutral-100" />
-          </div>
+          <MediaUploadInput name="media" />
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-neutral-500 mb-1">Titre <span className="text-neutral-400">(optionnel)</span></label>
