@@ -38,9 +38,10 @@ const FAQ: AccordionItem[] = [
 ];
 
 export default async function TaxidermiePage() {
-  const [products, dbCategories] = await Promise.all([
+  const [products, dbCategories, slides] = await Promise.all([
     getProducts(),
     getBrandCategories('taxidermie'),
+    getBrandSlides('taxidermie'),
   ])
   const filteredProducts = products.filter(
     (p) => p.universe === "taxidermie" && p.status !== "masqué"
@@ -55,21 +56,32 @@ export default async function TaxidermiePage() {
     hoverImage: cat.hoverImageId ? `/api/images/${cat.hoverImageId}` : null,
   }))
 
+  const slideItems: CarouselItem[] = slides
+    .filter(s => s.mediaId)
+    .map(s => ({
+      id: s.id,
+      title: s.title ?? '',
+      subtitle: s.subtitle ?? undefined,
+      image: `/api/images/${s.mediaId}`,
+    }))
+
   const carouselItems: CarouselItem[] =
-    filteredProducts.length > 0
-      ? filteredProducts.map((p) => ({
-          id: p.id,
-          title: p.name,
-          subtitle: p.category,
-          price: `${(p.price / 100).toFixed(2)} €`,
-          image: p.images[0],
-          href: `/produits/${p.id}`,
-        }))
-      : [1, 2, 3, 4, 5, 6].map((i) => ({
-          id: i,
-          title: `Pièce ${String(i).padStart(2, "0")}`,
-          subtitle: "Bientôt disponible",
-        }));
+    slideItems.length > 0
+      ? slideItems
+      : filteredProducts.length > 0
+        ? filteredProducts.map((p) => ({
+            id: p.id,
+            title: p.name,
+            subtitle: p.category,
+            price: `${(p.price / 100).toFixed(2)} €`,
+            image: p.images[0],
+            href: `/produits/${p.id}`,
+          }))
+        : [1, 2, 3, 4, 5, 6].map((i) => ({
+            id: i,
+            title: `Pièce ${String(i).padStart(2, "0")}`,
+            subtitle: "Bientôt disponible",
+          }));
 
   return (
     <div className="min-h-screen pb-24 bg-[#fafaf7] dark:bg-neutral-950 text-[#1a1a1a] dark:text-neutral-100">

@@ -89,6 +89,10 @@ export async function deleteBrandSlide(id: string): Promise<void> {
   await prisma.brandSlide.delete({ where: { id } })
 }
 
+export async function updateBrandSlide(id: string, data: { title: string | null; subtitle: string | null }): Promise<void> {
+  await prisma.brandSlide.update({ where: { id }, data })
+}
+
 export async function reorderBrandSlide(id: string, direction: 'up' | 'down', universe: string): Promise<void> {
   const slides = await getBrandSlides(universe)
   const idx = slides.findIndex(s => s.id === id)

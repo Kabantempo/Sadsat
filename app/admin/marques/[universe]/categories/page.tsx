@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, Plus, ChevronUp, ChevronDown, Trash2, Sparkles } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import StopPropDiv from '@/components/admin/StopPropDiv'
 
 const BRAND_NAMES: Record<string, string> = {
   taxidermie: 'Crystal Pets',
@@ -136,28 +137,28 @@ export default async function AdminCategoriesPage({ params }: Props) {
                 {cat.latin && <p className="text-xs text-neutral-400 italic">{cat.latin}</p>}
                 <p className="text-xs text-neutral-400">/{universe}/{cat.slug}</p>
               </div>
-              <div className="flex items-center gap-1 shrink-0">
+              <StopPropDiv className="flex items-center gap-1 shrink-0">
                 <form action={reorderCategory}>
                   <input type="hidden" name="id" value={cat.id} />
                   <input type="hidden" name="direction" value="up" />
-                  <button type="submit" disabled={i === 0} onClick={e => e.stopPropagation()} className="p-1 rounded text-neutral-400 hover:text-neutral-700 disabled:opacity-30">
+                  <button type="submit" disabled={i === 0} className="p-1 rounded text-neutral-400 hover:text-neutral-700 disabled:opacity-30">
                     <ChevronUp size={14} />
                   </button>
                 </form>
                 <form action={reorderCategory}>
                   <input type="hidden" name="id" value={cat.id} />
                   <input type="hidden" name="direction" value="down" />
-                  <button type="submit" disabled={i === categories.length - 1} onClick={e => e.stopPropagation()} className="p-1 rounded text-neutral-400 hover:text-neutral-700 disabled:opacity-30">
+                  <button type="submit" disabled={i === categories.length - 1} className="p-1 rounded text-neutral-400 hover:text-neutral-700 disabled:opacity-30">
                     <ChevronDown size={14} />
                   </button>
                 </form>
                 <form action={deleteCategory}>
                   <input type="hidden" name="id" value={cat.id} />
-                  <button type="submit" onClick={e => e.stopPropagation()} className="p-1 rounded text-neutral-300 hover:text-red-500">
+                  <button type="submit" className="p-1 rounded text-neutral-300 hover:text-red-500">
                     <Trash2 size={14} />
                   </button>
                 </form>
-              </div>
+              </StopPropDiv>
             </summary>
             <div className="border-t border-neutral-100 p-4 bg-neutral-50">
               <form action={editCategory} className="space-y-3">

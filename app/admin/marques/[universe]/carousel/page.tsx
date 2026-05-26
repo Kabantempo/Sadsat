@@ -1,10 +1,10 @@
 import { verifyAdmin } from '@/lib/dal'
-import { getBrandSlides, createBrandSlide, deleteBrandSlide, reorderBrandSlide } from '@/lib/brand'
+import { getBrandSlides, createBrandSlide, deleteBrandSlide, reorderBrandSlide, updateBrandSlide } from '@/lib/brand'
 import { uploadFile } from '@/lib/cloudinary'
 import { redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, Plus, ChevronUp, ChevronDown, Trash2 } from 'lucide-react'
+import { ArrowLeft, Plus, ChevronUp, ChevronDown, Trash2, Pencil } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import MediaUploadInput from '@/components/shared/MediaUploadInput'
 
@@ -61,6 +61,16 @@ export default async function AdminCarouselPage({ params }: Props) {
     redirect(`/admin/marques/${universe}/carousel`)
   }
 
+  async function editSlide(formData: FormData) {
+    'use server'
+    await verifyAdmin()
+    const id = String(formData.get('id') ?? '')
+    const title = String(formData.get('title') ?? '').trim() || null
+    const subtitle = String(formData.get('subtitle') ?? '').trim() || null
+    await updateBrandSlide(id, { title, subtitle })
+    redirect(`/admin/marques/${universe}/carousel`)
+  }
+
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <Link href="/admin/marques" className="flex items-center gap-2 text-neutral-400 hover:text-neutral-700 text-xs mb-8">
@@ -87,6 +97,9 @@ export default async function AdminCarouselPage({ params }: Props) {
               <div className="p-3">
                 {slide.title && <p className="text-sm font-medium text-neutral-700 truncate">{slide.title}</p>}
                 {slide.subtitle && <p className="text-xs text-neutral-400 truncate">{slide.subtitle}</p>}
+                {!slide.title && !slide.subtitle && (
+                  <p className="text-xs text-neutral-300 italic">Aucun texte</p>
+                )}
                 <div className="flex items-center gap-1 mt-3">
                   <form action={reorderSlide}>
                     <input type="hidden" name="id" value={slide.id} />
@@ -109,6 +122,43 @@ export default async function AdminCarouselPage({ params }: Props) {
                     </button>
                   </form>
                 </div>
+
+                {/* Panneau édition titre/sous-titre */}
+                <details className="mt-3 group">
+                  <summary className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-neutral-700 cursor-pointer list-none select-none">
+                    <Pencil size={11} />
+                    Modifier le texte
+                  </summary>
+                  <form action={editSlide} className="mt-3 space-y-2">
+                    <input type="hidden" name="id" value={slide.id} />
+                    <div>
+                      <label className="block text-[0.68rem] text-neutral-400 mb-1">Titre</label>
+                      <input
+                        type="text"
+                        name="title"
+                        defaultValue={slide.title ?? ''}
+                        placeholder="Ex. Collection automne"
+                        className="w-full border border-neutral-200 rounded px-2.5 py-1.5 text-xs outline-none focus:border-neutral-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[0.68rem] text-neutral-400 mb-1">Sous-titre</label>
+                      <input
+                        type="text"
+                        name="subtitle"
+                        defaultValue={slide.subtitle ?? ''}
+                        placeholder="Ex. Pièce unique"
+                        className="w-full border border-neutral-200 rounded px-2.5 py-1.5 text-xs outline-none focus:border-neutral-400"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full py-1.5 bg-neutral-900 text-white text-[0.65rem] tracking-[0.1em] uppercase rounded hover:bg-neutral-700 transition-colors"
+                    >
+                      Sauvegarder
+                    </button>
+                  </form>
+                </details>
               </div>
             </div>
           ))}

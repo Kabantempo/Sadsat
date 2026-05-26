@@ -1,7 +1,7 @@
 import { verifyAdmin } from '@/lib/dal'
 import { getOrders } from '@/lib/orders'
-import { expedierCommandeAction, updateTrackingAction, updateStatusAction } from '@/app/actions/shipping'
-import { Package, Clock, CheckCircle, Truck, XCircle, MapPin, Phone, Mail, ExternalLink } from 'lucide-react'
+import OrderActions from '@/components/admin/OrderActions'
+import { Package, Clock, CheckCircle, Truck, XCircle, MapPin, Phone, Mail } from 'lucide-react'
 
 const STATUS: Record<string, { label: string; bg: string; fg: string; Icon: typeof Clock }> = {
   en_attente: { label: 'En attente', bg: 'bg-yellow-100', fg: 'text-yellow-700', Icon: Clock },
@@ -114,75 +114,20 @@ export default async function AdminCommandesPage() {
 
                 {/* Suivi existant */}
                 {order.boxtalRef && (
-                  <div className="px-6 py-3 border-t border-neutral-100 bg-blue-50 flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-[0.6rem] tracking-[0.12em] uppercase text-blue-500 mb-0.5">Numéro de suivi</p>
-                      <p className="font-mono text-[0.78rem] text-blue-700">{order.boxtalRef}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      {trackingUrl && (
-                        <a href={trackingUrl} target="_blank" rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.12em] uppercase text-blue-600 hover:text-blue-800 border border-blue-200 px-3 py-1.5 hover:bg-blue-100 transition-colors">
-                          <ExternalLink size={10} /> Suivre
-                        </a>
-                      )}
-                      {labelUrl && (
-                        <a href={labelUrl} target="_blank" rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.12em] uppercase text-neutral-600 hover:text-neutral-900 border border-neutral-200 px-3 py-1.5 hover:bg-neutral-50 transition-colors">
-                          <Package size={10} /> Étiquette PDF
-                        </a>
-                      )}
-                    </div>
+                  <div className="px-6 py-3 border-t border-neutral-100 bg-blue-50">
+                    <p className="text-[0.6rem] tracking-[0.12em] uppercase text-blue-500 mb-0.5">Numéro de suivi</p>
+                    <p className="font-mono text-[0.78rem] text-blue-700">{order.boxtalRef}</p>
                   </div>
                 )}
 
                 {/* Actions */}
-                <div className="px-6 py-4 border-t border-neutral-100 bg-neutral-50 flex flex-wrap gap-3 items-end">
-
-                  {/* Changer statut */}
-                  <form action={updateStatusAction} className="flex items-center gap-2">
-                    <input type="hidden" name="orderId" value={order.id} />
-                    <select name="status" defaultValue={order.status}
-                      className="text-[0.68rem] border border-neutral-200 bg-white px-2 py-1.5 text-neutral-700 outline-none">
-                      {Object.entries(STATUS).map(([k, v]) => (
-                        <option key={k} value={k}>{v.label}</option>
-                      ))}
-                    </select>
-                    <button type="submit"
-                      className="text-[0.6rem] tracking-[0.12em] uppercase px-3 py-1.5 border border-neutral-200 bg-white hover:bg-neutral-100 transition-colors text-neutral-600">
-                      Mettre à jour
-                    </button>
-                  </form>
-
-                  {/* Tracking manuel */}
-                  {!order.boxtalRef && (
-                    <form action={updateTrackingAction} className="flex items-center gap-2">
-                      <input type="hidden" name="orderId" value={order.id} />
-                      <input type="text" name="tracking" placeholder="Numéro de suivi manuel"
-                        className="text-[0.68rem] border border-neutral-200 bg-white px-2 py-1.5 outline-none text-neutral-700 w-48" />
-                      <button type="submit"
-                        className="text-[0.6rem] tracking-[0.12em] uppercase px-3 py-1.5 border border-neutral-200 bg-white hover:bg-neutral-100 transition-colors text-neutral-600">
-                        Sauvegarder
-                      </button>
-                    </form>
-                  )}
-
-                  {/* Expédier via Sendcloud */}
-                  {!order.boxtalRef && order.status !== 'annulée' && (
-                    <form action={expedierCommandeAction} className="flex items-center gap-2 ml-auto">
-                      <input type="hidden" name="orderId" value={order.id} />
-                      <input type="number" name="weight" defaultValue="0.5" min="0.1" max="30" step="0.1"
-                        className="text-[0.68rem] border border-neutral-200 bg-white px-2 py-1.5 outline-none text-neutral-700 w-20"
-                        title="Poids en kg" />
-                      <span className="text-[0.6rem] text-neutral-400">kg</span>
-                      <button type="submit"
-                        className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.12em] uppercase px-4 py-1.5 bg-neutral-900 text-white hover:bg-neutral-700 transition-colors">
-                        <Truck size={11} strokeWidth={1.5} />
-                        Expédier via Sendcloud
-                      </button>
-                    </form>
-                  )}
-                </div>
+                <OrderActions
+                  orderId={order.id}
+                  currentStatus={order.status}
+                  boxtalRef={order.boxtalRef ?? null}
+                  trackingUrl={trackingUrl}
+                  labelUrl={labelUrl}
+                />
 
               </div>
             )
