@@ -6,9 +6,10 @@ import Link from 'next/link'
 import { ArrowLeft, Lock } from 'lucide-react'
 
 export default function CheckoutPage() {
-  const { items, total } = useCart()
+  const { items, total, clear } = useCart()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [stale, setStale] = useState(false)
 
   if (!items.length) {
     return (
@@ -39,6 +40,7 @@ export default function CheckoutPage() {
       })
       const data = await res.json()
       if (!res.ok || !data.url) {
+        if (data.notFound) setStale(true)
         throw new Error(data.error ?? 'Erreur inattendue')
       }
       window.location.href = data.url
@@ -101,7 +103,17 @@ export default function CheckoutPage() {
 
         {/* Erreur */}
         {error && (
-          <p className="mb-4 text-[0.72rem] text-red-400 text-center">{error}</p>
+          <div className="mb-4 text-center space-y-3">
+            <p className="text-[0.72rem] text-red-400">{error}</p>
+            {stale && (
+              <button
+                onClick={() => { clear(); setError(null); setStale(false) }}
+                className="text-[0.62rem] tracking-[0.18em] uppercase text-neutral-400 hover:text-neutral-100 underline underline-offset-4 transition-colors"
+              >
+                Vider le panier
+              </button>
+            )}
+          </div>
         )}
 
         {/* Bouton paiement */}

@@ -57,7 +57,7 @@ export default function CreateurCarousel({ createurs }: Props) {
 
       {/* Scène */}
       <div
-        className="relative overflow-hidden h-[340px] md:h-[420px]"
+        className="relative overflow-x-hidden h-[520px] md:h-[600px]"
         style={{ perspective: "1000px" }}
         onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
         onTouchEnd={(e) => {
