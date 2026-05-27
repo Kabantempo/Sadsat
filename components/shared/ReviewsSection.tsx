@@ -47,17 +47,19 @@ export default async function ReviewsSection({ productId, productName }: Props) 
 
   const avg = avgRating(reviews)
   const canReview = await (async () => {
-    if (!session?.email) return false
-    const [orders, alreadyReviewed] = await Promise.all([
-      getOrders(),
-      hasAlreadyReviewed(productId, session.email),
-    ])
-    if (alreadyReviewed) return false
-    return orders.some(
-      (o) =>
-        o.customerEmail.toLowerCase() === session.email!.toLowerCase() &&
-        o.items.some((i) => i.productId === productId)
-    )
+    try {
+      if (!session?.email) return false
+      const [orders, alreadyReviewed] = await Promise.all([
+        getOrders(),
+        hasAlreadyReviewed(productId, session.email),
+      ])
+      if (alreadyReviewed) return false
+      return orders.some(
+        (o) =>
+          o.customerEmail.toLowerCase() === session.email!.toLowerCase() &&
+          o.items.some((i) => i.productId === productId)
+      )
+    } catch { return false }
   })()
 
   return (

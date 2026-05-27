@@ -154,11 +154,9 @@ export default async function RootLayout({
 
   return (
     <html lang="fr" className={`${cormorant.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
-      <head>
+      <body className="font-sans antialiased bg-black text-neutral-200">
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={websiteJsonLd} />
-      </head>
-      <body className="font-sans antialiased bg-black text-neutral-200">
         <PageLoader />
         <FavoritesProvider isLoggedIn={!!user}>
           <CartProvider>
