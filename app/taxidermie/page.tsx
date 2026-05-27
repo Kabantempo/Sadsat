@@ -10,15 +10,27 @@ import { getProducts } from "@/lib/products";
 import { getBrandCategories, getBrandSlides } from "@/lib/brand";
 import type { AccordionItem } from "@/components/shared/Accordion";
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+
 export const metadata: Metadata = {
   title: "Crystal Pets — Taxidermie éthique · SADSAT",
   description:
-    "Pièces de taxidermie éthique, uniques, issues de mortalités naturelles. Collection Crystal Pets par SADSAT.",
+    "Pièces de taxidermie éthique, uniques, issues de mortalités naturelles. Chaque spécimen est sourcé depuis des mortalités naturelles ou confiscations douanières. Collection Crystal Pets par SADSAT.",
+  keywords: ["taxidermie éthique", "Crystal Pets", "pièce unique taxidermie", "naturalisation éthique", "spécimen naturalisé", "taxidermie France"],
+  alternates: { canonical: `${BASE_URL}/taxidermie` },
   openGraph: {
     title: "Crystal Pets — Taxidermie éthique · SADSAT",
     description:
-      "Pièces de taxidermie éthique, uniques, issues de mortalités naturelles. Collection Crystal Pets par SADSAT.",
+      "Taxidermie éthique, pièces uniques issues de mortalités naturelles. Collection Crystal Pets par SADSAT.",
     type: "website",
+    url: `${BASE_URL}/taxidermie`,
+    locale: "fr_FR",
+    siteName: "SADSAT",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Crystal Pets — Taxidermie éthique · SADSAT",
+    description: "Taxidermie éthique, pièces uniques issues de mortalités naturelles.",
   },
 };
 

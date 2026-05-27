@@ -5,15 +5,27 @@ import Link from "next/link";
 import { getProducts } from "@/lib/products";
 import ProductGrid from "@/components/shared/ProductGrid";
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+
 export const metadata: Metadata = {
   title: "HACKCYCLE — Mode upcycling & textile · SADSAT",
   description:
-    "HACKCYCLE : un sabotage textile. Créations uniques en upcycling et bio-matériaux. Mode punk, libre et responsable par SADSAT.",
+    "HACKCYCLE : un sabotage textile. Vêtements et accessoires en upcycling, bio-matériaux et textiles recyclés. Mode punk, libre et responsable par SADSAT.",
+  keywords: ["upcycling mode", "Hackcycle", "vêtements recyclés", "mode responsable", "textile upcyclé", "mode punk France", "bio-matériaux mode"],
+  alternates: { canonical: `${BASE_URL}/habillement` },
   openGraph: {
     title: "HACKCYCLE — Mode upcycling & textile · SADSAT",
     description:
-      "HACKCYCLE : un sabotage textile. Créations uniques en upcycling et bio-matériaux. Mode punk, libre et responsable par SADSAT.",
+      "Vêtements upcyclés, punk et responsables. Collection HACKCYCLE par SADSAT.",
     type: "website",
+    url: `${BASE_URL}/habillement`,
+    locale: "fr_FR",
+    siteName: "SADSAT",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HACKCYCLE — Mode upcycling & textile · SADSAT",
+    description: "Mode upcycling, punk et responsable. Édition limitée.",
   },
 };
 

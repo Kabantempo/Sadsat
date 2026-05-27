@@ -11,6 +11,9 @@ import FavoritesProvider from "@/components/shared/FavoritesProvider";
 import { getSession } from "@/lib/session";
 import { isNewsletterEnabled } from "@/lib/settings";
 import PageLoader from "@/components/shared/PageLoader";
+import JsonLd from "@/components/shared/JsonLd";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -35,16 +38,112 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SADSAT — Taxidermie · Bijoux · Bougies",
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: "SADSAT — Taxidermie · Bijoux · Bougies · Mode",
+    template: "%s | SADSAT",
+  },
   description:
-    "Trois univers, une vision. Pièces uniques de taxidermie éthique, bijoux en mailles métalliques et bougies artisanales.",
+    "Trois univers, une vision. Pièces uniques de taxidermie éthique, bijoux en maille métallique, bougies artisanales et mode upcycling. Créations en édition limitée, faites main en France.",
+  keywords: [
+    "taxidermie éthique",
+    "bijoux artisanaux",
+    "bougies artisanales",
+    "pièces uniques",
+    "Crystal Pets",
+    "L0vers.cult",
+    "Spectrum N°3",
+    "Hackcycle",
+    "SADSAT",
+    "création française",
+    "édition limitée",
+    "maille métallique",
+    "upcycling",
+    "artisanat",
+  ],
+  authors: [{ name: "SADSAT", url: BASE_URL }],
+  creator: "SADSAT",
+  publisher: "SADSAT",
+  category: "e-commerce",
   openGraph: {
-    title: "SADSAT — Taxidermie · Bijoux · Bougies",
+    title: "SADSAT — Taxidermie · Bijoux · Bougies · Mode",
     description:
-      "Trois univers, une vision. Créations artisanales en édition limitée.",
+      "Pièces uniques de taxidermie éthique, bijoux en maille métallique, bougies artisanales et mode upcycling. Édition limitée, fait main.",
     type: "website",
+    url: BASE_URL,
+    siteName: "SADSAT",
+    locale: "fr_FR",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "SADSAT — Créations artisanales en édition limitée",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SADSAT — Taxidermie · Bijoux · Bougies · Mode",
+    description:
+      "Pièces uniques de taxidermie éthique, bijoux en maille métallique, bougies artisanales et mode upcycling. Édition limitée, fait main.",
+    images: ["/og-image.jpg"],
+  },
+  alternates: {
+    canonical: BASE_URL,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${BASE_URL}/#organization`,
+  name: "SADSAT",
+  url: BASE_URL,
+  logo: {
+    "@type": "ImageObject",
+    url: `${BASE_URL}/og-image.jpg`,
+  },
+  description:
+    "Créations artisanales en édition limitée : taxidermie éthique, bijoux en maille métallique, bougies artisanales et mode upcycling.",
+  sameAs: [],
+  brand: [
+    { "@type": "Brand", name: "Crystal Pets" },
+    { "@type": "Brand", name: "L0vers.cult" },
+    { "@type": "Brand", name: "Spectrum N°3" },
+    { "@type": "Brand", name: "Hackcycle" },
+  ],
+}
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${BASE_URL}/#website`,
+  url: BASE_URL,
+  name: "SADSAT",
+  description: "Créations artisanales en édition limitée",
+  publisher: { "@id": `${BASE_URL}/#organization` },
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${BASE_URL}/recherche?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+  inLanguage: "fr-FR",
+}
 
 export default async function RootLayout({
   children,
@@ -55,19 +154,21 @@ export default async function RootLayout({
 
   return (
     <html lang="fr" className={`${cormorant.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
-      <body
-        className="font-sans antialiased bg-black text-neutral-200"
-      >
+      <head>
+        <JsonLd data={organizationJsonLd} />
+        <JsonLd data={websiteJsonLd} />
+      </head>
+      <body className="font-sans antialiased bg-black text-neutral-200">
         <PageLoader />
         <FavoritesProvider isLoggedIn={!!user}>
-        <CartProvider>
-          <Header user={user ? { name: user.name, role: user.role } : null} />
-          <main className="min-h-screen">{children}</main>
-          <Footer newsletterEnabled={newsletterEnabled} />
-          <RandomPieceButton />
-          <NewArrivalsButton />
-          <CartDrawer />
-        </CartProvider>
+          <CartProvider>
+            <Header user={user ? { name: user.name, role: user.role } : null} />
+            <main className="min-h-screen">{children}</main>
+            <Footer newsletterEnabled={newsletterEnabled} />
+            <RandomPieceButton />
+            <NewArrivalsButton />
+            <CartDrawer />
+          </CartProvider>
         </FavoritesProvider>
       </body>
     </html>

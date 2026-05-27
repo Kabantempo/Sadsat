@@ -2,16 +2,17 @@ export const revalidate = 30;
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { getProductById } from "@/lib/products";
 import { getUserById } from "@/lib/db";
 import { UNIVERSE_LABELS } from "@/lib/definitions";
 import ProductAccordion from "@/components/shared/ProductAccordion";
 import FavoriteButton from "@/components/shared/FavoriteButton";
-import ProductVideo from "@/components/shared/ProductVideo";
 import PreviewBanner from "@/components/shared/PreviewBanner";
 import AddToCartButton from "@/components/shared/AddToCartButton";
+import ProductGallery from "@/components/shared/ProductGallery";
+import JsonLd from "@/components/shared/JsonLd";
+import ReviewsSection from "@/components/shared/ReviewsSection";
 
 export async function generateMetadata({
   params,
@@ -22,18 +23,30 @@ export async function generateMetadata({
   const product = await getProductById(id);
   if (!product) return { title: "Produit introuvable — SADSAT" };
 
+  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
   const title = `${product.name} — SADSAT`;
   const description = product.description.slice(0, 155);
   const image = product.images[0] ?? undefined;
+  const canonical = `${BASE_URL}/produits/${id}`
 
   return {
     title,
     description,
+    alternates: { canonical },
     openGraph: {
       title,
       description,
-      images: image ? [{ url: image, width: 800, height: 600 }] : [],
+      url: canonical,
       type: "website",
+      locale: "fr_FR",
+      siteName: "SADSAT",
+      images: image ? [{ url: image, width: 1200, height: 900, alt: product.name }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: image ? [image] : [],
     },
   };
 }
@@ -52,12 +65,61 @@ export default async function FicheProduitPage({
   if (!product) notFound();
   if (product.status === "masqué" && !isPreview) notFound();
 
+  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
   const creator = product.createdBy ? await getUserById(product.createdBy) : null;
   const creatorData = creator
     ? { id: creator.id, name: creator.name, avatar: creator.avatar }
     : null;
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": `${BASE_URL}/produits/${product.id}`,
+    name: product.name,
+    description: product.description,
+    image: product.images.map((img) => img),
+    url: `${BASE_URL}/produits/${product.id}`,
+    brand: {
+      "@type": "Brand",
+      name: UNIVERSE_LABELS[product.universe] ?? "SADSAT",
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${BASE_URL}/produits/${product.id}`,
+      priceCurrency: "EUR",
+      price: (product.price / 100).toFixed(2),
+      priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      availability:
+        product.status === "vendu"
+          ? "https://schema.org/SoldOut"
+          : "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: {
+        "@type": "Organization",
+        name: "SADSAT",
+        url: BASE_URL,
+      },
+    },
+    ...(creator && {
+      manufacturer: {
+        "@type": "Person",
+        name: creator.name,
+        url: `${BASE_URL}/createurs/${creator.id}`,
+      },
+    }),
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Accueil", item: BASE_URL },
+        { "@type": "ListItem", position: 2, name: UNIVERSE_LABELS[product.universe], item: `${BASE_URL}/${product.universe}` },
+        { "@type": "ListItem", position: 3, name: product.name, item: `${BASE_URL}/produits/${product.id}` },
+      ],
+    },
+  }
+
   return (
+    <>
+      <JsonLd data={productJsonLd} />
     <div className="min-h-screen bg-neutral-950 text-neutral-200">
       {isPreview && product.status === "masqué" && (
         <PreviewBanner productId={product.id} />
@@ -86,46 +148,18 @@ export default async function FicheProduitPage({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
 
           {/* ── Galerie photos ── */}
-          <div className="space-y-3">
-            {product.video || product.images.length > 0 ? (
-              <>
-                <div className="relative aspect-[3/4] overflow-hidden bg-neutral-900">
-                  {product.video ? (
-                    <ProductVideo src={product.video} />
-                  ) : (
-                    <Image
-                      src={product.images[0]}
-                      alt={product.name}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  )}
-                  {product.status === "vendu" && (
-                    <div className="absolute top-4 left-4">
-                      <span className="text-[0.58rem] tracking-[0.2em] uppercase bg-black/80 text-neutral-400 px-3 py-1.5 border border-neutral-700">
-                        Vendu
-                      </span>
-                    </div>
-                  )}
-                </div>
-                {product.images.length > (product.video ? 0 : 1) && (
-                  <div className="grid grid-cols-4 gap-2">
-                    {(product.video ? product.images : product.images.slice(1)).map((img, i) => (
-                      <div key={i} className="relative aspect-square overflow-hidden bg-neutral-900">
-                        <Image src={img} alt={`${product.name} ${i + (product.video ? 1 : 2)}`} fill className="object-cover" />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="aspect-[3/4] bg-neutral-900 flex items-center justify-center">
-                <span className="text-neutral-700 text-5xl">✦</span>
-              </div>
-            )}
-
-          </div>
+          {product.images.length > 0 || product.video ? (
+            <ProductGallery
+              images={product.images}
+              name={product.name}
+              sold={product.status === "vendu"}
+              video={product.video}
+            />
+          ) : (
+            <div className="aspect-[3/4] bg-neutral-900 flex items-center justify-center">
+              <span className="text-neutral-700 text-5xl">✦</span>
+            </div>
+          )}
 
           {/* ── Infos produit ── */}
           <div className="flex flex-col">
@@ -200,7 +234,10 @@ export default async function FicheProduitPage({
             </div>
           </div>
         </div>
+        {/* ── Avis clients ── */}
+        <ReviewsSection productId={product.id} productName={product.name} />
       </div>
     </div>
+    </>
   );
 }

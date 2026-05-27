@@ -1,6 +1,20 @@
 export const revalidate = 30;
 
+import type { Metadata } from "next";
 import { getProducts } from "@/lib/products";
+
+export const metadata: Metadata = {
+  title: "Pièces uniques — SADSAT",
+  description:
+    "Toutes les créations uniques SADSAT réunies : taxidermie éthique, bijoux en maille, bougies artisanales et mode upcycling. Chaque pièce est faite main, en série très limitée.",
+  keywords: ["pièces uniques", "artisanat français", "édition limitée", "taxidermie", "bijoux", "bougies"],
+  alternates: { canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'}/pieces-uniques` },
+  openGraph: {
+    title: "Pièces uniques — SADSAT",
+    description: "Toutes les créations SADSAT réunies. Chaque pièce est unique, faite main.",
+    type: "website",
+  },
+}
 import PiecesUniquesContent from "@/components/pages/PiecesUniquesContent";
 
 export default async function PiecesUniquesPage() {

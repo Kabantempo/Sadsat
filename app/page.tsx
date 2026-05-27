@@ -1,5 +1,6 @@
 export const revalidate = 30;
 
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getUsers } from "@/lib/db";
 import { getProducts } from "@/lib/products";
@@ -7,6 +8,38 @@ import HeroSection from "@/components/shared/HeroSection";
 import ScrollStory from "@/components/shared/ScrollStory";
 import CreateurCarousel, { type CreateurCard } from "@/components/shared/CreateurCarousel";
 import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+
+export const metadata: Metadata = {
+  title: "SADSAT — Taxidermie éthique, Bijoux, Bougies & Mode artisanale",
+  description:
+    "SADSAT réunit quatre univers créatifs : Crystal Pets (taxidermie éthique), L0vers.cult (bijoux maille), Spectrum N°3 (bougies artisanales) et Hackcycle (mode upcycling). Pièces uniques, faites main en France.",
+  keywords: [
+    "SADSAT",
+    "taxidermie éthique France",
+    "bijoux maille métallique",
+    "bougies artisanales cire végétale",
+    "mode upcycling France",
+    "pièces uniques artisanat",
+    "boutique artisanale en ligne",
+  ],
+  alternates: { canonical: BASE_URL },
+  openGraph: {
+    title: "SADSAT — Quatre univers, une vision",
+    description:
+      "Taxidermie éthique · Bijoux en maille · Bougies artisanales · Mode upcycling. Édition limitée, fait main en France.",
+    url: BASE_URL,
+    type: "website",
+    locale: "fr_FR",
+    siteName: "SADSAT",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SADSAT — Quatre univers, une vision",
+    description: "Taxidermie éthique · Bijoux en maille · Bougies artisanales · Mode upcycling.",
+  },
+}
 
 export default async function Home() {
   const [users, products] = await Promise.all([
@@ -16,6 +49,10 @@ export default async function Home() {
 
   const createurs: CreateurCard[] = users
     .filter((u) => u.role === "créateur")
+    .filter((u) => {
+      const hasProducts = products.some((p) => p.createdBy === u.id && p.status !== "masqué")
+      return u.avatar || u.bio || hasProducts
+    })
     .map((u) => {
       const myProducts = products.filter(
         (p) => p.createdBy === u.id && p.status !== "masqué"

@@ -133,3 +133,21 @@ model SiteSetting {
 
   @@map("site_settings")
 }
+
+model Review {
+  id          String @id
+  productId   String
+  productName String
+  authorName  String
+  authorEmail String
+  rating      Int
+  comment     String @db.Text
+  status      String @default("approuvé")
+  createdAt   String
+  updatedAt   String
+
+  @@unique([productId, authorEmail])
+  @@index([productId])
+  @@index([authorEmail])
+  @@map("reviews")
+}

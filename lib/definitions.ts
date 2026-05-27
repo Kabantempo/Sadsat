@@ -31,6 +31,7 @@ export type SessionPayload = {
   userId: string
   role: 'admin' | 'client' | 'créateur' | 'grossiste'
   name?: string
+  email?: string
   expiresAt: Date
 }
 

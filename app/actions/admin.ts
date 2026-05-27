@@ -2,7 +2,8 @@
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
-import { createUser, getUserByEmail, deleteUser, clearUsersExcept, updateUserUniverse } from '@/lib/db'
+import { createUser, getUserByEmail, deleteUser, clearUsersExcept, updateUserUniverse, updateUser } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { clearAllProducts } from '@/lib/products'
 import { verifyAdmin } from '@/lib/dal'
 import { sendSetPasswordEmail } from '@/lib/email'
@@ -111,14 +112,28 @@ export async function createGrossisteAccountAction(
   return createAccountAction(formData, 'grossiste')
 }
 
-export async function deleteUserAction(id: string): Promise<void> {
+export async function deleteUserAction(formData: FormData): Promise<void> {
   const session = await verifyAdmin()
+  const id = String(formData.get('userId') ?? '')
 
   if (session.userId === id) {
     throw new Error('Vous ne pouvez pas supprimer votre propre compte.')
   }
 
   await deleteUser(id)
+  redirect('/admin/comptes')
+}
+
+export async function updateUserInfoAction(formData: FormData): Promise<void> {
+  await verifyAdmin()
+  const id = String(formData.get('userId') ?? '')
+  const name = String(formData.get('name') ?? '').trim()
+  const role = String(formData.get('role') ?? '') as 'admin' | 'client' | 'créateur' | 'grossiste'
+
+  if (!id || !name) return
+
+  await updateUser(id, { name })
+  await prisma.user.update({ where: { id }, data: { role } })
   redirect('/admin/comptes')
 }
 

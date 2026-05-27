@@ -1,5 +1,6 @@
 export const revalidate = 30;
 
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,6 +8,45 @@ import { getUserById } from "@/lib/db";
 import { getProducts } from "@/lib/products";
 import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 import type { Universe, Product } from "@/lib/definitions";
+import JsonLd from "@/components/shared/JsonLd";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const user = await getUserById(id);
+  if (!user || user.role !== "créateur") return { title: "Créateur introuvable — SADSAT" };
+
+  const title = `${user.name} — Créateur · SADSAT`;
+  const description = user.bio
+    ? user.bio.slice(0, 155)
+    : `Découvrez les créations artisanales de ${user.name} sur SADSAT. Pièces uniques en édition limitée.`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `${BASE_URL}/createurs/${id}` },
+    openGraph: {
+      title,
+      description,
+      url: `${BASE_URL}/createurs/${id}`,
+      type: "profile",
+      locale: "fr_FR",
+      siteName: "SADSAT",
+      ...(user.avatar && { images: [{ url: user.avatar, width: 400, height: 400, alt: user.name }] }),
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+      ...(user.avatar && { images: [user.avatar] }),
+    },
+  };
+}
 
 function ProductCard({ p }: { p: Product }) {
   return (
@@ -63,7 +103,44 @@ export default async function CreateurPublicPage({
 
   const activeUniverses = UNIVERSES.filter((u) => byUniverse[u].length > 0);
 
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${BASE_URL}/createurs/${user.id}`,
+    name: user.name,
+    url: `${BASE_URL}/createurs/${user.id}`,
+    ...(user.bio && { description: user.bio }),
+    ...(user.avatar && { image: user.avatar }),
+    ...(user.instagram && { sameAs: [`https://instagram.com/${user.instagram.replace('@', '')}`] }),
+    worksFor: { "@type": "Organization", name: "SADSAT", url: BASE_URL },
+    ...(products.length > 0 && {
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: `Créations de ${user.name}`,
+        itemListElement: products.slice(0, 10).map((p, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          item: {
+            "@type": "Product",
+            name: p.name,
+            url: `${BASE_URL}/produits/${p.id}`,
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "EUR",
+              price: (p.price / 100).toFixed(2),
+              availability: p.status === "vendu"
+                ? "https://schema.org/SoldOut"
+                : "https://schema.org/InStock",
+            },
+          },
+        })),
+      },
+    }),
+  }
+
   return (
+    <>
+      <JsonLd data={personJsonLd} />
     <div className="min-h-screen bg-neutral-950 text-neutral-200">
 
       {/* ── Hero plein écran ── */}
@@ -232,5 +309,6 @@ export default async function CreateurPublicPage({
         </Link>
       </div>
     </div>
+    </>
   );
 }

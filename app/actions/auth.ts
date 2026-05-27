@@ -68,7 +68,7 @@ export async function login(state: FormState, formData: FormData): Promise<FormS
     return { message: 'Veuillez confirmer votre email avant de vous connecter.' }
   }
 
-  await createSession(user.id, user.role, user.name)
+  await createSession(user.id, user.role, user.name, user.email)
   const dest =
     user.role === 'admin' ? '/admin' :
     user.role === 'créateur' ? '/createur' :
@@ -132,7 +132,7 @@ export async function setPasswordAction(
   await updateUserPassword(user.id, passwordHash)
   await clearPasswordToken(user.id)
 
-  await createSession(user.id, user.role, user.name)
+  await createSession(user.id, user.role, user.name, user.email)
   const setPasswordDest =
     user.role === 'admin' ? '/admin' :
     user.role === 'créateur' ? '/createur' :
@@ -190,6 +190,6 @@ export async function setupAdmin(state: FormState, formData: FormData): Promise<
     createdAt: new Date().toISOString(),
   }
   await createUser(user)
-  await createSession(user.id, 'admin', user.name)
+  await createSession(user.id, 'admin', user.name, email)
   redirect('/admin')
 }

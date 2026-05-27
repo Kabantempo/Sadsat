@@ -8,15 +8,27 @@ import { getProducts } from "@/lib/products";
 import { getBrandSlides } from "@/lib/brand";
 import type { AccordionItem } from "@/components/shared/Accordion";
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+
 export const metadata: Metadata = {
   title: "L0vers.cult — Bijoux en maille métallique · SADSAT",
   description:
-    "Bijoux artisanaux en maille métallique, faits main, en édition limitée. Bagues, colliers, bracelets. Collection L0vers.cult par SADSAT.",
+    "Bijoux artisanaux en maille métallique, faits main en édition limitée. Bagues, colliers, bracelets en argent, laiton et cuivre. Collection L0vers.cult par SADSAT.",
+  keywords: ["bijoux maille métallique", "L0vers.cult", "bijoux artisanaux", "bague maille", "collier maille", "bijoux fait main France", "édition limitée"],
+  alternates: { canonical: `${BASE_URL}/bijoux` },
   openGraph: {
     title: "L0vers.cult — Bijoux en maille métallique · SADSAT",
     description:
-      "Bijoux artisanaux en maille métallique, faits main, en édition limitée. Bagues, colliers, bracelets. Collection L0vers.cult par SADSAT.",
+      "Bijoux artisanaux en maille métallique, faits main. Bagues, colliers, bracelets. Collection L0vers.cult par SADSAT.",
     type: "website",
+    url: `${BASE_URL}/bijoux`,
+    locale: "fr_FR",
+    siteName: "SADSAT",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "L0vers.cult — Bijoux en maille métallique · SADSAT",
+    description: "Bijoux artisanaux en maille métallique, faits main en édition limitée.",
   },
 };
 

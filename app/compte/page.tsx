@@ -1,8 +1,10 @@
 import { verifySession, getCurrentUser } from '@/lib/dal'
 import { logout } from '@/app/actions/auth'
 import { getOrders } from '@/lib/orders'
+import { getReviewedProductIds } from '@/lib/reviews'
 import ChangePasswordForm from '@/components/shared/ChangePasswordForm'
-import { Package, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+import { Package, ChevronRight, Star } from 'lucide-react'
 
 const STATUS_LABEL: Record<string, string> = {
   en_attente: 'En attente',
@@ -24,7 +26,10 @@ export default async function ComptePage() {
   await verifySession()
   const user = await getCurrentUser()
 
-  const allOrders = await getOrders()
+  const [allOrders, reviewedIds] = await Promise.all([
+    getOrders(),
+    getReviewedProductIds(user?.email ?? ''),
+  ])
   const orders = allOrders.filter(
     (o) => o.customerEmail.toLowerCase() === user?.email?.toLowerCase()
   )
@@ -101,24 +106,43 @@ export default async function ComptePage() {
                       </div>
 
                       {/* Articles */}
-                      <div className="space-y-1">
-                        {order.items.map((item) => (
-                          <div
-                            key={item.id}
-                            className="flex items-center justify-between text-[0.76rem] text-neutral-500"
-                          >
-                            <span className="flex items-center gap-1.5">
-                              <ChevronRight size={10} strokeWidth={1.5} className="text-neutral-300" />
-                              {item.name}
-                              {item.quantity > 1 && (
-                                <span className="text-neutral-400">× {item.quantity}</span>
-                              )}
-                            </span>
-                            <span className="tabular-nums">
-                              {((item.price * item.quantity) / 100).toFixed(2)} €
-                            </span>
-                          </div>
-                        ))}
+                      <div className="space-y-1.5">
+                        {order.items.map((item) => {
+                          const alreadyReviewed = reviewedIds.includes(item.productId)
+                          return (
+                            <div
+                              key={item.id}
+                              className="flex items-center justify-between text-[0.76rem] text-neutral-500"
+                            >
+                              <span className="flex items-center gap-1.5">
+                                <ChevronRight size={10} strokeWidth={1.5} className="text-neutral-300" />
+                                {item.name}
+                                {item.quantity > 1 && (
+                                  <span className="text-neutral-400">× {item.quantity}</span>
+                                )}
+                              </span>
+                              <div className="flex items-center gap-3">
+                                <span className="tabular-nums">
+                                  {((item.price * item.quantity) / 100).toFixed(2)} €
+                                </span>
+                                {alreadyReviewed ? (
+                                  <span className="flex items-center gap-1 text-[0.58rem] tracking-[0.1em] uppercase text-amber-500">
+                                    <Star size={10} strokeWidth={1.5} className="fill-amber-400" />
+                                    Noté
+                                  </span>
+                                ) : (
+                                  <Link
+                                    href={`/produits/${item.productId}#avis`}
+                                    className="flex items-center gap-1 text-[0.58rem] tracking-[0.1em] uppercase text-neutral-400 hover:text-neutral-700 transition-colors"
+                                  >
+                                    <Star size={10} strokeWidth={1.5} />
+                                    Avis
+                                  </Link>
+                                )}
+                              </div>
+                            </div>
+                          )
+                        })}
                       </div>
 
                       {/* Livraison */}

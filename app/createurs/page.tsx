@@ -1,6 +1,19 @@
 export const revalidate = 30;
 
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Nos créateurs — SADSAT",
+  description:
+    "Découvrez les artisans et créateurs derrière les collections SADSAT. Chaque pièce est signée par un créateur engagé, travaillant en édition limitée.",
+  alternates: { canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'}/createurs` },
+  openGraph: {
+    title: "Nos créateurs — SADSAT",
+    description: "Les artisans et créateurs derrière les collections SADSAT.",
+    type: "website",
+  },
+}
 import Image from "next/image";
 import { getUsers } from "@/lib/db";
 import { getProducts } from "@/lib/products";

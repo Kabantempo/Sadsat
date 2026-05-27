@@ -1,8 +1,8 @@
 import { verifyAdmin } from '@/lib/dal'
 import { getUsers } from '@/lib/db'
-import { UserPlus, ShieldCheck, Palette, ShoppingBag, Users, Store } from 'lucide-react'
+import { UserPlus, ShieldCheck, Palette, ShoppingBag, Users, Store, Pencil } from 'lucide-react'
 import DeleteUserButton from '@/components/admin/DeleteUserButton'
-import { setUserUniverseAction } from '@/app/actions/admin'
+import { setUserUniverseAction, updateUserInfoAction } from '@/app/actions/admin'
 import Link from 'next/link'
 
 const UNIVERSE_LABELS: Record<string, string> = {
@@ -37,6 +37,55 @@ function SectionHeader({
 function EmptyRow({ message }: { message: string }) {
   return (
     <p className="px-6 py-8 text-[0.78rem] text-neutral-400 italic text-center">{message}</p>
+  )
+}
+
+const ROLE_OPTIONS = [
+  { value: 'client',    label: 'Client' },
+  { value: 'créateur',  label: 'Créateur' },
+  { value: 'grossiste', label: 'Grossiste' },
+  { value: 'admin',     label: 'Administrateur' },
+]
+
+function UserEditPanel({ u, isSelf }: { u: { id: string; name: string; role: string }; isSelf: boolean }) {
+  if (isSelf) return null
+  return (
+    <details className="border-t border-neutral-100 bg-neutral-50">
+      <summary className="px-6 py-2 flex items-center gap-1.5 text-[0.6rem] tracking-[0.14em] uppercase text-neutral-400 hover:text-neutral-700 cursor-pointer list-none select-none">
+        <Pencil size={10} /> Modifier
+      </summary>
+      <form action={updateUserInfoAction} className="px-6 py-4 flex flex-wrap items-end gap-3 border-t border-neutral-100">
+        <input type="hidden" name="userId" value={u.id} />
+        <div>
+          <label className="block text-[0.6rem] tracking-[0.14em] uppercase text-neutral-400 mb-1">Nom complet</label>
+          <input
+            type="text"
+            name="name"
+            defaultValue={u.name}
+            required
+            className="border border-neutral-200 rounded px-3 py-1.5 text-sm outline-none focus:border-neutral-400 bg-white w-52"
+          />
+        </div>
+        <div>
+          <label className="block text-[0.6rem] tracking-[0.14em] uppercase text-neutral-400 mb-1">Rôle</label>
+          <select
+            name="role"
+            defaultValue={u.role}
+            className="border border-neutral-200 rounded px-3 py-1.5 text-sm outline-none focus:border-neutral-400 bg-white"
+          >
+            {ROLE_OPTIONS.map((r) => (
+              <option key={r.value} value={r.value}>{r.label}</option>
+            ))}
+          </select>
+        </div>
+        <button
+          type="submit"
+          className="px-4 py-1.5 bg-neutral-900 text-white text-[0.6rem] tracking-[0.14em] uppercase rounded hover:bg-neutral-700 transition-colors"
+        >
+          Enregistrer
+        </button>
+      </form>
+    </details>
   )
 }
 
@@ -99,25 +148,23 @@ export default async function AdminComptesPage() {
           <div className="divide-y divide-neutral-100">
             {admins.length === 0 && <EmptyRow message="Aucun administrateur." />}
             {admins.map((u) => (
-              <div key={u.id} className="px-6 py-4 flex items-center gap-4">
-                {/* Avatar initiale */}
-                <div className="w-9 h-9 rounded-full bg-neutral-900 flex items-center justify-center shrink-0">
-                  <span className="text-white text-[0.72rem] font-medium uppercase">
-                    {u.name.charAt(0)}
-                  </span>
+              <div key={u.id}>
+                <div className="px-6 py-4 flex items-center gap-4">
+                  <div className="w-9 h-9 rounded-full bg-neutral-900 flex items-center justify-center shrink-0">
+                    <span className="text-white text-[0.72rem] font-medium uppercase">{u.name.charAt(0)}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[0.83rem] font-medium text-neutral-800 flex items-center gap-2">
+                      {u.name}
+                      {u.id === session.userId && (
+                        <span className="text-[0.52rem] tracking-[0.14em] uppercase bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">vous</span>
+                      )}
+                    </p>
+                    <p className="text-[0.68rem] text-neutral-400 truncate">{u.email}</p>
+                  </div>
+                  {u.id !== session.userId && <DeleteUserButton id={u.id} name={u.name} />}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[0.83rem] font-medium text-neutral-800 flex items-center gap-2">
-                    {u.name}
-                    {u.id === session.userId && (
-                      <span className="text-[0.52rem] tracking-[0.14em] uppercase bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">
-                        vous
-                      </span>
-                    )}
-                  </p>
-                  <p className="text-[0.68rem] text-neutral-400 truncate">{u.email}</p>
-                </div>
-                {u.id !== session.userId && <DeleteUserButton id={u.id} name={u.name} />}
+                <UserEditPanel u={u} isSelf={u.id === session.userId} />
               </div>
             ))}
           </div>
@@ -129,46 +176,40 @@ export default async function AdminComptesPage() {
           <div className="divide-y divide-neutral-100">
             {createurs.length === 0 && <EmptyRow message="Aucun créateur." />}
             {createurs.map((u) => (
-              <div key={u.id} className="px-6 py-4 flex flex-wrap items-center gap-4">
-                {/* Avatar initiale */}
-                <div className="w-9 h-9 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
-                  <span className="text-rose-700 text-[0.72rem] font-medium uppercase">
-                    {u.name.charAt(0)}
-                  </span>
+              <div key={u.id}>
+                <div className="px-6 py-4 flex flex-wrap items-center gap-4">
+                  <div className="w-9 h-9 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+                    <span className="text-rose-700 text-[0.72rem] font-medium uppercase">{u.name.charAt(0)}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[0.83rem] font-medium text-neutral-800">{u.name}</p>
+                    <p className="text-[0.68rem] text-neutral-400 truncate">{u.email}</p>
+                    {u.universe && (
+                      <span className="inline-flex items-center gap-1 mt-1 text-[0.56rem] tracking-[0.14em] uppercase bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded-full">
+                        <Store size={9} strokeWidth={1.5} />
+                        {UNIVERSE_LABELS[u.universe] ?? u.universe}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <form action={setUserUniverseAction} className="flex items-center gap-2">
+                      <input type="hidden" name="userId" value={u.id} />
+                      <select name="universe" defaultValue={u.universe ?? ''}
+                        className="text-[0.65rem] border border-neutral-200 rounded-lg px-2.5 py-1.5 text-neutral-600 bg-white outline-none focus:border-neutral-400 transition-colors">
+                        <option value="">— aucune marque —</option>
+                        <option value="taxidermie">Crystal Pets</option>
+                        <option value="bijoux">L0vers.cult</option>
+                        <option value="bougies">Spectrum N°3</option>
+                        <option value="habillement">Hackcycle</option>
+                      </select>
+                      <button type="submit" className="text-[0.6rem] tracking-[0.14em] uppercase px-3 py-1.5 bg-rose-50 border border-rose-200 hover:bg-rose-100 text-rose-600 hover:text-rose-800 transition-colors rounded-lg">
+                        Assigner
+                      </button>
+                    </form>
+                    <DeleteUserButton id={u.id} name={u.name} />
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[0.83rem] font-medium text-neutral-800">{u.name}</p>
-                  <p className="text-[0.68rem] text-neutral-400 truncate">{u.email}</p>
-                  {u.universe && (
-                    <span className="inline-flex items-center gap-1 mt-1 text-[0.56rem] tracking-[0.14em] uppercase bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded-full">
-                      <Store size={9} strokeWidth={1.5} />
-                      {UNIVERSE_LABELS[u.universe] ?? u.universe}
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <form action={setUserUniverseAction} className="flex items-center gap-2">
-                    <input type="hidden" name="userId" value={u.id} />
-                    <select
-                      name="universe"
-                      defaultValue={u.universe ?? ''}
-                      className="text-[0.65rem] border border-neutral-200 rounded-lg px-2.5 py-1.5 text-neutral-600 bg-white outline-none focus:border-neutral-400 transition-colors"
-                    >
-                      <option value="">— aucune marque —</option>
-                      <option value="taxidermie">Crystal Pets</option>
-                      <option value="bijoux">L0vers.cult</option>
-                      <option value="bougies">Spectrum N°3</option>
-                      <option value="habillement">Hackcycle</option>
-                    </select>
-                    <button
-                      type="submit"
-                      className="text-[0.6rem] tracking-[0.14em] uppercase px-3 py-1.5 bg-rose-50 border border-rose-200 hover:bg-rose-100 text-rose-600 hover:text-rose-800 transition-colors rounded-lg"
-                    >
-                      Assigner
-                    </button>
-                  </form>
-                  <DeleteUserButton id={u.id} name={u.name} />
-                </div>
+                <UserEditPanel u={u} isSelf={false} />
               </div>
             ))}
           </div>
@@ -180,17 +221,18 @@ export default async function AdminComptesPage() {
           <div className="divide-y divide-neutral-100">
             {grossistes.length === 0 && <EmptyRow message="Aucun grossiste." />}
             {grossistes.map((u) => (
-              <div key={u.id} className="px-6 py-4 flex items-center gap-4">
-                <div className="w-9 h-9 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
-                  <span className="text-sky-700 text-[0.72rem] font-medium uppercase">
-                    {u.name.charAt(0)}
-                  </span>
+              <div key={u.id}>
+                <div className="px-6 py-4 flex items-center gap-4">
+                  <div className="w-9 h-9 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
+                    <span className="text-sky-700 text-[0.72rem] font-medium uppercase">{u.name.charAt(0)}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[0.83rem] font-medium text-neutral-800">{u.name}</p>
+                    <p className="text-[0.68rem] text-neutral-400 truncate">{u.email}</p>
+                  </div>
+                  <DeleteUserButton id={u.id} name={u.name} />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[0.83rem] font-medium text-neutral-800">{u.name}</p>
-                  <p className="text-[0.68rem] text-neutral-400 truncate">{u.email}</p>
-                </div>
-                <DeleteUserButton id={u.id} name={u.name} />
+                <UserEditPanel u={u} isSelf={false} />
               </div>
             ))}
           </div>
@@ -202,17 +244,18 @@ export default async function AdminComptesPage() {
           <div className="divide-y divide-neutral-100">
             {clients.length === 0 && <EmptyRow message="Aucun client." />}
             {clients.map((u) => (
-              <div key={u.id} className="px-6 py-4 flex items-center gap-4">
-                <div className="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center shrink-0">
-                  <span className="text-neutral-500 text-[0.72rem] font-medium uppercase">
-                    {u.name.charAt(0)}
-                  </span>
+              <div key={u.id}>
+                <div className="px-6 py-4 flex items-center gap-4">
+                  <div className="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center shrink-0">
+                    <span className="text-neutral-500 text-[0.72rem] font-medium uppercase">{u.name.charAt(0)}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[0.83rem] font-medium text-neutral-800">{u.name}</p>
+                    <p className="text-[0.68rem] text-neutral-400 truncate">{u.email}</p>
+                  </div>
+                  <DeleteUserButton id={u.id} name={u.name} />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[0.83rem] font-medium text-neutral-800">{u.name}</p>
-                  <p className="text-[0.68rem] text-neutral-400 truncate">{u.email}</p>
-                </div>
-                <DeleteUserButton id={u.id} name={u.name} />
+                <UserEditPanel u={u} isSelf={false} />
               </div>
             ))}
           </div>
