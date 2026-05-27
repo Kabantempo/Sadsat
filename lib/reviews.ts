@@ -14,32 +14,40 @@ export type Review = {
 }
 
 export async function getReviewsByProduct(productId: string): Promise<Review[]> {
-  return prisma.review.findMany({
-    where: { productId, status: 'approuvé' },
-    orderBy: { createdAt: 'desc' },
-  })
+  try {
+    return await prisma.review.findMany({
+      where: { productId, status: 'approuvé' },
+      orderBy: { createdAt: 'desc' },
+    })
+  } catch { return [] }
 }
 
 export async function getReviewsByEmail(email: string): Promise<Review[]> {
-  return prisma.review.findMany({
-    where: { authorEmail: email.toLowerCase() },
-    orderBy: { createdAt: 'desc' },
-  })
+  try {
+    return await prisma.review.findMany({
+      where: { authorEmail: email.toLowerCase() },
+      orderBy: { createdAt: 'desc' },
+    })
+  } catch { return [] }
 }
 
 export async function getReviewedProductIds(email: string): Promise<string[]> {
-  const reviews = await prisma.review.findMany({
-    where: { authorEmail: email.toLowerCase() },
-    select: { productId: true },
-  })
-  return reviews.map((r) => r.productId)
+  try {
+    const reviews = await prisma.review.findMany({
+      where: { authorEmail: email.toLowerCase() },
+      select: { productId: true },
+    })
+    return reviews.map((r) => r.productId)
+  } catch { return [] }
 }
 
 export async function hasAlreadyReviewed(productId: string, email: string): Promise<boolean> {
-  const r = await prisma.review.findUnique({
-    where: { productId_authorEmail: { productId, authorEmail: email.toLowerCase() } },
-  })
-  return !!r
+  try {
+    const r = await prisma.review.findUnique({
+      where: { productId_authorEmail: { productId, authorEmail: email.toLowerCase() } },
+    })
+    return !!r
+  } catch { return false }
 }
 
 export async function createReview(data: {
@@ -63,7 +71,9 @@ export async function createReview(data: {
 }
 
 export async function getAllReviews(): Promise<Review[]> {
-  return prisma.review.findMany({ orderBy: { createdAt: 'desc' } })
+  try {
+    return await prisma.review.findMany({ orderBy: { createdAt: 'desc' } })
+  } catch { return [] }
 }
 
 export async function updateReviewStatus(id: string, status: string): Promise<void> {
