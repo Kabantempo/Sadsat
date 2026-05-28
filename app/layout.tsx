@@ -10,6 +10,7 @@ import CartDrawer from "@/components/shared/CartDrawer";
 import FavoritesProvider from "@/components/shared/FavoritesProvider";
 import { getSession } from "@/lib/session";
 import { isNewsletterEnabled } from "@/lib/settings";
+import { getBrandCategories } from "@/lib/brand";
 import PageLoader from "@/components/shared/PageLoader";
 import JsonLd from "@/components/shared/JsonLd";
 
@@ -150,7 +151,20 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await getSession();
   const user = session ? { name: session.name ?? '', role: session.role } : null;
-  const newsletterEnabled = await isNewsletterEnabled().catch(() => false);
+  const [newsletterEnabled, taxCats, bijouxCats, bougiesCats, habillementCats] = await Promise.all([
+    isNewsletterEnabled().catch(() => false),
+    getBrandCategories('taxidermie').catch(() => []),
+    getBrandCategories('bijoux').catch(() => []),
+    getBrandCategories('bougies').catch(() => []),
+    getBrandCategories('habillement').catch(() => []),
+  ])
+
+  const navCategories = {
+    taxidermie:  taxCats.map(c => ({ label: c.label, slug: c.slug })),
+    bijoux:      bijouxCats.map(c => ({ label: c.label, slug: c.slug })),
+    bougies:     bougiesCats.map(c => ({ label: c.label, slug: c.slug })),
+    habillement: habillementCats.map(c => ({ label: c.label, slug: c.slug })),
+  }
 
   return (
     <html lang="fr" className={`${cormorant.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
@@ -160,7 +174,7 @@ export default async function RootLayout({
         <PageLoader />
         <FavoritesProvider isLoggedIn={!!user}>
           <CartProvider>
-            <Header user={user ? { name: user.name, role: user.role } : null} />
+            <Header user={user ? { name: user.name, role: user.role } : null} navCategories={navCategories} />
             <main className="min-h-screen">{children}</main>
             <Footer newsletterEnabled={newsletterEnabled} />
             <RandomPieceButton />

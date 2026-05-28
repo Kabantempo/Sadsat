@@ -16,54 +16,40 @@ type NavItem = {
   label: string;
   href: string;
   bordeaux?: boolean;
-  comingSoon?: boolean;
   dropdown?: SubItem[];
 };
 
-const NAV: NavItem[] = [
-  { label: "Pièces uniques", href: "/pieces-uniques", bordeaux: true },
-  {
-    label: "Crystal Pets",
-    href: "/taxidermie",
-    dropdown: [
-      { label: "Oiseaux", href: "/taxidermie/oiseaux" },
-      { label: "Mammifères", href: "/taxidermie/mammiferes" },
-      { label: "Insectes", href: "/taxidermie/insectes" },
-      { label: "Crânes", href: "/taxidermie/cranes" },
-      { label: "Reptiles", href: "/taxidermie/reptiles" },
-    ],
-  },
-  {
-    label: "L0vers.cult",
-    href: "/bijoux",
-    dropdown: [
-      { label: "Bagues", href: "/bijoux/bagues" },
-      { label: "Colliers", href: "/bijoux/colliers" },
-      { label: "Bracelets", href: "/bijoux/bracelets" },
-      { label: "Boucles d'oreilles", href: "/bijoux/boucles" },
-    ],
-  },
-  {
-    label: "Spectrum N°3",
-    href: "/bougies",
-    comingSoon: true,
-    dropdown: [
-      { label: "Cire de soja", href: "/bougies/soja" },
-      { label: "Cire d'abeille", href: "/bougies/abeille" },
-      { label: "Piliers", href: "/bougies/piliers" },
-      { label: "Fondants", href: "/bougies/fondants" },
-    ],
-  },
-  { label: "Hackcycle", href: "/habillement" },
-  { label: "Créateurs", href: "/createurs" },
-  { label: "Contact", href: "/contact" },
-];
+type NavCat = { label: string; slug: string };
+type NavCategories = {
+  taxidermie: NavCat[];
+  bijoux: NavCat[];
+  bougies: NavCat[];
+  habillement: NavCat[];
+};
+
+function buildNav(cats: NavCategories): NavItem[] {
+  const dd = (universe: keyof NavCategories, base: string): SubItem[] | undefined => {
+    const list = cats[universe];
+    if (!list?.length) return undefined;
+    return list.map(c => ({ label: c.label, href: `/${base}/${c.slug}` }));
+  };
+  return [
+    { label: "Pièces uniques", href: "/pieces-uniques", bordeaux: true },
+    { label: "Crystal Pets",  href: "/taxidermie", dropdown: dd('taxidermie', 'taxidermie') },
+    { label: "L0vers.cult",   href: "/bijoux",     dropdown: dd('bijoux', 'bijoux') },
+    { label: "Spectrum N°3",  href: "/bougies",    dropdown: dd('bougies', 'bougies') },
+    { label: "Hackcycle",     href: "/habillement",dropdown: dd('habillement', 'habillement') },
+    { label: "Créateurs",     href: "/createurs" },
+    { label: "Contact",       href: "/contact" },
+  ];
+}
 
 type UserProp = { name: string; role: 'admin' | 'client' | 'créateur' | 'grossiste' } | null
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-export default function Header({ user }: { user?: UserProp }) {
+export default function Header({ user, navCategories }: { user?: UserProp; navCategories?: NavCategories }) {
+  const NAV = buildNav(navCategories ?? { taxidermie: [], bijoux: [], bougies: [], habillement: [] });
   const { count: favCount } = useFavorites();
   const { count: cartCount, openDrawer } = useCart();
   const [openMenu, setOpenMenu]         = useState<string | null>(null);
@@ -131,15 +117,10 @@ export default function Header({ user }: { user?: UserProp }) {
               <div
                 key={item.label}
                 className="relative"
-                onMouseEnter={() => item.dropdown && !item.comingSoon && setOpenMenu(item.label)}
+                onMouseEnter={() => item.dropdown && setOpenMenu(item.label)}
                 onMouseLeave={() => setOpenMenu(null)}
               >
-                {item.comingSoon ? (
-                  <span className="flex items-center gap-1 px-3 py-1.5 text-[0.6rem] tracking-[0.12em] uppercase text-neutral-400 cursor-default select-none">
-                    {item.label}
-                    <span className="text-[0.45rem] tracking-[0.18em] opacity-60">(bientôt)</span>
-                  </span>
-                ) : (
+                {(
                   <Link
                     href={item.href}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.6rem] tracking-[0.12em] uppercase transition-all duration-200 ${
@@ -161,7 +142,7 @@ export default function Header({ user }: { user?: UserProp }) {
                 )}
 
                 <AnimatePresence>
-                  {item.dropdown && !item.comingSoon && openMenu === item.label && (
+                  {item.dropdown && openMenu === item.label && (
                     <motion.div
                       key={item.label}
                       initial={{ opacity: 0, y: -6, scale: 0.97 }}
@@ -387,12 +368,7 @@ export default function Header({ user }: { user?: UserProp }) {
                 {NAV.map((item) => (
                   <div key={item.label} className="border-b border-neutral-100 dark:border-neutral-800/60 last:border-0">
                     <div className="flex items-center">
-                      {item.comingSoon ? (
-                        <span className="flex-1 py-3.5 px-2 text-[0.75rem] tracking-[0.12em] uppercase font-medium text-neutral-400 cursor-default select-none flex items-center gap-2">
-                          {item.label}
-                          <span className="text-[0.5rem] tracking-[0.16em] text-neutral-300">(bientôt)</span>
-                        </span>
-                      ) : (
+                      {(
                         <Link
                           href={item.href}
                           onClick={() => !item.dropdown && setMobileOpen(false)}
@@ -403,7 +379,7 @@ export default function Header({ user }: { user?: UserProp }) {
                           {item.label}
                         </Link>
                       )}
-                      {item.dropdown && !item.comingSoon && (
+                      {item.dropdown && (
                         <button
                           onClick={() => setMobileSub(mobileSub === item.label ? null : item.label)}
                           aria-label={`Sous-menu ${item.label}`}
