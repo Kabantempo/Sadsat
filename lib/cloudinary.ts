@@ -1,16 +1,41 @@
 import 'server-only'
-import { prisma } from './prisma'
+import { v2 as cloudinary } from 'cloudinary'
 
-export async function uploadFile(file: File, _folder?: string): Promise<string> {
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
+
+export async function uploadFile(file: File, folder?: string): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer())
-  const id = crypto.randomUUID()
-  const mimeType = file.type || 'application/octet-stream'
-  await prisma.productImage.create({ data: { id, data: buffer, mimeType } })
-  return `/api/images/${id}`
+  const isVideo = file.type.startsWith('video/')
+
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: folder || 'sadsat',
+        resource_type: isVideo ? 'video' : 'auto',
+      },
+      (error, result) => {
+        if (error) reject(new Error(`Cloudinary upload failed: ${error.message}`))
+        else resolve(result?.secure_url || '')
+      }
+    )
+    uploadStream.end(buffer)
+  })
 }
 
 export async function deleteFile(url: string): Promise<void> {
-  const match = url.match(/\/api\/images\/([^/?#]+)/)
-  if (!match) return
-  await prisma.productImage.delete({ where: { id: match[1] } }).catch(() => null)
+  try {
+    const match = url.match(/upload\/(?:v\d+\/)?([^?]+)$/)
+    if (!match) return
+    const publicId = match[1]
+    const isVideo = url.includes('sadsat/products/videos')
+    await cloudinary.uploader.destroy(publicId, {
+      resource_type: isVideo ? 'video' : 'image',
+    }).catch(() => null)
+  } catch (err) {
+    console.error('[deleteFile]', err)
+  }
 }
