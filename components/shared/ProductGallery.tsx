@@ -45,7 +45,7 @@ export default function ProductGallery({ images, name, sold, video }: Props) {
     setZoomPos({ x: 50, y: 50 })
   }
 
-  const showThumbs = !video && total > 1
+  const showThumbs = total > 1
   const activeImg = images[active] ?? null
 
   return (
