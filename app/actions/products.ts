@@ -4,7 +4,7 @@ import { verifyAdmin } from '@/lib/dal'
 import { createProduct, updateProduct, deleteProduct, getProductById } from '@/lib/products'
 import type { ProductFormState, Universe, ProductStatus, Dimensions } from '@/lib/definitions'
 import { UNIVERSES } from '@/lib/definitions'
-import { uploadFile, deleteFile } from '@/lib/cloudinary'
+import { deleteFile } from '@/lib/cloudinary'
 
 async function saveFiles(files: File[]): Promise<string[]> {
   const urls: string[] = []
@@ -16,10 +16,6 @@ async function saveFiles(files: File[]): Promise<string[]> {
   return urls
 }
 
-async function saveVideo(file: File): Promise<string | null> {
-  if (!file || file.size === 0) return null
-  return uploadFile(file, 'sadsat/products/videos')
-}
 
 function parseProduct(formData: FormData) {
   const name = String(formData.get('name') ?? '').trim()
@@ -78,8 +74,7 @@ export async function createProductAction(
   try {
     const newFiles = formData.getAll('newImages') as File[]
     const imagePaths = await saveFiles(newFiles)
-    const videoFile = formData.get('video') as File | null
-    const videoPath = videoFile ? await saveVideo(videoFile) : null
+    const videoPath = String(formData.get('videoUrl') ?? '').trim() || null
 
     await createProduct({
       id: crypto.randomUUID(),
@@ -112,10 +107,9 @@ export async function updateProductAction(
     const newFiles = formData.getAll('newImages') as File[]
     const newPaths = await saveFiles(newFiles)
 
-    const videoFile = formData.get('video') as File | null
-    const existingVideo = String(formData.get('existingVideo') ?? '') || undefined
-    const newVideoPath = videoFile ? await saveVideo(videoFile) : null
-    const videoPath = newVideoPath ?? existingVideo ?? null
+    const videoUrl = String(formData.get('videoUrl') ?? '').trim() || null
+    const existingVideo = String(formData.get('existingVideo') ?? '').trim() || null
+    const videoPath = videoUrl ?? existingVideo ?? null
 
     await updateProduct(id, {
       ...parsed.data,

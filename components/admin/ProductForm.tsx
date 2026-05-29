@@ -178,6 +178,9 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
   const [newPreviews, setNewPreviews] = useState<string[]>([])
   const [existingVideo, setExistingVideo] = useState<string | null>(product?.video ?? null)
   const [videoPreview, setVideoPreview] = useState<string | null>(null)
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
+  const [videoUploading, setVideoUploading] = useState(false)
+  const [videoError, setVideoError] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLInputElement>(null)
@@ -195,11 +198,37 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
   function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
     setNewPreviews(Array.from(e.target.files ?? []).map(f => URL.createObjectURL(f)))
   }
-  function handleVideo(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0]; if (f) setVideoPreview(URL.createObjectURL(f))
+  async function handleVideo(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0]
+    if (!f) return
+    setVideoPreview(URL.createObjectURL(f))
+    setVideoUrl(null)
+    setVideoError(false)
+    setVideoUploading(true)
+    try {
+      const res = await fetch('/api/cloudinary-signature')
+      if (!res.ok) throw new Error()
+      const { timestamp, signature, apiKey, cloudName, folder } = await res.json()
+      const fd = new FormData()
+      fd.append('file', f)
+      fd.append('timestamp', String(timestamp))
+      fd.append('signature', signature)
+      fd.append('api_key', apiKey)
+      fd.append('folder', folder)
+      const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/video/upload`, { method: 'POST', body: fd })
+      const data = await uploadRes.json()
+      if (!uploadRes.ok || data.error) throw new Error(data.error?.message)
+      setVideoUrl(data.secure_url)
+    } catch {
+      setVideoError(true)
+      setVideoPreview(null)
+      if (videoRef.current) videoRef.current.value = ''
+    } finally {
+      setVideoUploading(false)
+    }
   }
   function removeVideo() {
-    setExistingVideo(null); setVideoPreview(null)
+    setExistingVideo(null); setVideoPreview(null); setVideoUrl(null); setVideoError(false)
     if (videoRef.current) videoRef.current.value = ''
   }
 
@@ -296,6 +325,7 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
     <div className="space-y-5">
       {product && <input type="hidden" name="productId" value={product.id} />}
       {existingImages.map(s => <input key={s} type="hidden" name="existingImages" value={s} />)}
+      {videoUrl && <input type="hidden" name="videoUrl" value={videoUrl} />}
 
       <AnimatePresence>
         {state?.message && (
@@ -507,13 +537,31 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
             )}
 
             {videoPreview && (
-              <div className="relative inline-block group">
-                <video src={videoPreview} autoPlay muted loop playsInline className="w-40 h-28 object-cover rounded-xl" />
-                <button type="button" onClick={removeVideo}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50">
-                  <X size={11} strokeWidth={2} className="text-neutral-600" />
-                </button>
+              <div className="space-y-3">
+                <div className="relative inline-block group">
+                  <video src={videoPreview} autoPlay muted loop playsInline className="w-40 h-28 object-cover rounded-xl" />
+                  {!videoUploading && (
+                    <button type="button" onClick={removeVideo}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50">
+                      <X size={11} strokeWidth={2} className="text-neutral-600" />
+                    </button>
+                  )}
+                </div>
+                {videoUploading && (
+                  <div className="flex items-center gap-2 text-[0.68rem] text-neutral-500">
+                    <span className="w-3 h-3 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
+                    Upload en cours vers Cloudinary…
+                  </div>
+                )}
+                {videoUrl && !videoUploading && (
+                  <p className="text-[0.68rem] text-green-600 flex items-center gap-1.5">
+                    <Check size={11} /> Vidéo prête
+                  </p>
+                )}
               </div>
+            )}
+            {videoError && (
+              <p className="text-[0.68rem] text-red-500">Erreur lors de l'upload. Réessayez.</p>
             )}
 
             <label htmlFor="video"
@@ -539,12 +587,14 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}
         className="flex flex-wrap items-center gap-4 pt-2 pb-8">
         <motion.button
-          type="submit" disabled={pending}
+          type="submit" disabled={pending || videoUploading}
           whileHover={!pending ? { y: -1, boxShadow: '0 8px 24px rgba(0,0,0,0.15)' } : {}}
-          whileTap={!pending ? { scale: 0.98 } : {}}
+          whileTap={!pending && !videoUploading ? { scale: 0.98 } : {}}
           className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-neutral-900 text-white text-[0.62rem] tracking-[0.2em] uppercase font-semibold hover:bg-neutral-800 transition-colors disabled:opacity-50 shadow-lg shadow-neutral-900/20"
         >
-          {pending ? (
+          {videoUploading ? (
+            <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Vidéo en cours d'upload…</>
+          ) : pending ? (
             <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Enregistrement…</>
           ) : (
             <><Upload size={14} strokeWidth={1.5} />{product ? 'Mettre à jour' : 'Créer le produit'}</>
