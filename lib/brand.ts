@@ -47,6 +47,16 @@ export async function getBrandCategories(universe: string): Promise<BrandCategor
   })
 }
 
+export async function getAllCategoriesByUniverse(): Promise<Record<string, string[]>> {
+  const cats = await prisma.brandCategory.findMany({ orderBy: { order: 'asc' } })
+  const result: Record<string, string[]> = {}
+  for (const cat of cats) {
+    if (!result[cat.universe]) result[cat.universe] = []
+    result[cat.universe].push(cat.label)
+  }
+  return result
+}
+
 export async function getBrandCategoryBySlug(universe: string, slug: string): Promise<BrandCategory | null> {
   return prisma.brandCategory.findUnique({ where: { universe_slug: { universe, slug } } })
 }

@@ -5,6 +5,7 @@ import { getProductById } from '@/lib/products'
 import { updateProductAction } from '@/app/actions/products'
 import ProductForm from '@/components/admin/ProductForm'
 import DeleteProductButton from '@/components/admin/DeleteProductButton'
+import { getAllCategoriesByUniverse } from '@/lib/brand'
 import { ArrowLeft } from 'lucide-react'
 
 export default async function ModifierProduitPage({
@@ -14,7 +15,10 @@ export default async function ModifierProduitPage({
 }) {
   await verifyAdmin()
   const { id } = await params
-  const product = await getProductById(id)
+  const [product, categoriesByUniverse] = await Promise.all([
+    getProductById(id),
+    getAllCategoriesByUniverse(),
+  ])
   if (!product) notFound()
 
   return (
@@ -36,7 +40,7 @@ export default async function ModifierProduitPage({
         <DeleteProductButton id={product.id} name={product.name} variant="full" />
       </div>
 
-      <ProductForm action={updateProductAction} product={product} showPreview />
+      <ProductForm action={updateProductAction} product={product} showPreview categoriesByUniverse={categoriesByUniverse} />
     </div>
   )
 }

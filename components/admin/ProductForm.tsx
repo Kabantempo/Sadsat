@@ -15,6 +15,7 @@ type Props = {
   variant?: 'admin' | 'createur'
   cancelHref?: string
   showPreview?: boolean
+  categoriesByUniverse?: Record<string, string[]>
 }
 
 const UNIVERSE_COLOR: Record<string, { bg: string; text: string; ring: string; dot: string }> = {
@@ -171,7 +172,7 @@ function PreviewModal({ open, onClose, name, price, description, status, univers
 }
 
 /* ─── Composant principal ─── */
-export default function ProductForm({ action, product, variant = 'admin', cancelHref, showPreview = false }: Props) {
+export default function ProductForm({ action, product, variant = 'admin', cancelHref, showPreview = false, categoriesByUniverse }: Props) {
   const [state, formAction, pending] = useActionState(action, undefined)
   const [universe, setUniverse] = useState<Universe>(product?.universe ?? 'taxidermie')
   const [existingImages, setExistingImages] = useState<string[]>(product?.images ?? [])
@@ -386,7 +387,7 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
                 <label htmlFor="category" className={labelCls}>Catégorie <span className="text-red-400 normal-case text-[0.8em]">*</span></label>
                 <select id="category" name="category" defaultValue={product?.category} className={inputCls}>
                   <option value="">— choisir —</option>
-                  {CATEGORIES[universe].map(c => <option key={c} value={c}>{c}</option>)}
+                  {(categoriesByUniverse?.[universe] ?? CATEGORIES[universe] ?? []).map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
                 {state?.errors?.category && <p className="mt-2 text-[0.64rem] text-red-500">{state.errors.category[0]}</p>}
               </div>

@@ -2,10 +2,12 @@ import Link from 'next/link'
 import { verifyAdmin } from '@/lib/dal'
 import { createProductAction } from '@/app/actions/products'
 import ProductForm from '@/components/admin/ProductForm'
+import { getAllCategoriesByUniverse } from '@/lib/brand'
 import { ArrowLeft } from 'lucide-react'
 
 export default async function NouveauProduitPage() {
   await verifyAdmin()
+  const categoriesByUniverse = await getAllCategoriesByUniverse()
 
   return (
     <div className="px-4 md:px-6 py-12 max-w-6xl mx-auto">
@@ -22,7 +24,7 @@ export default async function NouveauProduitPage() {
         <h1 className="font-serif text-4xl tracking-wide text-neutral-900">Nouveau produit</h1>
       </div>
 
-      <ProductForm action={createProductAction} showPreview />
+      <ProductForm action={createProductAction} showPreview categoriesByUniverse={categoriesByUniverse} />
     </div>
   )
 }

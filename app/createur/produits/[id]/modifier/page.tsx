@@ -5,6 +5,7 @@ import { getProductById } from '@/lib/products'
 import { updateCreateurProductAction, deleteCreateurProductAction } from '@/app/actions/createur'
 import ProductForm from '@/components/admin/ProductForm'
 import DeleteProductButton from '@/components/admin/DeleteProductButton'
+import { getAllCategoriesByUniverse } from '@/lib/brand'
 import { ChevronRight } from 'lucide-react'
 
 export default async function ModifierProduitCreateurPage({
@@ -14,7 +15,10 @@ export default async function ModifierProduitCreateurPage({
 }) {
   const session = await verifyCreateur()
   const { id } = await params
-  const product = await getProductById(id)
+  const [product, categoriesByUniverse] = await Promise.all([
+    getProductById(id),
+    getAllCategoriesByUniverse(),
+  ])
 
   if (!product) notFound()
   if (product.createdBy && product.createdBy !== session.userId && session.role !== 'admin') {
@@ -38,7 +42,7 @@ export default async function ModifierProduitCreateurPage({
         <DeleteProductButton id={product.id} name={product.name} variant="full" deleteAction={deleteCreateurProductAction} />
       </div>
 
-      <ProductForm action={updateCreateurProductAction} product={product} variant="createur" />
+      <ProductForm action={updateCreateurProductAction} product={product} variant="createur" categoriesByUniverse={categoriesByUniverse} />
     </div>
   )
 }
