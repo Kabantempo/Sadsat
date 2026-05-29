@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import type { Product } from '@/lib/definitions'
 import FavoriteButton from './FavoriteButton'
+import ProductCardMedia from './ProductCardMedia'
 
 type Props = {
   products: Product[]
@@ -26,38 +26,22 @@ export default function ProductGrid({ products, theme = 'light', emptyMessage }:
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {products.map((product) => (
         <div key={product.id} className="group">
-          {/* Image */}
+          {/* Image / Vidéo */}
           <Link href={`/produits/${product.id}`} className="block relative">
-            <div className={`relative aspect-[3/4] overflow-hidden mb-5 rounded-xl ${light ? 'bg-neutral-100' : 'bg-neutral-900'}`}>
-              {product.images[0] ? (
-                <Image
-                  src={product.images[0]}
-                  alt={product.name}
-                  fill
-                  className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className={`text-[0.58rem] tracking-[0.2em] uppercase ${light ? 'text-neutral-300' : 'text-neutral-700'}`}>
-                    Photo à venir
-                  </span>
-                </div>
-              )}
-              {product.status === 'vendu' && (
-                <div className="absolute inset-0 bg-white/40 flex items-center justify-center">
-                  <span className="text-[0.6rem] tracking-[0.22em] uppercase text-neutral-600 bg-white/80 px-4 py-1.5">
-                    Vendu
-                  </span>
-                </div>
-              )}
-              {/* Favoris */}
-              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <FavoriteButton
-                  productId={product.id}
-                  className={`p-1.5 rounded-full ${light ? 'bg-white/80' : 'bg-black/60'}`}
-                  size={14}
-                />
-              </div>
+            <ProductCardMedia
+              image={product.images[0] ?? null}
+              video={product.video ?? null}
+              name={product.name}
+              sold={product.status === 'vendu'}
+              light={light}
+            />
+            {/* Favoris */}
+            <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <FavoriteButton
+                productId={product.id}
+                className={`p-1.5 rounded-full ${light ? 'bg-white/80' : 'bg-black/60'}`}
+                size={14}
+              />
             </div>
           </Link>
 
