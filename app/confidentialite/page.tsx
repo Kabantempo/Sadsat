@@ -1,6 +1,10 @@
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
+
 export const metadata = {
   title: "Politique de confidentialité — SADSAT",
-  description: "Politique de confidentialité et gestion des données personnelles de SADSAT.",
+  description: "Politique de confidentialité et gestion des données personnelles de SADSAT. Informations sur la collecte, l'utilisation et la protection de vos données.",
+  alternates: { canonical: `${BASE_URL}/confidentialite` },
+  robots: { index: true, follow: false },
 };
 
 const SECTIONS = [

@@ -5,9 +5,26 @@ import { getProducts } from '@/lib/products'
 import { UNIVERSE_LABELS } from '@/lib/definitions'
 import NouveautesCard from '@/components/shared/NouveautesCard'
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
+
 export const metadata: Metadata = {
   title: 'Nouveautés — SADSAT',
-  description: 'Les dernières créations SADSAT — taxidermie, bijoux, bougies.',
+  description: 'Découvrez les dernières créations SADSAT : taxidermie éthique, bijoux en maille métallique, bougies artisanales et mode upcycling. Pièces uniques faites main, ajoutées régulièrement.',
+  keywords: ['nouveautés artisanat', 'nouvelles créations SADSAT', 'pièces uniques récentes', 'taxidermie bijoux bougies nouveautés', 'artisanat français édition limitée'],
+  alternates: { canonical: `${BASE_URL}/nouveautes` },
+  openGraph: {
+    title: 'Nouveautés — SADSAT',
+    description: 'Les dernières créations SADSAT : taxidermie éthique, bijoux, bougies artisanales et mode upcycling. Nouvelles pièces ajoutées régulièrement.',
+    url: `${BASE_URL}/nouveautes`,
+    type: 'website',
+    locale: 'fr_FR',
+    siteName: 'SADSAT',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Nouveautés — SADSAT',
+    description: 'Les dernières créations SADSAT : pièces uniques faites main, ajoutées régulièrement.',
+  },
 }
 
 const UNIVERSE_COLOR: Record<string, string> = {

@@ -6,6 +6,8 @@ import type { Universe } from '@/lib/definitions'
 
 export const metadata = {
   title: 'Recherche — SADSAT',
+  description: 'Recherchez parmi les créations artisanales SADSAT : taxidermie éthique, bijoux, bougies et mode upcycling.',
+  robots: { index: false, follow: false },
 }
 
 const UNIVERSE_BADGE: Record<Universe, { bg: string; text: string }> = {

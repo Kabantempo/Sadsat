@@ -1,6 +1,10 @@
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
+
 export const metadata = {
   title: "Conditions Générales de Vente — SADSAT",
-  description: "Conditions générales de vente de la boutique artisanale SADSAT.",
+  description: "Conditions générales de vente de la boutique artisanale SADSAT : commandes, paiement, livraison, retours et garanties.",
+  alternates: { canonical: `${BASE_URL}/cgv` },
+  robots: { index: true, follow: false },
 };
 
 const SECTIONS = [

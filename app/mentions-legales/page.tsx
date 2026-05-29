@@ -1,6 +1,10 @@
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
+
 export const metadata = {
   title: "Mentions légales — SADSAT",
-  description: "Mentions légales du site SADSAT, boutique artisanale française.",
+  description: "Mentions légales du site SADSAT : éditeur, hébergeur, propriété intellectuelle et informations légales de la boutique artisanale française.",
+  alternates: { canonical: `${BASE_URL}/mentions-legales` },
+  robots: { index: true, follow: false },
 };
 
 const SECTIONS = [

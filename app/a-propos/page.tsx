@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
+
 export const metadata: Metadata = {
   title: "À propos — SADSAT",
-  description:
-    "SADSAT est un atelier artisanal né de trois pratiques : taxidermie éthique, bijoux en maille métallique et bougies artisanales. Trois univers, une seule signature.",
+  description: "SADSAT est un atelier artisanal né de trois pratiques : taxidermie éthique, bijoux en maille métallique et bougies artisanales. Trois univers, une seule signature.",
+  keywords: ['à propos SADSAT', 'atelier artisanal français', 'taxidermie éthique bijoux bougies', 'histoire SADSAT'],
+  alternates: { canonical: `${BASE_URL}/a-propos` },
   openGraph: {
     title: "À propos — SADSAT",
-    description:
-      "SADSAT est un atelier artisanal né de trois pratiques : taxidermie éthique, bijoux en maille métallique et bougies artisanales. Trois univers, une seule signature.",
+    description: "SADSAT est un atelier artisanal né de trois pratiques : taxidermie éthique, bijoux en maille métallique et bougies artisanales. Trois univers, une seule signature.",
     type: "website",
+    url: `${BASE_URL}/a-propos`,
+    locale: 'fr_FR',
+    siteName: 'SADSAT',
   },
 };
 
