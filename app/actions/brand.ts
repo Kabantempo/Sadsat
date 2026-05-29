@@ -80,6 +80,30 @@ export async function addBrandCategoryAction(formData: FormData): Promise<void> 
   redirect('/createur/marque/categories')
 }
 
+export async function quickAddCategoryAction(
+  universe: string,
+  label: string
+): Promise<{ label: string } | { error: string }> {
+  const session = await getSession()
+  if (!session?.userId || (session.role !== 'admin' && session.role !== 'créateur')) {
+    return { error: 'Non autorisé' }
+  }
+  const trimmed = label.trim()
+  if (!trimmed || trimmed.length < 2) return { error: 'Nom trop court.' }
+  const slug = trimmed
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+  try {
+    await createBrandCategory({ universe, label: trimmed, slug, latin: null, description: null, primaryImageId: null, hoverImageId: null, order: 999 })
+    return { label: trimmed }
+  } catch {
+    return { error: 'Catégorie déjà existante ou erreur serveur.' }
+  }
+}
+
 export async function updateBrandCategoryAction(formData: FormData): Promise<void> {
   await getCreatorUniverse()
   const id = String(formData.get('id') ?? '')

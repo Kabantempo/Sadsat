@@ -1,5 +1,6 @@
 'use client'
-import { useActionState, useState, useRef } from 'react'
+import { useActionState, useState, useRef, useTransition } from 'react'
+import { quickAddCategoryAction } from '@/app/actions/brand'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   X, ImagePlus, VideoIcon, Upload, Tag, Ruler, LayoutGrid,
@@ -183,8 +184,15 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
   const [videoUploading, setVideoUploading] = useState(false)
   const [videoError, setVideoError] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
+  const [localCats, setLocalCats] = useState<Record<string, string[]>>(categoriesByUniverse ?? {})
+  const [addingCat, setAddingCat] = useState(false)
+  const [newCatInput, setNewCatInput] = useState('')
+  const [newCatError, setNewCatError] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string>(product?.category ?? '')
+  const [catPending, startCatTransition] = useTransition()
   const fileRef = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLInputElement>(null)
+  const newCatRef = useRef<HTMLInputElement>(null)
 
   const [pName,   setPName]   = useState(product?.name ?? '')
   const [pPrice,  setPPrice]  = useState(product ? product.price : 0)
@@ -195,6 +203,25 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
   const previewImg = allImgs[0] ?? null
   const uColor = UNIVERSE_COLOR[universe] ?? UNIVERSE_COLOR['pieces-uniques']
   const resolvedCancel = cancelHref ?? (variant === 'createur' ? '/createur/produits' : '/admin/produits')
+
+  function handleAddCategory() {
+    if (!newCatInput.trim()) return
+    startCatTransition(async () => {
+      const result = await quickAddCategoryAction(universe, newCatInput.trim())
+      if ('error' in result) {
+        setNewCatError(result.error)
+      } else {
+        setLocalCats(prev => ({
+          ...prev,
+          [universe]: [...(prev[universe] ?? []), result.label],
+        }))
+        setSelectedCategory(result.label)
+        setAddingCat(false)
+        setNewCatInput('')
+        setNewCatError('')
+      }
+    })
+  }
 
   function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
     setNewPreviews(Array.from(e.target.files ?? []).map(f => URL.createObjectURL(f)))
@@ -385,10 +412,53 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
               </div>
               <div>
                 <label htmlFor="category" className={labelCls}>Catégorie <span className="text-red-400 normal-case text-[0.8em]">*</span></label>
-                <select id="category" name="category" defaultValue={product?.category} className={inputCls}>
-                  <option value="">— choisir —</option>
-                  {(categoriesByUniverse?.[universe] ?? CATEGORIES[universe] ?? []).map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
+                <div className="flex gap-2">
+                  <select
+                    id="category" name="category"
+                    value={selectedCategory}
+                    onChange={e => setSelectedCategory(e.target.value)}
+                    className={`${inputCls} flex-1`}
+                  >
+                    <option value="">— choisir —</option>
+                    {(localCats[universe] ?? CATEGORIES[universe] ?? []).map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => { setAddingCat(true); setNewCatError(''); setTimeout(() => newCatRef.current?.focus(), 50) }}
+                    title="Ajouter une catégorie"
+                    className="w-10 shrink-0 rounded-xl border border-neutral-200 bg-neutral-50 hover:bg-neutral-100 flex items-center justify-center text-neutral-500 hover:text-neutral-800 transition-colors"
+                  >
+                    <Plus size={16} strokeWidth={1.5} />
+                  </button>
+                </div>
+
+                {addingCat && (
+                  <div className="mt-2 flex gap-2 items-center">
+                    <input
+                      ref={newCatRef}
+                      type="text"
+                      value={newCatInput}
+                      onChange={e => { setNewCatInput(e.target.value); setNewCatError('') }}
+                      onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddCategory() } if (e.key === 'Escape') { setAddingCat(false); setNewCatInput('') } }}
+                      placeholder="Nom de la catégorie…"
+                      className={`${inputCls} flex-1 py-2`}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddCategory}
+                      disabled={catPending}
+                      className="shrink-0 px-3 py-2 rounded-xl bg-neutral-900 text-white text-[0.62rem] tracking-[0.12em] uppercase disabled:opacity-50"
+                    >
+                      {catPending ? '…' : 'Ajouter'}
+                    </button>
+                    <button type="button" onClick={() => { setAddingCat(false); setNewCatInput(''); setNewCatError('') }} className="shrink-0 text-neutral-400 hover:text-neutral-700">
+                      <X size={14} />
+                    </button>
+                  </div>
+                )}
+                {newCatError && <p className="mt-1 text-[0.64rem] text-red-500">{newCatError}</p>}
                 {state?.errors?.category && <p className="mt-2 text-[0.64rem] text-red-500">{state.errors.category[0]}</p>}
               </div>
             </div>
