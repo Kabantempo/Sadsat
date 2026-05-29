@@ -219,6 +219,7 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
       const data = await uploadRes.json()
       if (!uploadRes.ok || data.error) throw new Error(data.error?.message)
       setVideoUrl(data.secure_url)
+      if (videoRef.current) videoRef.current.value = ''
     } catch {
       setVideoError(true)
       setVideoPreview(null)
