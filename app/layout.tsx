@@ -11,6 +11,7 @@ import FavoritesProvider from "@/components/shared/FavoritesProvider";
 import { getSession } from "@/lib/session";
 import { isNewsletterEnabled } from "@/lib/settings";
 import { getBrandCategories } from "@/lib/brand";
+import { getUsers } from "@/lib/db";
 import PageLoader from "@/components/shared/PageLoader";
 import JsonLd from "@/components/shared/JsonLd";
 
@@ -151,13 +152,18 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await getSession();
   const user = session ? { name: session.name ?? '', role: session.role } : null;
-  const [newsletterEnabled, taxCats, bijouxCats, bougiesCats, habillementCats] = await Promise.all([
+  const [newsletterEnabled, taxCats, bijouxCats, bougiesCats, habillementCats, users] = await Promise.all([
     isNewsletterEnabled().catch(() => false),
     getBrandCategories('taxidermie').catch(() => []),
     getBrandCategories('bijoux').catch(() => []),
     getBrandCategories('bougies').catch(() => []),
     getBrandCategories('habillement').catch(() => []),
+    getUsers().catch(() => []),
   ])
+
+  const footerInstagrams = users
+    .filter((u) => u.role === 'créateur' && u.instagram)
+    .map((u) => ({ name: u.name ?? u.pseudo ?? '', handle: u.instagram! }))
 
   const navCategories = {
     taxidermie:  taxCats.map(c => ({ label: c.label, slug: c.slug })),
@@ -176,7 +182,7 @@ export default async function RootLayout({
           <CartProvider>
             <Header user={user ? { name: user.name, role: user.role } : null} navCategories={navCategories} />
             <main className="min-h-screen">{children}</main>
-            <Footer newsletterEnabled={newsletterEnabled} />
+            <Footer newsletterEnabled={newsletterEnabled} instagrams={footerInstagrams} />
             <RandomPieceButton />
             <NewArrivalsButton />
             <CartDrawer />

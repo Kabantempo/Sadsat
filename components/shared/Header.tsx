@@ -57,8 +57,17 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
   const [mobileSub, setMobileSub]       = useState<string | null>(null);
   const [hidden, setHidden]             = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [hoveredBrand, setHoveredBrand] = useState<string | null>(null);
   const lastScrollY                     = useRef(0);
   const userMenuRef                     = useRef<HTMLDivElement>(null);
+
+  const BRAND_ACCENTS: Record<string, { color: string; glow: string }> = {
+    taxidermie:  { color: '#c9b896', glow: 'rgba(201,184,150,0.5)' },
+    bijoux:      { color: '#8b0000', glow: 'rgba(139,0,0,0.6)'     },
+    bougies:     { color: '#00ff41', glow: 'rgba(0,255,65,0.5)'    },
+    habillement: { color: '#a0a0a0', glow: 'rgba(160,160,160,0.4)' },
+  };
+  const activeBrand = hoveredBrand ? BRAND_ACCENTS[hoveredBrand] : null;
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -86,8 +95,21 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: hidden ? 0 : 1, y: hidden ? "-100%" : 0 }}
         transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="sticky top-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md border-b border-neutral-100 dark:border-neutral-800/60 text-neutral-900 dark:text-neutral-100 transition-colors duration-300"
+        className="sticky top-0 z-50 bg-black/55 backdrop-blur-2xl text-neutral-100 transition-all duration-300"
       >
+        {/* ── Bordure basse lumineuse réactive ── */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
+          animate={{
+            background: activeBrand
+              ? `linear-gradient(90deg, transparent 0%, ${activeBrand.color}33 15%, ${activeBrand.color} 50%, ${activeBrand.color}33 85%, transparent 100%)`
+              : 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 30%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.06) 70%, transparent 100%)',
+            boxShadow: activeBrand
+              ? `0 0 16px 2px ${activeBrand.glow}`
+              : 'none',
+          }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+        />
         {/* ── Barre unique desktop ── */}
         <div className="relative flex items-center px-5 py-3 md:px-10 md:py-0 md:h-16">
 
@@ -104,7 +126,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
           <div className="flex-1 flex justify-center md:flex-none md:justify-start">
             <Link
               href="/"
-              className="font-serif italic text-[1.5rem] md:text-2xl tracking-[0.08em] select-none text-neutral-900 dark:text-neutral-100 transition-opacity hover:opacity-50 duration-300"
+              className="font-serif italic text-[1.5rem] md:text-2xl tracking-[0.08em] select-none bg-gradient-to-r from-neutral-100 via-neutral-300 to-neutral-100 bg-clip-text text-transparent hover:from-amber-100 hover:via-neutral-200 hover:to-amber-100 transition-all duration-500"
             >
               Sadsat
               <span className="not-italic text-neutral-300 dark:text-neutral-600 ml-1.5 text-sm">✦</span>
@@ -112,12 +134,22 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
           </div>
 
           {/* Nav desktop — centrée en absolu */}
-          <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1">
-            {NAV.map((item) => (
+          <nav
+            className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1"
+            onMouseLeave={() => setHoveredBrand(null)}
+          >
+            {NAV.map((item) => {
+              const brandSlug = item.href.replace('/', '');
+              const accent = BRAND_ACCENTS[brandSlug];
+              return (
               <div
                 key={item.label}
                 className="relative"
-                onMouseEnter={() => item.dropdown && setOpenMenu(item.label)}
+                onMouseEnter={() => {
+                  if (item.dropdown) setOpenMenu(item.label);
+                  if (accent) setHoveredBrand(brandSlug);
+                  else setHoveredBrand(null);
+                }}
                 onMouseLeave={() => setOpenMenu(null)}
               >
                 {(
@@ -126,10 +158,18 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.6rem] tracking-[0.12em] uppercase transition-all duration-200 ${
                       item.bordeaux
                         ? "text-[#8b0000] hover:bg-[#8b0000]/8"
-                        : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800/70"
+                        : "text-neutral-400 hover:text-neutral-100 hover:bg-white/[0.06]"
                     }`}
+                    style={accent && hoveredBrand === brandSlug ? { color: accent.color } : undefined}
                   >
                     {item.bordeaux && <span className="w-1 h-1 rounded-full bg-[#8b0000] shrink-0" />}
+                    {accent && !item.bordeaux && (
+                      <motion.span
+                        className="w-1 h-1 rounded-full shrink-0"
+                        animate={{ background: hoveredBrand === brandSlug ? accent.color : '#404040', scale: hoveredBrand === brandSlug ? 1.5 : 1 }}
+                        transition={{ duration: 0.25 }}
+                      />
+                    )}
                     {item.label}
                     {item.dropdown && (
                       <ChevronDown
@@ -149,8 +189,21 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -6, scale: 0.97 }}
                       transition={{ duration: 0.15, ease: "easeOut" }}
-                      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 min-w-[180px] py-2 z-50 shadow-xl rounded-2xl overflow-hidden"
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-neutral-950/90 backdrop-blur-2xl border min-w-[180px] py-2 z-50 shadow-[0_25px_50px_rgba(0,0,0,0.8)] rounded-2xl overflow-hidden"
+                      style={{
+                        borderColor: accent ? `${accent.color}30` : 'rgba(255,255,255,0.08)',
+                        boxShadow: accent
+                          ? `0 25px 50px rgba(0,0,0,0.8), 0 0 0 1px ${accent.color}20`
+                          : undefined,
+                      }}
                     >
+                      {/* Accent top line */}
+                      {accent && (
+                        <div
+                          className="absolute top-0 left-0 right-0 h-px"
+                          style={{ background: `linear-gradient(90deg, transparent, ${accent.color}80, transparent)` }}
+                        />
+                      )}
                       {item.dropdown.map((sub, i) => (
                         <motion.div
                           key={sub.href}
@@ -160,7 +213,10 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                         >
                           <Link
                             href={sub.href}
-                            className="block px-5 py-2.5 text-[0.6rem] tracking-[0.12em] uppercase text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors"
+                            className="block px-5 py-2.5 text-[0.6rem] tracking-[0.12em] uppercase text-neutral-400 transition-colors"
+                            style={accent ? { ['--hover-color' as string]: accent.color } : undefined}
+                            onMouseEnter={e => { if (accent) (e.currentTarget as HTMLElement).style.color = accent.color; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = ''; }}
                           >
                             {sub.label}
                           </Link>
@@ -170,11 +226,12 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                   )}
                 </AnimatePresence>
               </div>
-            ))}
+            );
+            })}
           </nav>
 
           {/* Actions desktop */}
-          <div className="hidden md:flex ml-auto items-center gap-2 text-neutral-500 dark:text-neutral-400">
+          <div className="hidden md:flex ml-auto items-center gap-2 text-neutral-400">
             <ThemeToggle />
 
             <SearchModal />
@@ -187,7 +244,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                   transition={{ duration: 0.15 }}
                   aria-label="Mon compte"
                   onClick={() => setUserMenuOpen((v) => !v)}
-                  className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 transition-all"
+                  className="p-2 rounded-full hover:bg-white/[0.08] hover:text-neutral-100 transition-all"
                 >
                   <User size={15} strokeWidth={1.5} />
                 </motion.button>
@@ -198,16 +255,16 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -6, scale: 0.97 }}
                       transition={{ duration: 0.15, ease: "easeOut" }}
-                      className="absolute top-full right-0 mt-2 bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 min-w-[200px] py-2 z-50 shadow-xl rounded-2xl overflow-hidden"
+                      className="absolute top-full right-0 mt-2 bg-neutral-950/90 backdrop-blur-2xl border border-white/[0.08] min-w-[200px] py-2 z-50 shadow-[0_25px_50px_rgba(0,0,0,0.7)] rounded-2xl overflow-hidden"
                     >
-                      <p className="px-5 pb-2 pt-1 text-[0.52rem] tracking-[0.18em] uppercase text-neutral-400 border-b border-neutral-100 dark:border-neutral-800 mb-1">
+                      <p className="px-5 pb-2 pt-1 text-[0.52rem] tracking-[0.18em] uppercase text-neutral-500 border-b border-white/[0.07] mb-1">
                         {user.name}
                       </p>
                       {(user.role === 'admin' || user.role === 'créateur') && (
                         <Link
                           href={user.role === 'admin' ? '/admin/produits/nouveau' : '/createur/produits/nouveau'}
                           onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-2.5 px-5 py-2.5 text-[0.6rem] tracking-[0.12em] uppercase text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors"
+                          className="flex items-center gap-2.5 px-5 py-2.5 text-[0.6rem] tracking-[0.12em] uppercase text-neutral-400 hover:text-neutral-100 hover:bg-white/[0.06] transition-colors"
                         >
                           <span className="text-base leading-none">+</span>
                           Nouveau produit
@@ -216,15 +273,15 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                       <Link
                         href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/compte'}
                         onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2.5 px-5 py-2.5 text-[0.6rem] tracking-[0.12em] uppercase text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors"
+                        className="flex items-center gap-2.5 px-5 py-2.5 text-[0.6rem] tracking-[0.12em] uppercase text-neutral-400 hover:text-neutral-100 hover:bg-white/[0.06] transition-colors"
                       >
                         <LayoutDashboard size={12} strokeWidth={1.5} />
                         {user.role === 'admin' ? 'Administration' : 'Mon espace'}
                       </Link>
-                      <div className="border-t border-neutral-100 dark:border-neutral-800 mt-1 pt-1">
+                      <div className="border-t border-white/[0.07] mt-1 pt-1">
                         <button
                           onClick={() => { setUserMenuOpen(false); logout(); }}
-                          className="flex items-center gap-2.5 px-5 py-2.5 w-full text-left text-[0.6rem] tracking-[0.12em] uppercase text-neutral-500 hover:text-red-500 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors"
+                          className="flex items-center gap-2.5 px-5 py-2.5 w-full text-left text-[0.6rem] tracking-[0.12em] uppercase text-neutral-500 hover:text-red-400 hover:bg-white/[0.05] transition-colors"
                         >
                           <LogOut size={12} strokeWidth={1.5} />
                           Déconnexion
@@ -250,7 +307,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
               <motion.div
                 whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.15 }}
-                className="relative p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 transition-all cursor-pointer"
+                className="relative p-2 rounded-full hover:bg-white/[0.08] hover:text-neutral-100 transition-all cursor-pointer"
               >
                 <Heart size={15} strokeWidth={1.5} />
                 {favCount > 0 && (
@@ -270,7 +327,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
             >
               <ShoppingBag size={15} strokeWidth={1.5} />
               {cartCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.4rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
+                <span className="absolute top-0.5 right-0.5 bg-white/25 backdrop-blur-sm border border-white/20 text-white text-[0.4rem] leading-none rounded-full w-[13px] h-[13px] flex items-center justify-center font-bold">
                   {cartCount}
                 </span>
               )}
@@ -287,7 +344,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
             >
               <ShoppingBag size={19} strokeWidth={1.5} />
               {cartCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-[0.4rem] leading-none rounded-full w-[12px] h-[12px] flex items-center justify-center font-bold">
+                <span className="absolute top-0.5 right-0.5 bg-white/25 backdrop-blur-sm border border-white/20 text-white text-[0.4rem] leading-none rounded-full w-[12px] h-[12px] flex items-center justify-center font-bold">
                   {cartCount}
                 </span>
               )}
@@ -295,7 +352,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
             {!user ? (
               <Link
                 href="/connexion"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.6rem] tracking-[0.1em] uppercase font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.6rem] tracking-[0.1em] uppercase font-medium bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/15 transition-colors"
               >
                 <User size={13} strokeWidth={1.5} />
                 Connexion
@@ -315,7 +372,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                 </Link>
                 <Link
                   href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/compte'}
-                  className="p-1.5 rounded-full text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                  className="p-1.5 rounded-full text-neutral-400 hover:text-neutral-100 hover:bg-white/[0.08] transition-all"
                 >
                   <User size={19} strokeWidth={1.5} />
                 </Link>
@@ -343,21 +400,21 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ duration: 0.35, ease }}
-              className="fixed top-0 left-0 bottom-0 z-[70] w-[82vw] max-w-[340px] bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col md:hidden overflow-y-auto shadow-2xl rounded-r-2xl"
+              className="fixed top-0 left-0 bottom-0 z-[70] w-[82vw] max-w-[340px] bg-neutral-950/95 backdrop-blur-2xl text-neutral-100 flex flex-col md:hidden overflow-y-auto shadow-2xl rounded-r-2xl border-r border-white/[0.07]"
             >
               {/* Header du drawer */}
-              <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100 dark:border-neutral-800">
+              <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.07]">
                 <Link
                   href="/"
                   onClick={() => setMobileOpen(false)}
-                  className="font-serif italic text-xl tracking-[0.06em] text-neutral-900 dark:text-neutral-100"
+                  className="font-serif italic text-xl tracking-[0.06em] bg-gradient-to-r from-neutral-100 via-neutral-300 to-neutral-100 bg-clip-text text-transparent"
                 >
                   Sadsat <span className="not-italic text-neutral-300 dark:text-neutral-600 text-sm">✦</span>
                 </Link>
                 <button
                   onClick={() => setMobileOpen(false)}
                   aria-label="Fermer le menu"
-                  className="p-1.5 rounded-full text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all -mr-1"
+                  className="p-1.5 rounded-full text-neutral-500 hover:text-neutral-100 hover:bg-white/[0.08] transition-all -mr-1"
                 >
                   <X size={18} strokeWidth={1.5} />
                 </button>
@@ -366,14 +423,14 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
               {/* Liens */}
               <nav className="flex-1 px-4 py-3 flex flex-col" aria-label="Navigation principale">
                 {NAV.map((item) => (
-                  <div key={item.label} className="border-b border-neutral-100 dark:border-neutral-800/60 last:border-0">
+                  <div key={item.label} className="border-b border-white/[0.06] last:border-0">
                     <div className="flex items-center">
                       {(
                         <Link
                           href={item.href}
                           onClick={() => !item.dropdown && setMobileOpen(false)}
                           className={`flex-1 py-3.5 px-2 rounded-lg text-[0.75rem] tracking-[0.12em] uppercase font-medium transition-colors ${
-                            item.bordeaux ? "text-[#8b0000]" : "text-neutral-800 dark:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                            item.bordeaux ? "text-[#8b0000]" : "text-neutral-300 hover:text-neutral-100 hover:bg-white/[0.05]"
                           }`}
                         >
                           {item.label}
@@ -408,7 +465,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                               key={sub.href}
                               href={sub.href}
                               onClick={() => setMobileOpen(false)}
-                              className="block pl-6 pr-4 py-2.5 text-[0.68rem] tracking-[0.1em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+                              className="block pl-6 pr-4 py-2.5 text-[0.68rem] tracking-[0.1em] uppercase text-neutral-500 hover:text-neutral-100 transition-colors"
                             >
                               {sub.label}
                             </Link>
@@ -421,7 +478,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
               </nav>
 
               {/* Actions bas du drawer */}
-              <div className="px-4 py-5 border-t border-neutral-100 dark:border-neutral-800 space-y-0.5">
+              <div className="px-4 py-5 border-t border-white/[0.07] space-y-0.5">
                 {user ? (
                   <>
                     <p className="text-[0.5rem] tracking-[0.18em] uppercase text-neutral-400 px-2 mb-2">{user.name}</p>
@@ -429,7 +486,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                       <Link
                         href={user.role === 'admin' ? '/admin/produits/nouveau' : '/createur/produits/nouveau'}
                         onClick={() => setMobileOpen(false)}
-                        className="flex items-center gap-2.5 px-2 py-2.5 rounded-lg text-[0.65rem] tracking-[0.12em] uppercase text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
+                        className="flex items-center gap-2.5 px-2 py-2.5 rounded-lg text-[0.65rem] tracking-[0.12em] uppercase text-neutral-400 hover:text-neutral-100 hover:bg-white/[0.06] transition-colors"
                       >
                         <span className="text-base leading-none">+</span>
                         Nouveau produit
@@ -438,7 +495,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                     <Link
                       href={user.role === 'admin' ? '/admin' : user.role === 'créateur' ? '/createur/produits' : '/compte'}
                       onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-2.5 px-2 py-2.5 rounded-lg text-[0.65rem] tracking-[0.12em] uppercase text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
+                      className="flex items-center gap-2.5 px-2 py-2.5 rounded-lg text-[0.65rem] tracking-[0.12em] uppercase text-neutral-400 hover:text-neutral-100 hover:bg-white/[0.06] transition-colors"
                     >
                       <LayoutDashboard size={13} strokeWidth={1.5} />
                       {user.role === 'admin' ? 'Administration' : 'Mon espace'}
@@ -455,7 +512,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                   <Link
                     href="/connexion"
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-2.5 px-2 py-2.5 rounded-lg text-[0.65rem] tracking-[0.12em] uppercase text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
+                    className="flex items-center gap-2.5 px-2 py-2.5 rounded-lg text-[0.65rem] tracking-[0.12em] uppercase text-neutral-400 hover:text-neutral-100 hover:bg-white/[0.06] transition-colors"
                   >
                     <User size={13} strokeWidth={1.5} />
                     Se connecter

@@ -10,10 +10,11 @@ function BrandCard({ brand, scrollYProgress, index }: {
   scrollYProgress: MotionValue<number>;
   index: number;
 }) {
-  const start   = Math.min(0.78 + index * 0.04, 0.88);
+  const start   = Math.min(0.82 + index * 0.05, 0.92);
   const end     = Math.min(start + 0.16, 1.0);
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-  const scale   = useTransform(scrollYProgress, [start, end], [0.94, 1]);
+  const scale   = useTransform(scrollYProgress, [start, end], [0.92, 1]);
+  const y       = useTransform(scrollYProgress, [start, end], ["20px", "0px"]);
 
   const inner = (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
@@ -63,7 +64,7 @@ function BrandCard({ brand, scrollYProgress, index }: {
   const cardClass = "relative rounded-xl overflow-hidden aspect-square";
 
   return (
-    <motion.div style={{ opacity, scale }}>
+    <motion.div style={{ opacity, scale, y }}>
       {brand.cta && !brand.special ? (
         <Link
           href={`/${brand.slug}`}
@@ -81,16 +82,16 @@ function BrandCard({ brand, scrollYProgress, index }: {
   );
 }
 
-// ── Scene 3 with instagrams ────────────────────────────────────────────────────
+// ── Scene 3 : instagram ───────────────────────────────────────────────────────
 function InstaLine({ creator, scrollYProgress, index }: {
   creator: { name: string; handle: string };
   scrollYProgress: MotionValue<number>;
   index: number;
 }) {
-  const start = Math.min(0.78 + index * 0.06, 0.89);
-  const end   = Math.min(start + 0.10, 1.0);
+  const start   = Math.min(0.78 + index * 0.08, 0.92);
+  const end     = Math.min(start + 0.14, 1.0);
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-  const y       = useTransform(scrollYProgress, [start, end], ["18px", "0px"]);
+  const y       = useTransform(scrollYProgress, [start, end], ["22px", "0px"]);
 
   return (
     <motion.div style={{ opacity, y }} className="text-center">
@@ -123,21 +124,29 @@ export default function ScrollStory({
     offset: ["start start", "end end"],
   });
 
-  // Scène 1 — titre (dwell until ~35%)
-  const s1TitleY       = useTransform(scrollYProgress, [0, 0.35], ["0%", "-18%"]);
-  const s1TitleOpacity = useTransform(scrollYProgress, [0, 0.24, 0.33], [1, 1, 0]);
-  const s1SubOpacity   = useTransform(scrollYProgress, [0, 0.20, 0.30], [1, 1, 0]);
-  const s1SubY         = useTransform(scrollYProgress, [0, 0.35], ["0%", "-24%"]);
+  // ── S1 — sortie en cascade : label → sous-titre → titre ──────────────────
+  // Chaque élément disparaît à un moment légèrement différent
+  // et dérive vers le haut à des vitesses différentes (parallaxe)
+  const s1LabelOp  = useTransform(scrollYProgress, [0.04, 0.20, 0.30], [1, 1, 0]);
+  const s1LabelY   = useTransform(scrollYProgress, [0.04, 0.44], ["0%", "-22%"]);
+  const s1SubOp    = useTransform(scrollYProgress, [0.04, 0.22, 0.36], [1, 1, 0]);
+  const s1SubY     = useTransform(scrollYProgress, [0.04, 0.44], ["0%", "-13%"]);
+  const s1TitleOp  = useTransform(scrollYProgress, [0.04, 0.26, 0.42], [1, 1, 0]);
+  const s1TitleY   = useTransform(scrollYProgress, [0.04, 0.44], ["0%", "-9%"]);
 
-  // Scène 2 — révélation (démarre à 0.35, gris + texte arrivent ensemble)
-  const s2Opacity   = useTransform(scrollYProgress, [0.35, 0.44, 0.72, 0.80], [0, 1, 1, 0]);
-  const maskY       = useTransform(scrollYProgress, [0.35, 0.52], ["0%", "100%"]);
-  const lineScale   = useTransform(scrollYProgress, [0.36, 0.50], [0, 1]);
-  const textOpacity = useTransform(scrollYProgress, [0.40, 0.52], [0, 1]);
-  const textX       = useTransform(scrollYProgress, [0.40, 0.53], ["50px", "0px"]);
+  // ── S2 — apparaît pendant que S1 finit de disparaître (crossfade) ────────
+  // Sort vers le haut pour laisser la place à S3
+  const s2Opacity   = useTransform(scrollYProgress, [0.28, 0.42, 0.70, 0.82], [0, 1, 1, 0]);
+  const s2ContentY  = useTransform(scrollYProgress, [0.70, 0.82], ["0px", "-28px"]);
+  const maskY       = useTransform(scrollYProgress, [0.30, 0.56], ["0%", "100%"]);
+  const lineScale   = useTransform(scrollYProgress, [0.43, 0.58], [0, 1]);
+  const textOpacity = useTransform(scrollYProgress, [0.45, 0.60], [0, 1]);
+  const textX       = useTransform(scrollYProgress, [0.45, 0.60], ["36px", "0px"]);
 
-  // Scène 3 — instagram / marques (démarre à 0.78)
-  const s3Opacity = useTransform(scrollYProgress, [0.78, 0.86, 0.95, 1], [0, 1, 1, 0]);
+  // ── S3 — crossfade avec S2, label et cartes animés séparément ────────────
+  const s3Opacity = useTransform(scrollYProgress, [0.72, 0.84], [0, 1]);
+  const s3LabelOp = useTransform(scrollYProgress, [0.74, 0.86], [0, 1]);
+  const s3LabelY  = useTransform(scrollYProgress, [0.74, 0.86], ["14px", "0px"]);
 
   // Indicateur scroll
   const arrowOpacity = useTransform(scrollYProgress, [0, 0.07], [1, 0]);
@@ -148,39 +157,38 @@ export default function ScrollStory({
     <div ref={containerRef} className="relative h-[500vh] bg-neutral-950">
       <div className="sticky top-0 h-screen overflow-hidden">
 
-        {/* ── SCÈNE 1 — Grand titre ── */}
-        <motion.div
-          style={{ opacity: s1TitleOpacity }}
-          className="absolute inset-0 z-10 bg-neutral-950 flex flex-col items-center justify-center pointer-events-none"
-        >
+        {/* ── SCÈNE 1 — Grand titre, sortie en cascade ── */}
+        <div className="absolute inset-0 z-10 bg-neutral-950 flex flex-col items-center justify-center pointer-events-none">
           <motion.p
-            style={{ y: s1SubY, opacity: s1SubOpacity }}
+            style={{ y: s1LabelY, opacity: s1LabelOp }}
             className="font-mono text-[0.58rem] tracking-[0.4em] uppercase text-neutral-600 mb-8"
           >
             SADSAT — Collectif
           </motion.p>
           <motion.h2
-            style={{ y: s1TitleY }}
+            style={{ y: s1TitleY, opacity: s1TitleOp }}
             className="font-serif font-light text-[13vw] md:text-[9vw] leading-none text-neutral-100 text-center px-6"
           >
             Un collectif.
           </motion.h2>
           <motion.p
-            style={{ y: s1TitleY, opacity: s1SubOpacity }}
+            style={{ y: s1SubY, opacity: s1SubOp }}
             className="font-serif italic text-neutral-500 text-lg md:text-2xl mt-6"
           >
             Plusieurs univers, une vision partagée.
           </motion.p>
-        </motion.div>
+        </div>
 
-        {/* ── SCÈNE 2 — Révélation image + texte ── */}
+        {/* ── SCÈNE 2 — Révélation + texte, sort vers le haut ── */}
         <motion.div
           style={{ opacity: s2Opacity }}
           className="absolute inset-0 z-20 bg-neutral-950 pointer-events-none"
         >
-          {/* Layout: flex-col sur mobile, grille 2 colonnes sur desktop */}
-          <div className="h-full flex flex-col md:grid md:grid-cols-2">
-            {/* Gauche : visuel révélé de haut en bas — caché sur mobile */}
+          <motion.div
+            style={{ y: s2ContentY }}
+            className="h-full flex flex-col md:grid md:grid-cols-2"
+          >
+            {/* Gauche : visuel révélé de haut en bas */}
             <div className="hidden md:block relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-neutral-800 via-neutral-900 to-neutral-950">
                 <div
@@ -197,7 +205,7 @@ export default function ScrollStory({
               />
             </div>
 
-            {/* Droite : texte qui glisse de la droite */}
+            {/* Droite : texte glissant */}
             <div className="flex-1 flex flex-col justify-center px-8 md:px-16">
               <motion.div style={{ x: textX, opacity: textOpacity }}>
                 <motion.div
@@ -219,17 +227,20 @@ export default function ScrollStory({
                 </p>
               </motion.div>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
 
-        {/* ── SCÈNE 3 — Grille univers (+ instagrams si dispo) ── */}
+        {/* ── SCÈNE 3 — Grille univers / instagrams ── */}
         <motion.div
           style={{ opacity: s3Opacity }}
           className="absolute inset-0 z-30 bg-neutral-950 flex flex-col items-center justify-center px-8 pointer-events-none"
         >
-          <p className="font-mono text-[0.52rem] tracking-[0.36em] uppercase text-neutral-600 mb-8">
+          <motion.p
+            style={{ opacity: s3LabelOp, y: s3LabelY }}
+            className="font-mono text-[0.52rem] tracking-[0.36em] uppercase text-neutral-600 mb-8"
+          >
             {showInstas ? "Nous suivre" : "Nos univers"}
-          </p>
+          </motion.p>
 
           {showInstas ? (
             <div className="flex flex-col items-center gap-5 md:gap-6">
