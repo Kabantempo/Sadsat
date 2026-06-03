@@ -4,7 +4,7 @@ import { verifyAdmin } from '@/lib/dal'
 import { createProduct, updateProduct, deleteProduct, getProductById } from '@/lib/products'
 import type { ProductFormState, Universe, ProductStatus, Dimensions } from '@/lib/definitions'
 import { UNIVERSES } from '@/lib/definitions'
-import { deleteFile } from '@/lib/cloudinary'
+import { deleteFile, uploadFile } from '@/lib/cloudinary'
 
 async function saveFiles(files: File[]): Promise<string[]> {
   const urls: string[] = []
