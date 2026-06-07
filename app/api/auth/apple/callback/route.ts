@@ -74,6 +74,7 @@ export async function POST(req: NextRequest) {
         passwordHash: '',
         name,
         role: 'client',
+        emailVerified: true,
         createdAt: new Date().toISOString(),
       }
       await createUser(user)

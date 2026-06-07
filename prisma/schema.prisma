@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -80,7 +80,7 @@ model Product {
 
 model ProductImage {
   id       String @id
-  data     Bytes  @db.LongBlob
+  data     Bytes  @db.ByteA
   mimeType String
 
   @@map("product_images")

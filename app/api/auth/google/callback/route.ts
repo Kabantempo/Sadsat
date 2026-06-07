@@ -43,6 +43,7 @@ export async function GET(req: NextRequest) {
         passwordHash: '',
         name: gUser.name ?? gUser.email.split('@')[0],
         role: 'client',
+        emailVerified: true,
         createdAt: new Date().toISOString(),
       }
       await createUser(user)
