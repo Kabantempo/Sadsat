@@ -2,6 +2,8 @@ import type { MetadataRoute } from 'next'
 import { getProducts } from '@/lib/products'
 import { getUsers } from '@/lib/db'
 
+export const dynamic = 'force-dynamic'
+
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
 
 const STATIC_PAGES: MetadataRoute.Sitemap = [
