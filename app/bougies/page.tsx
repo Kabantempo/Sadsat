@@ -6,7 +6,7 @@ import { getBrandSlides } from "@/lib/brand";
 import BougiesContent from "@/components/pages/BougiesContent";
 import type { CarouselItem } from "@/components/shared/ProductCarousel";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 export const metadata: Metadata = {
   title: "Spectrum N°3 — Bougies artisanales · SADSAT",

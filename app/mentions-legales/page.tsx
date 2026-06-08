@@ -12,7 +12,7 @@ const SECTIONS = [
     title: "Éditeur du site",
     content: `SADSAT est édité par [Prénom NOM], auto-entrepreneur.
 Adresse : [Votre adresse complète], France
-Email : contact@sadsat.fr
+Email : contact@sadsat.com
 SIRET : [À compléter après immatriculation]
 Non assujetti à la TVA (article 293 B du CGI)`,
   },
@@ -33,7 +33,7 @@ https://www.hostinger.fr`,
   },
   {
     title: "Données personnelles",
-    content: `Le traitement de vos données personnelles est détaillé dans notre Politique de confidentialité. Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits : contact@sadsat.fr.`,
+    content: `Le traitement de vos données personnelles est détaillé dans notre Politique de confidentialité. Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits : contact@sadsat.com.`,
   },
   {
     title: "Cookies",

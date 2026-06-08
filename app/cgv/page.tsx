@@ -10,7 +10,7 @@ export const metadata = {
 const SECTIONS = [
   {
     title: "Objet",
-    content: `Les présentes Conditions Générales de Vente (CGV) régissent les ventes de produits artisanaux réalisées sur le site sadsat.fr par [Prénom NOM], auto-entrepreneur (SIRET : [À compléter]), ci-après dénommé « SADSAT ».
+    content: `Les présentes Conditions Générales de Vente (CGV) régissent les ventes de produits artisanaux réalisées sur le site sadsat.com par [Prénom NOM], auto-entrepreneur (SIRET : [À compléter]), ci-après dénommé « SADSAT ».
 
 Toute commande implique l'acceptation pleine et entière des présentes CGV.`,
   },
@@ -54,7 +54,7 @@ Les frais de port sont indiqués au moment de la commande. La livraison est offe
     title: "Droit de rétractation",
     content: `Conformément aux articles L.221-18 et suivants du Code de la consommation, vous disposez d'un délai de 14 jours à compter de la réception du colis pour exercer votre droit de rétractation, sans motif à donner.
 
-Pour l'exercer, contactez-nous à contact@sadsat.fr avant expiration du délai. Les frais de retour sont à la charge du client.
+Pour l'exercer, contactez-nous à contact@sadsat.com avant expiration du délai. Les frais de retour sont à la charge du client.
 
 Exception : les pièces de taxidermie personnalisées ou fabriquées sur mesure ne sont pas éligibles au droit de rétractation (article L.221-28 du Code de la consommation).`,
   },
@@ -68,7 +68,7 @@ Exception : les pièces de taxidermie personnalisées ou fabriquées sur mesure 
 • Garantie légale de conformité (articles L.217-4 et suivants)
 • Garantie des vices cachés (articles 1641 et suivants du Code civil)
 
-Pour toute demande, contactez : contact@sadsat.fr`,
+Pour toute demande, contactez : contact@sadsat.com`,
   },
   {
     title: "Responsabilité",

@@ -8,7 +8,7 @@ import { getProducts } from "@/lib/products";
 import { getBrandSlides } from "@/lib/brand";
 import type { AccordionItem } from "@/components/shared/Accordion";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 export const metadata: Metadata = {
   title: "L0vers.cult — Bijoux en maille métallique · SADSAT",

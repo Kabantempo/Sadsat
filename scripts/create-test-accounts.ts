@@ -9,9 +9,9 @@ async function main() {
   const now = new Date().toISOString()
 
   const accounts = [
-    { id: randomUUID(), email: 'createur@test.sadsat.fr',  name: 'Créateur Test',  role: 'créateur',  passwordHash: password },
-    { id: randomUUID(), email: 'grossiste@test.sadsat.fr', name: 'Grossiste Test', role: 'grossiste', passwordHash: password },
-    { id: randomUUID(), email: 'client@test.sadsat.fr',    name: 'Client Test',    role: 'client',    passwordHash: password },
+    { id: randomUUID(), email: 'createur@test.sadsat.com',  name: 'Créateur Test',  role: 'créateur',  passwordHash: password },
+    { id: randomUUID(), email: 'grossiste@test.sadsat.com', name: 'Grossiste Test', role: 'grossiste', passwordHash: password },
+    { id: randomUUID(), email: 'client@test.sadsat.com',    name: 'Client Test',    role: 'client',    passwordHash: password },
   ]
 
   for (const account of accounts) {

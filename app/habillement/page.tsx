@@ -5,7 +5,7 @@ import Link from "next/link";
 import { getProducts } from "@/lib/products";
 import ProductGrid from "@/components/shared/ProductGrid";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 export const metadata: Metadata = {
   title: "HACKCYCLE — Mode upcycling & textile · SADSAT",

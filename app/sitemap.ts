@@ -4,7 +4,7 @@ import { getUsers } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 const STATIC_PAGES: MetadataRoute.Sitemap = [
   {

@@ -143,8 +143,8 @@ export default function ContactPage() {
 
           <p className="text-center text-[0.58rem] text-neutral-700 tracking-wider">
             Ou directement à{" "}
-            <a href="mailto:contact@sadsat.fr" className="text-neutral-500 hover:text-neutral-300 transition-colors">
-              contact@sadsat.fr
+            <a href="mailto:contact@sadsat.com" className="text-neutral-500 hover:text-neutral-300 transition-colors">
+              contact@sadsat.com
             </a>
           </p>
         </form>

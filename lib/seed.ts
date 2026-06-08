@@ -12,7 +12,7 @@ export const SEED_USERS: User[] = [
   },
   {
     id: 'createur-demo-001',
-    email: 'ambre.taxidermie@sadsat.fr',
+    email: 'ambre.taxidermie@sadsat.com',
     passwordHash: '',
     name: 'Ambre Vidal',
     role: 'créateur',
@@ -21,7 +21,7 @@ export const SEED_USERS: User[] = [
   },
   {
     id: 'createur-demo-002',
-    email: 'leo.bijoux@sadsat.fr',
+    email: 'leo.bijoux@sadsat.com',
     passwordHash: '',
     name: 'Léo Marchetti',
     role: 'créateur',
@@ -30,7 +30,7 @@ export const SEED_USERS: User[] = [
   },
   {
     id: 'createur-demo-003',
-    email: 'sofia.bougies@sadsat.fr',
+    email: 'sofia.bougies@sadsat.com',
     passwordHash: '',
     name: 'Sofia Blanc',
     role: 'créateur',

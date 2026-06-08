@@ -23,7 +23,7 @@ export async function generateMetadata({
   const product = await getProductById(id);
   if (!product) return { title: "Produit introuvable — SADSAT" };
 
-  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
   const title = `${product.name} — SADSAT`;
   const description = product.description.slice(0, 155);
   const image = product.images[0] ?? undefined;
@@ -65,7 +65,7 @@ export default async function FicheProduitPage({
   if (!product) notFound();
   if (product.status === "masqué" && !isPreview) notFound();
 
-  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
   const creator = product.createdBy ? await getUserById(product.createdBy) : null;
   const creatorData = creator
     ? { id: creator.id, name: creator.name, avatar: creator.avatar }

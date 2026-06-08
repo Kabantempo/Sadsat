@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Nos créateurs — SADSAT",
   description:
     "Découvrez les artisans et créateurs derrière les collections SADSAT. Chaque pièce est signée par un créateur engagé, travaillant en édition limitée.",
-  alternates: { canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'}/createurs` },
+  alternates: { canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'}/createurs` },
   openGraph: {
     title: "Nos créateurs — SADSAT",
     description: "Les artisans et créateurs derrière les collections SADSAT.",

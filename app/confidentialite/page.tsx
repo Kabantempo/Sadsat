@@ -30,7 +30,7 @@ const SECTIONS = [
   },
   {
     title: "Vos droits",
-    content: `Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression, de portabilité et d'opposition à vos données. Pour exercer ces droits, contactez-nous à l'adresse : confidentialite@sadsat.fr. Vous pouvez également introduire une réclamation auprès de la CNIL (cnil.fr).`,
+    content: `Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression, de portabilité et d'opposition à vos données. Pour exercer ces droits, contactez-nous à l'adresse : confidentialite@sadsat.com. Vous pouvez également introduire une réclamation auprès de la CNIL (cnil.fr).`,
   },
   {
     title: "Cookies",
@@ -38,7 +38,7 @@ const SECTIONS = [
   },
   {
     title: "Contact",
-    content: `Responsable du traitement : SADSAT — France. Pour toute question relative à la protection de vos données : confidentialite@sadsat.fr.`,
+    content: `Responsable du traitement : SADSAT — France. Pour toute question relative à la protection de vos données : confidentialite@sadsat.com.`,
   },
 ];
 

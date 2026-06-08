@@ -19,7 +19,25 @@
       "Bash(npx next *)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/connexion)",
       "Bash(findstr cloudinary *)",
-      "Bash(taskkill /F /IM node.exe)"
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(git reset *)",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(git stash *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\mini-pc-01\\\\Documents\\\\code\\\\Sadsat\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(Format-Table -AutoSize)",
+      "Bash(npm run *)",
+      "Skill(run)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(curl -s http://localhost:3001 -w \"\\\\n\\\\nHTTP_CODE:%{http_code}\")",
+      "Bash(Get-Process -Name \"node\")",
+      "Bash(Stop-Process -Force)",
+      "Bash(Start-Sleep -Seconds 2)",
+      "Bash(Write-Output \"Done\")",
+      "PowerShell(Get-Process *)",
+      "Bash(xargs sed -i 's/sadsat\\\\.fr/sadsat.com/g')"
     ]
   }
 }

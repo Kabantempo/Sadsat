@@ -10,7 +10,7 @@ import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 import type { Universe, Product } from "@/lib/definitions";
 import JsonLd from "@/components/shared/JsonLd";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 export async function generateMetadata({
   params,

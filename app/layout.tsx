@@ -15,7 +15,7 @@ import { getUsers } from "@/lib/db";
 import PageLoader from "@/components/shared/PageLoader";
 import JsonLd from "@/components/shared/JsonLd";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],

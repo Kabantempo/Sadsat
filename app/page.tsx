@@ -9,7 +9,7 @@ import ScrollStory from "@/components/shared/ScrollStory";
 import CreateurCarousel, { type CreateurCard } from "@/components/shared/CreateurCarousel";
 import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.fr'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 export const metadata: Metadata = {
   title: "SADSAT — Taxidermie éthique, Bijoux, Bougies & Mode artisanale",
