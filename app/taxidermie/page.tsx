@@ -115,10 +115,10 @@ export default async function TaxidermiePage() {
               Qu'est-ce que c'est
             </div>
             <div>
-              <p className="font-serif text-xl md:text-2xl font-light italic leading-relaxed text-neutral-800 mb-5">
+              <p className="font-serif text-xl md:text-2xl font-light italic leading-relaxed text-neutral-800 dark:text-neutral-200 mb-5">
                 La taxidermie est l'art de conserver et de présenter la dépouille d'un animal dans une apparence naturelle et vivante.
               </p>
-              <p className="text-[0.84rem] leading-[1.85] text-neutral-600">
+              <p className="text-[0.84rem] leading-[1.85] text-neutral-600 dark:text-neutral-300">
                 Pratiquée depuis des siècles dans les cabinets de curiosités et les musées d'histoire naturelle, elle est aujourd'hui un médium artistique à part entière. Chez SADSAT, chaque pièce est une ode à la beauté du vivant — réalisée avec respect, patience, et une exigence absolue sur la provenance des spécimens.
               </p>
             </div>
@@ -129,7 +129,7 @@ export default async function TaxidermiePage() {
       {/* ── Valeurs ── */}
       <div className="max-w-3xl mx-auto px-8 mb-16">
         <ScrollReveal delay={0.1}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-neutral-200">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-neutral-200 dark:bg-neutral-800">
             {[
               { label: "Provenance éthique",          detail: "Mortalités naturelles uniquement" },
               { label: "Certification CITES",          detail: "Conformité réglementaire totale"  },
@@ -137,7 +137,7 @@ export default async function TaxidermiePage() {
             ].map(({ label, detail }) => (
               <div key={label} className="bg-[#fafaf7] dark:bg-neutral-950 px-5 py-6 text-center">
                 <p className="font-mono text-[0.56rem] tracking-[0.18em] uppercase text-neutral-400 mb-2">{detail}</p>
-                <p className="font-serif text-[0.88rem] italic text-neutral-700">{label}</p>
+                <p className="font-serif text-[0.88rem] italic text-neutral-700 dark:text-neutral-300">{label}</p>
               </div>
             ))}
           </div>
