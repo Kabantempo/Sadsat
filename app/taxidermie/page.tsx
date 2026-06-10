@@ -102,7 +102,8 @@ export default async function TaxidermiePage() {
       <div className="pt-32 pb-24 max-w-3xl mx-auto px-8 text-center">
         <ScrollReveal>
           <div className="font-mono text-[0.7rem] tracking-[0.3em] mb-6 text-neutral-500">— 01 —</div>
-          <h1 className="font-serif font-light text-6xl md:text-7xl italic mb-6">Taxidermie</h1>
+          <p className="font-mono text-[0.62rem] tracking-[0.3em] uppercase text-neutral-400 mb-3">Taxidermie</p>
+          <h1 className="font-serif font-light text-6xl md:text-7xl italic mb-6">Crystal Pets</h1>
           <p className="text-sm tracking-[0.2em] uppercase opacity-60">Pièces uniques · Provenance éthique</p>
         </ScrollReveal>
       </div>
