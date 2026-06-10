@@ -403,7 +403,7 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
         <Card>
           <CardHeader step={2} icon={LayoutGrid} title="Classement" done />
           <div className="p-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="universe" className={labelCls}>Univers <span className="text-red-400 normal-case text-[0.8em]">*</span></label>
                 <select id="universe" name="universe" value={universe} onChange={e => setUniverse(e.target.value as Universe)} className={inputCls}>
@@ -471,7 +471,7 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
         <Card>
           <CardHeader step={3} icon={DollarSign} title="Prix & disponibilité" done={pPrice > 0} />
           <div className="p-7">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
               <div>
                 <label htmlFor="price" className={labelCls}>Prix (€) <span className="text-red-400 normal-case text-[0.8em]">*</span></label>
                 <div className="relative">
@@ -504,7 +504,7 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
         <Card>
           <CardHeader step={4} icon={Ruler} title="Dimensions & matériaux" />
           <div className="p-7 space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 { id: 'dim_hauteur',    label: 'Hauteur cm',    key: 'hauteur',    step: '0.1' },
                 { id: 'dim_largeur',    label: 'Largeur cm',    key: 'largeur',    step: '0.1' },
@@ -685,7 +685,7 @@ export default function ProductForm({ action, product, variant = 'admin', cancel
         name={pName} price={pPrice} description={pDesc} status={pStatus} universe={universe} imgs={allImgs} />
       <form action={formAction}>
         {showPreview ? (
-          <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
             <div>{formContent}</div>
             {sidePreview}
           </div>

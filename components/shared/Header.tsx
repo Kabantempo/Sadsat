@@ -111,31 +111,31 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
           transition={{ duration: 0.35, ease: 'easeOut' }}
         />
         {/* ── Barre unique desktop ── */}
-        <div className="relative flex items-center px-5 py-3 md:px-10 md:py-0 md:h-16">
+        <div className="relative flex items-center justify-between px-4 py-3 sm:px-6 lg:px-10 lg:py-0 lg:h-16 w-full">
 
           {/* Gauche mobile : hamburger */}
           <button
             aria-label="Ouvrir le menu"
             onClick={() => setMobileOpen(true)}
-            className="md:hidden text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+            className="lg:hidden text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
           >
             <Menu size={22} strokeWidth={1.5} />
           </button>
 
-          {/* Logo */}
-          <div className="flex-1 flex justify-center md:flex-none md:justify-start">
+          {/* Logo — Mobile: centered, Desktop: left */}
+          <div className="flex-1 lg:flex-none flex justify-center lg:justify-start">
             <Link
               href="/"
-              className="font-serif italic text-[1.5rem] md:text-2xl tracking-[0.08em] select-none bg-gradient-to-r from-neutral-100 via-neutral-300 to-neutral-100 bg-clip-text text-transparent hover:from-amber-100 hover:via-neutral-200 hover:to-amber-100 transition-all duration-500"
+              className="font-serif italic text-[1.4rem] sm:text-[1.6rem] lg:text-2xl tracking-[0.08em] select-none bg-gradient-to-r from-neutral-100 via-neutral-300 to-neutral-100 bg-clip-text text-transparent hover:from-amber-100 hover:via-neutral-200 hover:to-amber-100 transition-all duration-500 whitespace-nowrap"
             >
               Sadsat
               <span className="not-italic text-neutral-300 dark:text-neutral-600 ml-1.5 text-sm">✦</span>
             </Link>
           </div>
 
-          {/* Nav desktop — centrée en absolu */}
+          {/* Nav desktop — hidden below lg breakpoint */}
           <nav
-            className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1"
+            className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-1"
             onMouseLeave={() => setHoveredBrand(null)}
           >
             {NAV.map((item) => {
@@ -231,7 +231,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
           </nav>
 
           {/* Actions desktop */}
-          <div className="hidden md:flex ml-auto items-center gap-2 text-neutral-400">
+          <div className="hidden lg:flex ml-auto items-center gap-1.5 text-neutral-400">
             <ThemeToggle />
 
             <SearchModal />
@@ -244,7 +244,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                   transition={{ duration: 0.15 }}
                   aria-label="Mon compte"
                   onClick={() => setUserMenuOpen((v) => !v)}
-                  className="p-2 rounded-full hover:bg-white/[0.08] hover:text-neutral-100 transition-all"
+                  className="p-1.5 lg:p-2 rounded-full hover:bg-white/[0.08] hover:text-neutral-100 transition-all"
                 >
                   <User size={15} strokeWidth={1.5} />
                 </motion.button>
@@ -307,7 +307,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
               <motion.div
                 whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.15 }}
-                className="relative p-2 rounded-full hover:bg-white/[0.08] hover:text-neutral-100 transition-all cursor-pointer"
+                className="relative p-1.5 lg:p-2 rounded-full hover:bg-white/[0.08] hover:text-neutral-100 transition-all cursor-pointer"
               >
                 <Heart size={15} strokeWidth={1.5} />
                 {favCount > 0 && (
@@ -323,7 +323,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
               transition={{ duration: 0.15 }}
               aria-label="Panier"
               onClick={openDrawer}
-              className="relative p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 transition-all"
+              className="relative p-1.5 lg:p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 transition-all"
             >
               <ShoppingBag size={15} strokeWidth={1.5} />
               {cartCount > 0 && (
@@ -336,7 +336,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
           </div>
 
           {/* Droite mobile */}
-          <div className="md:hidden flex items-center gap-1">
+          <div className="lg:hidden flex items-center gap-2 sm:gap-1">
             <button
               aria-label="Panier"
               onClick={openDrawer}

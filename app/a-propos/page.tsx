@@ -71,6 +71,55 @@ export default function AProposPage() {
             Trois mondes, une seule matière première : l'attention.
           </p>
         </div>
+
+        {/* Section équipe */}
+        <div className="mt-24 pt-16 border-t border-neutral-800">
+          <div className="text-center mb-12">
+            <h2 className="font-serif font-light text-3xl md:text-4xl">Équipe & crédits</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+              <h3 className="font-serif text-lg italic mb-3 text-neutral-100">Création & direction</h3>
+              <p className="text-neutral-400 text-sm">
+                Visuels, concept, direction artistique. Un regard unique sur ce que peut être
+                l'artisanat en 2026.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-serif text-lg italic mb-3 text-neutral-100">Développement web</h3>
+              <p className="text-neutral-400 text-sm">
+                Architecture, design système, intégration Stripe & SendCloud. Une plateforme
+                pensée pour l'artisan, pas pour les algorithmes.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-serif text-lg italic mb-3 text-neutral-100">Photographie</h3>
+              <p className="text-neutral-400 text-sm">
+                Chaque pièce mérite une image qui la raconte. Lumière naturelle, respect des matières,
+                transparence sur les défauts qui font l'authenticité.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-serif text-lg italic mb-3 text-neutral-100">Typographie & design</h3>
+              <p className="text-neutral-400 text-sm">
+                Serif pour l'intemporel, mono pour la précision, sans-serif pour la clarté.
+                Chaque univers a sa voix.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-12 p-6 bg-neutral-900/50 border border-neutral-800 rounded-xl">
+            <p className="text-sm text-neutral-400 text-center">
+              <span className="font-semibold text-neutral-300">SADSAT</span> est une marque indépendante.
+              Pas de holding derrière, pas d'algorithmes qui décident pour nous.
+              Juste quatre univers créatifs et une plateforme qui les amplifie.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
