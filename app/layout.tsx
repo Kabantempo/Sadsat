@@ -150,24 +150,15 @@ const websiteJsonLd = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  let user = null;
-  let footerInstagrams: any[] = [];
-  let navCategories = {
+  const user = null;
+  const footerInstagrams: any[] = [];
+  const navCategories = {
     taxidermie: [],
     bijoux: [],
     bougies: [],
     habillement: [],
   };
-  let newsletterEnabled = false;
-
-  // Try to fetch data with strict 2s timeout, but don't block rendering
-  try {
-    const session = await Promise.race([
-      getSession(),
-      new Promise((_, r) => setTimeout(() => r(null), 2000))
-    ]) as any;
-    if (session) user = { name: session.name ?? '', role: session.role };
-  } catch {}
+  const newsletterEnabled = false;
 
   const navCategories = {
     taxidermie:  taxCats.map(c => ({ label: c.label, slug: c.slug })),

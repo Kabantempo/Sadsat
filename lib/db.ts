@@ -2,6 +2,25 @@ import 'server-only'
 import type { User } from './definitions'
 import { prisma } from './prisma'
 
+// Helper: retry avec backoff exponentiel
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 2): Promise<T> {
+  for (let i = 0; i <= maxRetries; i++) {
+    try {
+      return await Promise.race([
+        fn(),
+        new Promise<T>((_, reject) =>
+          setTimeout(() => reject(new Error('DB timeout')), 5000)
+        )
+      ]);
+    } catch (err) {
+      if (i === maxRetries) throw err;
+      const delay = Math.min(100 * Math.pow(2, i), 1000);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+  throw new Error('Retry failed');
+}
+
 function rowToUser(row: {
   id: string
   email: string
@@ -41,8 +60,9 @@ function rowToUser(row: {
 }
 
 export async function getUsers(): Promise<User[]> {
-  const rows = await prisma.user.findMany()
-  return rows.map(rowToUser)
+  return withRetry(() =>
+    prisma.user.findMany().then(rows => rows.map(rowToUser))
+  ).catch(() => []);
 }
 
 export async function getUserById(id: string): Promise<User | undefined> {
