@@ -40,11 +40,40 @@
 
 ---
 
+## 🔑 Credentials & Accès (Auto-Load)
+
+### Hostinger
+- **Domain** : sadsat.com
+- **Panel** : https://hpanel.hostinger.com
+- **SSH** : srv1746.hstgr.io
+- **Max Processes** : 78 (⚠️ Monitor si dépasse 120)
+- **GitHub Webhook** : Auto-deploy on push to main
+
+### Supabase
+- **Project ID** : wazmbsfvfhcqgtibewnz
+- **URL** : https://wazmbsfvfhcqgtibewnz.supabase.co
+- **Database** : PostgreSQL (aws-0-eu-west-1)
+- **Connection Modes** :
+  - Session mode (port 5432) : max 15 connections
+  - Transaction mode (port 6543) : max 100+ connections
+- **Current mode** : Transaction (port 6543)
+- **Pool status** : Monitor in `.env.local`
+
+### Auto-Load Instructions
+À chaque session Claude Code :
+1. Lire `.env.local` pour DATABASE_URL (Supabase)
+2. Lire `.env` pour credentials (Stripe, Sendcloud, Cloudinary)
+3. Consulter Obsidian pour l'état prod (5 fichiers clés)
+4. Vérifier https://sadsat.com status
+
+---
+
 ## ⚠️ Points à surveiller
 
 - Pool PostgreSQL Supabase limité à 15 clients (session mode)
 - `/api/health` peut retourner erreur pool si saturé
 - Navbar responsive améliorée (breakpoint `lg:` à 1024px)
+- **Max Processes Hostinger** : Si dépasse 120 → site bloqué 30 min
 
 ---
 
