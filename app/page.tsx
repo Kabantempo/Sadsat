@@ -43,10 +43,12 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   try {
+    console.log('[Home] Starting render...');
     const [users, products] = await Promise.all([
-      getUsers().catch(() => []),
-      getProducts().catch(() => []),
+      getUsers().then(u => { console.log('[Home] getUsers() OK:', u?.length); return u; }).catch(e => { console.error('[Home] getUsers() failed:', e.message); return []; }),
+      getProducts().then(p => { console.log('[Home] getProducts() OK:', p?.length); return p; }).catch(e => { console.error('[Home] getProducts() failed:', e.message); return []; }),
     ]);
+    console.log('[Home] Data loaded, creating createurs...');
 
     const createurs: CreateurCard[] = (users || [])
       .filter((u) => u.role === "créateur")
