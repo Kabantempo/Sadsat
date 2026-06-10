@@ -18,9 +18,9 @@ export default function Accordion({
   const light = theme === 'light'
 
   return (
-    <div className={`border-t ${light ? 'border-neutral-200' : 'border-neutral-800'}`}>
+    <div className={`border-t ${light ? 'border-neutral-200 dark:border-neutral-800' : 'border-neutral-800'}`}>
       {items.map((item, i) => (
-        <div key={i} className={`border-b ${light ? 'border-neutral-200' : 'border-neutral-800'}`}>
+        <div key={i} className={`border-b ${light ? 'border-neutral-200 dark:border-neutral-800' : 'border-neutral-800'}`}>
           <button
             onClick={() => setOpen(open === i ? null : i)}
             className="w-full text-left py-5 flex items-start justify-between gap-6 group"
@@ -28,13 +28,13 @@ export default function Accordion({
             <span
               className={`text-[0.84rem] leading-snug tracking-[0.02em] transition-opacity duration-200 ${
                 light
-                  ? 'text-neutral-800 group-hover:opacity-60'
+                  ? 'text-neutral-800 dark:text-neutral-200 group-hover:opacity-60'
                   : 'text-neutral-200 group-hover:opacity-60'
               }`}
             >
               {item.question}
             </span>
-            <span className={`shrink-0 mt-0.5 transition-opacity ${light ? 'text-neutral-400' : 'text-neutral-600'}`}>
+            <span className={`shrink-0 mt-0.5 transition-opacity ${light ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-600'}`}>
               {open === i ? (
                 <Minus size={14} strokeWidth={1.5} />
               ) : (
@@ -55,7 +55,7 @@ export default function Accordion({
               >
                 <p
                   className={`pb-6 text-[0.82rem] leading-[1.75] ${
-                    light ? 'text-neutral-600' : 'text-neutral-400'
+                    light ? 'text-neutral-600 dark:text-neutral-400' : 'text-neutral-400'
                   }`}
                 >
                   {item.answer}
