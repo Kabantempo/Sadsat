@@ -10,6 +10,7 @@ import CartDrawer from "@/components/shared/CartDrawer";
 import FavoritesProvider from "@/components/shared/FavoritesProvider";
 import PageLoader from "@/components/shared/PageLoader";
 import JsonLd from "@/components/shared/JsonLd";
+import { getSession } from "@/lib/session";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
@@ -146,7 +147,8 @@ const websiteJsonLd = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const user = null;
+  const session = await getSession().catch(() => null);
+  const user = session ? { name: session.name ?? '', role: session.role } : null;
   const footerInstagrams: any[] = [];
   const navCategories = {
     taxidermie: [] as { label: string; slug: string }[],
@@ -162,9 +164,9 @@ export default async function RootLayout({
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={websiteJsonLd} />
         <PageLoader />
-        <FavoritesProvider isLoggedIn={!!user}>
+        <FavoritesProvider isLoggedIn={!!session}>
           <CartProvider>
-            <Header user={null} navCategories={navCategories} />
+            <Header user={user} navCategories={navCategories} />
             <main className="min-h-screen">{children}</main>
             <Footer newsletterEnabled={newsletterEnabled} instagrams={footerInstagrams} />
             <RandomPieceButton />
