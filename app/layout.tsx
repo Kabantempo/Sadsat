@@ -150,20 +150,24 @@ const websiteJsonLd = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const session = await getSession();
-  const user = session ? { name: session.name ?? '', role: session.role } : null;
-  const [newsletterEnabled, taxCats, bijouxCats, bougiesCats, habillementCats, users] = await Promise.all([
-    Promise.race([isNewsletterEnabled(), new Promise((_, r) => setTimeout(() => r(false), 3000))]).catch(() => false),
-    Promise.race([getBrandCategories('taxidermie'), new Promise((_, r) => setTimeout(() => r([]), 3000))]).catch(() => []),
-    Promise.race([getBrandCategories('bijoux'), new Promise((_, r) => setTimeout(() => r([]), 3000))]).catch(() => []),
-    Promise.race([getBrandCategories('bougies'), new Promise((_, r) => setTimeout(() => r([]), 3000))]).catch(() => []),
-    Promise.race([getBrandCategories('habillement'), new Promise((_, r) => setTimeout(() => r([]), 3000))]).catch(() => []),
-    Promise.race([getUsers(), new Promise((_, r) => setTimeout(() => r([]), 3000))]).catch(() => []),
-  ])
+  let user = null;
+  let footerInstagrams: any[] = [];
+  let navCategories = {
+    taxidermie: [],
+    bijoux: [],
+    bougies: [],
+    habillement: [],
+  };
+  let newsletterEnabled = false;
 
-  const footerInstagrams = users
-    .filter((u) => u.role === 'créateur' && u.instagram)
-    .map((u) => ({ name: u.name ?? u.pseudo ?? '', handle: u.instagram! }))
+  // Try to fetch data with strict 2s timeout, but don't block rendering
+  try {
+    const session = await Promise.race([
+      getSession(),
+      new Promise((_, r) => setTimeout(() => r(null), 2000))
+    ]) as any;
+    if (session) user = { name: session.name ?? '', role: session.role };
+  } catch {}
 
   const navCategories = {
     taxidermie:  taxCats.map(c => ({ label: c.label, slug: c.slug })),
