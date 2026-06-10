@@ -59,7 +59,7 @@ export default function TaxidermieDetails({ process, faq }: Props) {
             </Link>
             <Link
               href="/a-propos"
-              className="text-[0.62rem] tracking-[0.16em] uppercase text-neutral-500 hover:text-neutral-900 transition-colors underline underline-offset-4"
+              className="text-[0.62rem] tracking-[0.16em] uppercase text-neutral-400 hover:text-neutral-100 transition-colors underline underline-offset-4"
             >
               En savoir plus sur SADSAT →
             </Link>
