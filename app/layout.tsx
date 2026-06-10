@@ -164,7 +164,7 @@ export default async function RootLayout({
         <PageLoader />
         <FavoritesProvider isLoggedIn={!!user}>
           <CartProvider>
-            <Header user={user ? { name: user.name, role: user.role } : null} navCategories={navCategories} />
+            <Header user={null} navCategories={navCategories} />
             <main className="min-h-screen">{children}</main>
             <Footer newsletterEnabled={newsletterEnabled} instagrams={footerInstagrams} />
             <RandomPieceButton />
