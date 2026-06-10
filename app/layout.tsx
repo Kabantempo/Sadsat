@@ -11,6 +11,9 @@ import FavoritesProvider from "@/components/shared/FavoritesProvider";
 import PageLoader from "@/components/shared/PageLoader";
 import JsonLd from "@/components/shared/JsonLd";
 import { getSession } from "@/lib/session";
+import { isNewsletterEnabled } from "@/lib/settings";
+import { getBrandCategories } from "@/lib/brand";
+import { getUsers } from "@/lib/db";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
@@ -147,16 +150,23 @@ const websiteJsonLd = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const session = await getSession().catch(() => null);
+  const [session, taxCats, bijouxCats, bougiesCats, habCats, newsletterEnabled] = await Promise.all([
+    getSession().catch(() => null),
+    getBrandCategories('taxidermie'),
+    getBrandCategories('bijoux'),
+    getBrandCategories('bougies'),
+    getBrandCategories('habillement'),
+    isNewsletterEnabled(),
+  ]);
+
   const user = session ? { name: session.name ?? '', role: session.role } : null;
   const footerInstagrams: any[] = [];
   const navCategories = {
-    taxidermie: [] as { label: string; slug: string }[],
-    bijoux: [] as { label: string; slug: string }[],
-    bougies: [] as { label: string; slug: string }[],
-    habillement: [] as { label: string; slug: string }[],
+    taxidermie:  taxCats.map(c => ({ label: c.label, slug: c.slug })),
+    bijoux:      bijouxCats.map(c => ({ label: c.label, slug: c.slug })),
+    bougies:     bougiesCats.map(c => ({ label: c.label, slug: c.slug })),
+    habillement: habCats.map(c => ({ label: c.label, slug: c.slug })),
   };
-  const newsletterEnabled = false;
 
   return (
     <html lang="fr" className={`${cormorant.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
