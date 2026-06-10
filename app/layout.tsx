@@ -8,10 +8,6 @@ import NewArrivalsButton from "@/components/shared/NewArrivalsButton";
 import CartProvider from "@/components/shared/CartProvider";
 import CartDrawer from "@/components/shared/CartDrawer";
 import FavoritesProvider from "@/components/shared/FavoritesProvider";
-import { getSession } from "@/lib/session";
-import { isNewsletterEnabled } from "@/lib/settings";
-import { getBrandCategories } from "@/lib/brand";
-import { getUsers } from "@/lib/db";
 import PageLoader from "@/components/shared/PageLoader";
 import JsonLd from "@/components/shared/JsonLd";
 
@@ -153,19 +149,12 @@ export default async function RootLayout({
   const user = null;
   const footerInstagrams: any[] = [];
   const navCategories = {
-    taxidermie: [],
-    bijoux: [],
-    bougies: [],
-    habillement: [],
+    taxidermie: [] as { label: string; slug: string }[],
+    bijoux: [] as { label: string; slug: string }[],
+    bougies: [] as { label: string; slug: string }[],
+    habillement: [] as { label: string; slug: string }[],
   };
   const newsletterEnabled = false;
-
-  const navCategories = {
-    taxidermie:  taxCats.map(c => ({ label: c.label, slug: c.slug })),
-    bijoux:      bijouxCats.map(c => ({ label: c.label, slug: c.slug })),
-    bougies:     bougiesCats.map(c => ({ label: c.label, slug: c.slug })),
-    habillement: habillementCats.map(c => ({ label: c.label, slug: c.slug })),
-  }
 
   return (
     <html lang="fr" className={`${cormorant.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
