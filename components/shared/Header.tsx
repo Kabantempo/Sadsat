@@ -391,7 +391,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm lg:hidden"
               onClick={() => setMobileOpen(false)}
             />
 
@@ -400,7 +400,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ duration: 0.35, ease }}
-              className="fixed top-0 left-0 bottom-0 z-[70] w-[82vw] max-w-[340px] bg-neutral-950/95 backdrop-blur-2xl text-neutral-100 flex flex-col md:hidden overflow-y-auto shadow-2xl rounded-r-2xl border-r border-white/[0.07]"
+              className="fixed top-0 left-0 bottom-0 z-[70] w-[82vw] max-w-[340px] bg-neutral-950/95 backdrop-blur-2xl text-neutral-100 flex flex-col lg:hidden overflow-y-auto shadow-2xl rounded-r-2xl border-r border-white/[0.07]"
             >
               {/* Header du drawer */}
               <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.07]">
