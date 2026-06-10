@@ -42,55 +42,10 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
-  try {
-    // Récupérer les données avec timeout
-    let users = [];
-    let products = [];
-
-    try {
-      users = await Promise.race([
-        getUsers(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('getUsers timeout')), 5000))
-      ]).catch(() => []);
-    } catch (e) {
-      console.error('[Home] getUsers error:', e);
-    }
-
-    try {
-      products = await Promise.race([
-        getProducts(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('getProducts timeout')), 5000))
-      ]).catch(() => []);
-    } catch (e) {
-      console.error('[Home] getProducts error:', e);
-    }
-
-    const createurs: CreateurCard[] = ((users || []) as any[])
-      .filter((u) => u.role === "créateur")
-      .filter((u) => {
-        const hasProducts = ((products || []) as any[]).some((p) => p.createdBy === u.id && p.status !== "masqué")
-        return u.avatar || u.bio || hasProducts
-      })
-      .map((u) => ({
-        id: u.id,
-        name: u.name,
-        pseudo: u.pseudo,
-        bio: u.bio,
-        avatar: u.avatar,
-        universes: UNIVERSES.filter((uv) =>
-          ((products || []) as any[]).some((p) => p.createdBy === u.id && p.universe === uv && p.status !== "masqué")
-        ).map((uv) => UNIVERSE_LABELS[uv]),
-        instagram: u.instagram,
-      }));
-
-  const instagrams = createurs
-    .filter((c) => c.instagram)
-    .map((c) => ({ name: c.name, handle: c.instagram! }));
-
   return (
     <>
       <HeroSection />
-      <ScrollStory instagrams={instagrams} />
+      <ScrollStory instagrams={[]} />
 
       {/* QUI SOMMES NOUS */}
       <section className="py-16 md:py-32 px-4 md:px-8 max-w-5xl mx-auto text-center">
@@ -112,25 +67,7 @@ export default async function Home() {
           Lire l'histoire complète
         </Link>
 
-        {/* Carousel créateurs */}
-        <CreateurCarousel createurs={createurs} />
       </section>
     </>
   );
-  } catch (err) {
-    console.error('[Home] Render error:', err);
-    return (
-      <>
-        <HeroSection />
-        <section className="py-16 md:py-32 px-4 md:px-8 max-w-5xl mx-auto text-center">
-          <h3 className="font-serif font-light text-4xl md:text-5xl mb-8 text-neutral-100">Qui sommes-nous</h3>
-          <p className="text-neutral-400 leading-relaxed font-light mb-6 max-w-2xl mx-auto">
-            SADSAT est né d'un dialogue entre trois langages : la délicatesse du vivant figé,
-            la brutalité du métal travaillé, et la chaleur silencieuse de la cire. Chaque pièce
-            est faite main, en série limitée, dans un même atelier — par les mêmes mains.
-          </p>
-        </section>
-      </>
-    );
-  }
 }
