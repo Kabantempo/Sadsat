@@ -21,7 +21,7 @@ export default function DevOpsPage() {
   const [current, setCurrent] = useState<MetricData | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isMonitoring, setIsMonitoring] = useState(false);
-  const [interval, setInterval] = useState(3600);
+  const [refreshInterval, setRefreshInterval] = useState(3600);
 
   useEffect(() => {
     // Charger les données initiales
@@ -44,7 +44,7 @@ export default function DevOpsPage() {
       setIsMonitoring(false);
     } else {
       setIsMonitoring(true);
-      const intervalId = setInterval(fetchMetrics, interval * 1000);
+      const intervalId = setInterval(fetchMetrics, refreshInterval * 1000);
       return () => clearInterval(intervalId);
     }
   }
@@ -231,12 +231,12 @@ export default function DevOpsPage() {
               </label>
               <input
                 type="number"
-                value={interval}
-                onChange={(e) => setInterval(parseInt(e.target.value))}
+                value={refreshInterval}
+                onChange={(e) => setRefreshInterval(parseInt(e.target.value))}
                 className="w-full px-4 py-2 bg-slate-800 text-white rounded border border-slate-600 focus:border-blue-500 focus:outline-none"
               />
               <p className="text-slate-400 text-xs mt-1">
-                {interval < 60 ? `${interval}s` : `${(interval / 60).toFixed(0)}min`}
+                {refreshInterval < 60 ? `${refreshInterval}s` : `${(refreshInterval / 60).toFixed(0)}min`}
               </p>
             </div>
           </div>
