@@ -66,13 +66,17 @@ export async function getUsers(): Promise<User[]> {
 }
 
 export async function getUserById(id: string): Promise<User | undefined> {
-  const row = await prisma.user.findUnique({ where: { id } })
-  return row ? rowToUser(row) : undefined
+  try {
+    const row = await prisma.user.findUnique({ where: { id } })
+    return row ? rowToUser(row) : undefined
+  } catch { return undefined }
 }
 
 export async function getUserByEmail(email: string): Promise<User | undefined> {
-  const row = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
-  return row ? rowToUser(row) : undefined
+  try {
+    const row = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
+    return row ? rowToUser(row) : undefined
+  } catch { return undefined }
 }
 
 export async function createUser(user: User): Promise<void> {
@@ -154,8 +158,10 @@ export async function clearUsersExcept(keepId: string): Promise<void> {
 }
 
 export async function getUserByPasswordToken(token: string): Promise<User | undefined> {
-  const row = await prisma.user.findFirst({ where: { setPasswordToken: token } })
-  return row ? rowToUser(row) : undefined
+  try {
+    const row = await prisma.user.findFirst({ where: { setPasswordToken: token } })
+    return row ? rowToUser(row) : undefined
+  } catch { return undefined }
 }
 
 export async function savePasswordToken(id: string, token: string, expiry: string): Promise<boolean> {
@@ -190,8 +196,10 @@ export async function saveVerificationToken(id: string, token: string, expiry: s
 }
 
 export async function getUserByVerificationToken(token: string): Promise<User | undefined> {
-  const row = await prisma.user.findFirst({ where: { verificationToken: token } })
-  return row ? rowToUser(row) : undefined
+  try {
+    const row = await prisma.user.findFirst({ where: { verificationToken: token } })
+    return row ? rowToUser(row) : undefined
+  } catch { return undefined }
 }
 
 export async function verifyUserEmail(id: string): Promise<void> {

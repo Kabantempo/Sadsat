@@ -41,13 +41,17 @@ function rowToProduct(row: {
 }
 
 export async function getProducts(): Promise<Product[]> {
-  const rows = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } })
-  return rows.map(rowToProduct)
+  try {
+    const rows = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } })
+    return rows.map(rowToProduct)
+  } catch { return [] }
 }
 
 export async function getProductById(id: string): Promise<Product | undefined> {
-  const row = await prisma.product.findUnique({ where: { id } })
-  return row ? rowToProduct(row) : undefined
+  try {
+    const row = await prisma.product.findUnique({ where: { id } })
+    return row ? rowToProduct(row) : undefined
+  } catch { return undefined }
 }
 
 export async function createProduct(product: Product): Promise<void> {

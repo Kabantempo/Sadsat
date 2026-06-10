@@ -41,31 +41,33 @@ export const DEFAULT_CATEGORIES: Record<string, Omit<BrandCategory, 'id' | 'univ
 }
 
 export async function getBrandCategories(universe: string): Promise<BrandCategory[]> {
-  return prisma.brandCategory.findMany({
-    where: { universe },
-    orderBy: { order: 'asc' },
-  })
+  try {
+    return await prisma.brandCategory.findMany({ where: { universe }, orderBy: { order: 'asc' } })
+  } catch { return [] }
 }
 
 export async function getAllCategoriesByUniverse(): Promise<Record<string, string[]>> {
-  const cats = await prisma.brandCategory.findMany({ orderBy: { order: 'asc' } })
-  const result: Record<string, string[]> = {}
-  for (const cat of cats) {
-    if (!result[cat.universe]) result[cat.universe] = []
-    result[cat.universe].push(cat.label)
-  }
-  return result
+  try {
+    const cats = await prisma.brandCategory.findMany({ orderBy: { order: 'asc' } })
+    const result: Record<string, string[]> = {}
+    for (const cat of cats) {
+      if (!result[cat.universe]) result[cat.universe] = []
+      result[cat.universe].push(cat.label)
+    }
+    return result
+  } catch { return {} }
 }
 
 export async function getBrandCategoryBySlug(universe: string, slug: string): Promise<BrandCategory | null> {
-  return prisma.brandCategory.findUnique({ where: { universe_slug: { universe, slug } } })
+  try {
+    return await prisma.brandCategory.findUnique({ where: { universe_slug: { universe, slug } } })
+  } catch { return null }
 }
 
 export async function getBrandSlides(universe: string): Promise<BrandSlide[]> {
-  return prisma.brandSlide.findMany({
-    where: { universe },
-    orderBy: { order: 'asc' },
-  })
+  try {
+    return await prisma.brandSlide.findMany({ where: { universe }, orderBy: { order: 'asc' } })
+  } catch { return [] }
 }
 
 export async function createBrandCategory(data: Omit<BrandCategory, 'id'>): Promise<void> {

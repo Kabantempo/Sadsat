@@ -2,8 +2,10 @@ import 'server-only'
 import { prisma } from './prisma'
 
 export async function getSetting(key: string): Promise<string | null> {
-  const row = await prisma.siteSetting.findUnique({ where: { key } })
-  return row?.value ?? null
+  try {
+    const row = await prisma.siteSetting.findUnique({ where: { key } })
+    return row?.value ?? null
+  } catch { return null }
 }
 
 export async function setSetting(key: string, value: string): Promise<void> {
