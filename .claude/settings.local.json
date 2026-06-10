@@ -37,7 +37,18 @@
       "Bash(Start-Sleep -Seconds 2)",
       "Bash(Write-Output \"Done\")",
       "PowerShell(Get-Process *)",
-      "Bash(xargs sed -i 's/sadsat\\\\.fr/sadsat.com/g')"
+      "Bash(xargs sed -i 's/sadsat\\\\.fr/sadsat.com/g')",
+      "Bash(New-Item -Path \"C:\\\\Users\\\\mini-pc-01\\\\Desktop\\\\.env\" -ItemType File -Force)",
+      "Bash(Write-Output \"created\")",
+      "Bash(sshpass *)",
+      "Bash(ssh -o StrictHostKeyChecking=no -o BatchMode=yes -p 65002 u142938038@147.79.103.73 \"echo connected\")",
+      "Bash(python3 -c \"import paramiko; print\\('paramiko ok'\\)\")",
+      "Bash(python -c \"import paramiko; print\\('paramiko ok'\\)\")",
+      "Bash(python3 -m pip install paramiko -q)",
+      "Bash(pip install *)",
+      "Read(//usr/**)",
+      "Bash(ls /c/Python*)",
+      "Read(//c/Users/mini-pc-01/AppData/Local/Programs/**)"
     ]
   }
 }
