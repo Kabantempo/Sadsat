@@ -43,36 +43,45 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   try {
-    console.log('[Home] Starting render...');
-    const [users, products] = await Promise.all([
-      getUsers().then(u => { console.log('[Home] getUsers() OK:', u?.length); return u; }).catch(e => { console.error('[Home] getUsers() failed:', e.message); return []; }),
-      getProducts().then(p => { console.log('[Home] getProducts() OK:', p?.length); return p; }).catch(e => { console.error('[Home] getProducts() failed:', e.message); return []; }),
-    ]);
-    console.log('[Home] Data loaded, creating createurs...');
+    // Récupérer les données avec timeout
+    let users = [];
+    let products = [];
 
-    const createurs: CreateurCard[] = (users || [])
+    try {
+      users = await Promise.race([
+        getUsers(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('getUsers timeout')), 5000))
+      ]).catch(() => []);
+    } catch (e) {
+      console.error('[Home] getUsers error:', e);
+    }
+
+    try {
+      products = await Promise.race([
+        getProducts(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('getProducts timeout')), 5000))
+      ]).catch(() => []);
+    } catch (e) {
+      console.error('[Home] getProducts error:', e);
+    }
+
+    const createurs: CreateurCard[] = ((users || []) as any[])
       .filter((u) => u.role === "créateur")
       .filter((u) => {
-        const hasProducts = (products || []).some((p) => p.createdBy === u.id && p.status !== "masqué")
+        const hasProducts = ((products || []) as any[]).some((p) => p.createdBy === u.id && p.status !== "masqué")
         return u.avatar || u.bio || hasProducts
       })
-      .map((u) => {
-        const myProducts = (products || []).filter(
-          (p) => p.createdBy === u.id && p.status !== "masqué"
-        );
-        const universes = UNIVERSES.filter((uv) =>
-          myProducts.some((p) => p.universe === uv)
-        ).map((uv) => UNIVERSE_LABELS[uv]);
-        return {
-          id: u.id,
-          name: u.name,
-          pseudo: u.pseudo,
-          bio: u.bio,
-          avatar: u.avatar,
-          universes,
-          instagram: u.instagram,
-        };
-      });
+      .map((u) => ({
+        id: u.id,
+        name: u.name,
+        pseudo: u.pseudo,
+        bio: u.bio,
+        avatar: u.avatar,
+        universes: UNIVERSES.filter((uv) =>
+          ((products || []) as any[]).some((p) => p.createdBy === u.id && p.universe === uv && p.status !== "masqué")
+        ).map((uv) => UNIVERSE_LABELS[uv]),
+        instagram: u.instagram,
+      }));
 
   const instagrams = createurs
     .filter((c) => c.instagram)
