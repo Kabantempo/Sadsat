@@ -153,12 +153,12 @@ export default async function RootLayout({
   const session = await getSession();
   const user = session ? { name: session.name ?? '', role: session.role } : null;
   const [newsletterEnabled, taxCats, bijouxCats, bougiesCats, habillementCats, users] = await Promise.all([
-    isNewsletterEnabled().catch(() => false),
-    getBrandCategories('taxidermie').catch(() => []),
-    getBrandCategories('bijoux').catch(() => []),
-    getBrandCategories('bougies').catch(() => []),
-    getBrandCategories('habillement').catch(() => []),
-    getUsers().catch(() => []),
+    Promise.race([isNewsletterEnabled(), new Promise((_, r) => setTimeout(() => r(false), 3000))]).catch(() => false),
+    Promise.race([getBrandCategories('taxidermie'), new Promise((_, r) => setTimeout(() => r([]), 3000))]).catch(() => []),
+    Promise.race([getBrandCategories('bijoux'), new Promise((_, r) => setTimeout(() => r([]), 3000))]).catch(() => []),
+    Promise.race([getBrandCategories('bougies'), new Promise((_, r) => setTimeout(() => r([]), 3000))]).catch(() => []),
+    Promise.race([getBrandCategories('habillement'), new Promise((_, r) => setTimeout(() => r([]), 3000))]).catch(() => []),
+    Promise.race([getUsers(), new Promise((_, r) => setTimeout(() => r([]), 3000))]).catch(() => []),
   ])
 
   const footerInstagrams = users
