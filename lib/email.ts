@@ -80,7 +80,14 @@ export async function sendSetPasswordEmail(to: string, name: string, token: stri
 export async function sendPasswordResetEmail(to: string, name: string, token: string): Promise<boolean> {
   const link = `${BASE()}/set-password?token=${token}`
   try {
-    await transporter.sendMail({
+    console.log('[email] Attempting to send password reset email to:', to);
+    console.log('[email] SMTP config:', {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      user: process.env.SMTP_USER,
+      from: FROM,
+    });
+    const result = await transporter.sendMail({
       from: FROM,
       to,
       subject: 'Réinitialisation de votre mot de passe — SADSAT',
@@ -95,9 +102,13 @@ export async function sendPasswordResetEmail(to: string, name: string, token: st
         </p>
       `),
     })
+    console.log('[email] Password reset email sent successfully:', result.response);
     return true
   } catch (err) {
-    console.error('[email] sendPasswordResetEmail failed:', err)
+    console.error('[email] sendPasswordResetEmail failed:', {
+      message: err instanceof Error ? err.message : String(err),
+      code: err instanceof Error && 'code' in err ? (err as any).code : undefined,
+    })
     return false
   }
 }
