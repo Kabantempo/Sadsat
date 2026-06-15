@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { CheckCircle, XCircle } from 'lucide-react'
 import { getUserByVerificationToken, verifyUserEmail } from '@/lib/db'
+import ResendVerificationForm from './resend-form'
 
 export default async function VerifyEmailPage({
   searchParams,
@@ -10,34 +11,62 @@ export default async function VerifyEmailPage({
   const { token } = await searchParams
 
   if (!token) {
-    return <Result success={false} message="Lien de confirmation invalide." />
+    return (
+      <Result success={false} message="Aucun token de vérification trouvé.">
+        <ResendVerificationForm />
+      </Result>
+    )
   }
 
   let user
   try {
     user = await getUserByVerificationToken(token)
   } catch {
-    return <Result success={false} message="Erreur serveur. Réessayez dans quelques instants." />
+    return (
+      <Result success={false} message="Erreur serveur. Réessayez dans quelques instants.">
+        <ResendVerificationForm />
+      </Result>
+    )
   }
 
   if (!user || !user.verificationTokenExpiry) {
-    return <Result success={false} message="Ce lien est invalide ou a déjà été utilisé." />
+    return (
+      <Result success={false} message="Ce lien est invalide ou a déjà été utilisé.">
+        <ResendVerificationForm />
+      </Result>
+    )
   }
 
   if (new Date(user.verificationTokenExpiry) < new Date()) {
-    return <Result success={false} message="Ce lien a expiré. Créez un nouveau compte." />
+    return (
+      <Result success={false} message="Ce lien a expiré.">
+        <ResendVerificationForm />
+      </Result>
+    )
   }
 
   try {
     await verifyUserEmail(user.id)
   } catch {
-    return <Result success={false} message="Erreur serveur. Réessayez dans quelques instants." />
+    return (
+      <Result success={false} message="Erreur serveur. Réessayez dans quelques instants.">
+        <ResendVerificationForm />
+      </Result>
+    )
   }
 
   return <Result success={true} message="Votre email est confirmé. Vous pouvez maintenant vous connecter." />
 }
 
-function Result({ success, message }: { success: boolean; message: string }) {
+function Result({
+  success,
+  message,
+  children,
+}: {
+  success: boolean
+  message: string
+  children?: React.ReactNode
+}) {
   return (
     <div className="min-h-screen bg-neutral-950 flex items-center justify-center px-6">
       <div className="w-full max-w-md text-center">
@@ -53,12 +82,16 @@ function Result({ success, message }: { success: boolean; message: string }) {
         <p className="text-[0.85rem] text-neutral-500 leading-relaxed mb-8">
           {message}
         </p>
-        <Link
-          href="/connexion"
-          className="text-[0.62rem] tracking-[0.2em] uppercase text-neutral-400 hover:text-neutral-100 transition-colors border-b border-neutral-700 hover:border-neutral-400 pb-0.5"
-        >
-          {success ? 'Se connecter →' : 'Retour à la connexion'}
-        </Link>
+        {success ? (
+          <Link
+            href="/connexion"
+            className="text-[0.62rem] tracking-[0.2em] uppercase text-neutral-400 hover:text-neutral-100 transition-colors border-b border-neutral-700 hover:border-neutral-400 pb-0.5"
+          >
+            Se connecter →
+          </Link>
+        ) : (
+          children
+        )}
       </div>
     </div>
   )

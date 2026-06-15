@@ -164,6 +164,32 @@ export async function forgotPasswordAction(
   return { success: true }
 }
 
+export type ResendVerificationState = { message?: string; success?: boolean } | undefined
+
+export async function resendVerificationAction(
+  _state: ResendVerificationState,
+  formData: FormData
+): Promise<ResendVerificationState> {
+  const email = String(formData.get('email') ?? '').trim().toLowerCase()
+  if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
+    return { message: 'Adresse email invalide.' }
+  }
+
+  const user = await getUserByEmail(email)
+  if (!user) return { success: true } // ne pas révéler si l'email existe
+
+  if (user.emailVerified) {
+    return { message: 'Ce compte est déjà vérifié. Vous pouvez vous connecter.' }
+  }
+
+  const token = crypto.randomUUID()
+  const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+  await saveVerificationToken(user.id, token, expiry)
+  await sendVerificationEmail(email, user.name, token)
+
+  return { success: true }
+}
+
 export async function setupAdmin(state: FormState, formData: FormData): Promise<FormState> {
   if (await adminExists()) {
     return { message: 'Un administrateur existe déjà.' }
