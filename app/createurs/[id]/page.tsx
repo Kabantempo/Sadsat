@@ -209,6 +209,13 @@ export default async function CreateurPublicPage({
               @{user.instagram}
             </a>
           )}
+
+          {user.availability && (
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 border border-neutral-700 text-[0.65rem] tracking-[0.14em] uppercase text-neutral-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
+              {user.availability}
+            </div>
+          )}
         </div>
 
         {/* Stats flottantes */}

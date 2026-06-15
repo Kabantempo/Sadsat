@@ -52,6 +52,7 @@ export type User = {
   instagram?: string
   pseudo?: string
   universe?: string
+  availability?: string
 }
 
 export type SafeUser = Omit<User, 'passwordHash'>

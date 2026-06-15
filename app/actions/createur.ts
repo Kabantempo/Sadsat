@@ -23,6 +23,7 @@ export async function updateProfileAction(
   const pseudo = String(formData.get('pseudo') ?? '').trim()
   const bio = String(formData.get('bio') ?? '').trim()
   const instagramRaw = String(formData.get('instagram') ?? '').trim().replace(/^@/, '')
+  const availability = String(formData.get('availability') ?? '').trim()
   const avatarFile = formData.get('avatar') as File | null
 
   if (!name || name.length < 2) {
@@ -44,6 +45,7 @@ export async function updateProfileAction(
     pseudo: pseudo || undefined,
     bio: bio || undefined,
     instagram: instagramRaw || undefined,
+    availability: availability || undefined,
     ...(avatarPath ? { avatar: avatarPath } : {}),
   })
 

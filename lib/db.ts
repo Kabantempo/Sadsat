@@ -38,6 +38,7 @@ function rowToUser(row: {
   instagram?: string | null
   pseudo?: string | null
   universe?: string | null
+  availability?: string | null
 }): User {
   return {
     id: row.id,
@@ -56,6 +57,7 @@ function rowToUser(row: {
     instagram: row.instagram ?? undefined,
     pseudo: row.pseudo ?? undefined,
     universe: row.universe ?? undefined,
+    availability: row.availability ?? undefined,
   }
 }
 
@@ -116,7 +118,7 @@ export async function updateUserUniverse(id: string, universe: string | null): P
 
 export async function updateUser(
   id: string,
-  data: Partial<Pick<User, 'name' | 'bio' | 'avatar' | 'instagram' | 'pseudo'>>
+  data: Partial<Pick<User, 'name' | 'bio' | 'avatar' | 'instagram' | 'pseudo' | 'availability'>>
 ): Promise<boolean> {
   try {
     await prisma.user.update({
@@ -127,6 +129,7 @@ export async function updateUser(
         ...(data.avatar !== undefined && { avatar: data.avatar ?? null }),
         ...(data.instagram !== undefined && { instagram: data.instagram ?? null }),
         ...(data.pseudo !== undefined && { pseudo: data.pseudo ?? null }),
+        ...(data.availability !== undefined && { availability: data.availability ?? null }),
       },
     })
     return true

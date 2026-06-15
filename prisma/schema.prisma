@@ -25,6 +25,7 @@ model User {
   instagram              String?
   pseudo                 String?
   universe               String?
+  availability           String? @db.Text
 
   @@map("users")
 }

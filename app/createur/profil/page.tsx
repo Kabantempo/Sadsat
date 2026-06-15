@@ -147,6 +147,21 @@ export default function ProfilCreateurPage() {
           </p>
         </div>
 
+        {/* Disponibilités */}
+        <div>
+          <label htmlFor="availability" className={labelClass}>Disponibilités & commissions</label>
+          <textarea
+            id="availability"
+            name="availability"
+            rows={3}
+            placeholder="Ex : Ouvert aux commissions · Délai 3 semaines · Fermé en août..."
+            className={`${fieldClass} resize-none`}
+          />
+          <p className="mt-1 text-[0.6rem] text-neutral-600">
+            Visible sur votre page publique pour informer les clients de vos disponibilités.
+          </p>
+        </div>
+
         <button
           type="submit"
           disabled={pending}
