@@ -21,15 +21,8 @@ if (content.includes('wazmbsfvfhcqgtibewnz')) {
   process.exit(0)
 }
 
-const patch = `// [patch-server-env] Fix DATABASE_URL format for Supabase pooler
-// Hostinger injects "postgres:PASS@pooler" but Supabase needs "postgres.PROJECTREF:PASS@pooler"
-;(function() {
-  var url = process.env.DATABASE_URL;
-  if (url && url.indexOf('pooler.supabase.com') !== -1 && url.indexOf('.wazmbsfvfhcqgtibewnz') === -1) {
-    process.env.DATABASE_URL = url.replace('://postgres:', '://postgres.wazmbsfvfhcqgtibewnz:');
-    console.log('[patch-server-env] DATABASE_URL username corrected');
-  }
-})();
+const patch = `// [patch-server-env] Force connexion directe Supabase (bypass pooler + circuit breaker)
+process.env.DATABASE_URL = "postgresql://postgres:%23!Kalvert123@db.wazmbsfvfhcqgtibewnz.supabase.co:5432/postgres";
 
 `
 
