@@ -11,6 +11,7 @@ import CartDrawer from "@/components/shared/CartDrawer";
 import FavoritesProvider from "@/components/shared/FavoritesProvider";
 import PageLoader from "@/components/shared/PageLoader";
 import JsonLd from "@/components/shared/JsonLd";
+import Script from "next/script";
 import { getSession } from "@/lib/session";
 import { isNewsletterEnabled } from "@/lib/settings";
 import { getBrandCategories } from "@/lib/brand";
@@ -173,12 +174,19 @@ export default async function RootLayout({
   return (
     <html lang="fr" className={`${cormorant.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
       <head>
-        {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
-          <script
-            defer
-            data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
-            src="https://plausible.io/js/script.js"
-          />
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga-init" strategy="afterInteractive">{`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { anonymize_ip: true });
+            `}</Script>
+          </>
         )}
       </head>
       <body className="font-sans antialiased bg-black text-neutral-200">
