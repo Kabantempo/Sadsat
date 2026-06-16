@@ -15,7 +15,10 @@ const transporter = nodemailer.createTransport({
 const FROM = process.env.SMTP_FROM
   ? `SADSAT <${process.env.SMTP_FROM}>`
   : `SADSAT <${process.env.SMTP_USER}>`
-const BASE = () => process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+const BASE = () =>
+  process.env.NEXT_PUBLIC_BASE_URL ??
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  'http://localhost:3000'
 
 export async function sendVerificationEmail(to: string, name: string, token: string): Promise<boolean> {
   const link = `${BASE()}/verify-email?token=${token}`
