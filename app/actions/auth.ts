@@ -5,7 +5,7 @@ import { SignupFormSchema, LoginFormSchema, type FormState } from '@/lib/definit
 import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword, getUserByPasswordToken, clearPasswordToken, saveVerificationToken, getUserByVerificationToken, verifyUserEmail, savePasswordToken, deleteUser } from '@/lib/db'
 import { verifySession } from '@/lib/dal'
 import { createSession, deleteSession } from '@/lib/session'
-import { sendVerificationEmail, sendPasswordResetEmail } from '@/lib/email'
+import { sendVerificationEmail, sendPasswordResetEmail, sendWelcomeEmail } from '@/lib/email'
 
 export async function signup(state: FormState, formData: FormData): Promise<FormState> {
   const validated = SignupFormSchema.safeParse({
@@ -38,7 +38,10 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
   const token = crypto.randomUUID()
   const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
   await saveVerificationToken(user.id, token, expiry)
-  await sendVerificationEmail(email, name, token)
+  await Promise.all([
+    sendVerificationEmail(email, name, token),
+    sendWelcomeEmail(email, name),
+  ])
 
   redirect('/inscription/confirmer')
 }

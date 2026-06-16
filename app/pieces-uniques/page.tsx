@@ -16,9 +16,13 @@ export const metadata: Metadata = {
   },
 }
 import PiecesUniquesContent from "@/components/pages/PiecesUniquesContent";
+import { getAvgRatings } from "@/lib/reviews";
 
 export default async function PiecesUniquesPage() {
-  const allProducts = (await getProducts()).filter((p) => p.status !== "masqué");
+  const [allProducts, ratings] = await Promise.all([
+    getProducts().then((p) => p.filter((p) => p.status !== "masqué")),
+    getAvgRatings(),
+  ]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 pt-32 pb-24">
@@ -35,7 +39,7 @@ export default async function PiecesUniquesPage() {
           </p>
         </div>
 
-        <PiecesUniquesContent products={allProducts} totalCount={allProducts.length} />
+        <PiecesUniquesContent products={allProducts} totalCount={allProducts.length} ratings={ratings} />
       </div>
     </div>
   );

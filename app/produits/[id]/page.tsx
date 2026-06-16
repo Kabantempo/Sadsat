@@ -3,7 +3,7 @@ export const revalidate = 30;
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getProductById } from "@/lib/products";
+import { getProductById, getProducts } from "@/lib/products";
 import { getUserById } from "@/lib/db";
 import { UNIVERSE_LABELS } from "@/lib/definitions";
 import ProductAccordion from "@/components/shared/ProductAccordion";
@@ -13,6 +13,7 @@ import AddToCartButton from "@/components/shared/AddToCartButton";
 import ProductGallery from "@/components/shared/ProductGallery";
 import JsonLd from "@/components/shared/JsonLd";
 import ReviewsSection from "@/components/shared/ReviewsSection";
+import ProductGrid from "@/components/shared/ProductGrid";
 
 export async function generateMetadata({
   params,
@@ -66,7 +67,13 @@ export default async function FicheProduitPage({
   if (product.status === "masqué" && !isPreview) notFound();
 
   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
-  const creator = product.createdBy ? await getUserById(product.createdBy) : null;
+  const [creator, allProducts] = await Promise.all([
+    product.createdBy ? getUserById(product.createdBy) : Promise.resolve(null),
+    getProducts(),
+  ]);
+  const similar = allProducts
+    .filter((p) => p.id !== product.id && p.universe === product.universe && p.status !== 'masqué')
+    .slice(0, 4);
   const creatorData = creator
     ? { id: creator.id, name: creator.name, avatar: creator.avatar }
     : null;
@@ -236,6 +243,19 @@ export default async function FicheProduitPage({
         </div>
         {/* ── Avis clients ── */}
         <ReviewsSection productId={product.id} productName={product.name} />
+
+        {/* ── Vous aimerez aussi ── */}
+        {similar.length > 0 && (
+          <div className="mt-24 border-t border-neutral-800 pt-16">
+            <p className="font-mono text-[0.58rem] tracking-[0.28em] uppercase text-neutral-600 mb-2">
+              Dans le même univers
+            </p>
+            <h2 className="font-serif font-light text-2xl italic text-neutral-300 mb-10">
+              Vous aimerez aussi
+            </h2>
+            <ProductGrid products={similar} theme="dark" />
+          </div>
+        )}
       </div>
     </div>
     </>

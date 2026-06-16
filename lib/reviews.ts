@@ -88,3 +88,24 @@ export function avgRating(reviews: Review[]): number {
   if (!reviews.length) return 0
   return reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
 }
+
+export async function getAvgRatings(): Promise<Record<string, { avg: number; count: number }>> {
+  try {
+    const reviews = await prisma.review.findMany({
+      where: { status: 'approuvé' },
+      select: { productId: true, rating: true },
+    })
+    const map: Record<string, { sum: number; count: number }> = {}
+    for (const r of reviews) {
+      if (!map[r.productId]) map[r.productId] = { sum: 0, count: 0 }
+      map[r.productId].sum += r.rating
+      map[r.productId].count += 1
+    }
+    return Object.fromEntries(
+      Object.entries(map).map(([id, { sum, count }]) => [
+        id,
+        { avg: Math.round((sum / count) * 10) / 10, count },
+      ])
+    )
+  } catch { return {} }
+}

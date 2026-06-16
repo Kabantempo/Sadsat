@@ -108,6 +108,30 @@ export async function sendPasswordResetEmail(to: string, name: string, token: st
   }
 }
 
+export async function sendWelcomeEmail(to: string, name: string): Promise<boolean> {
+  try {
+    await getTransporter().sendMail({
+      from: FROM(),
+      to,
+      subject: 'Bienvenue sur SADSAT',
+      html: emailLayout(`
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
+          Bienvenue dans l'univers SADSAT. Votre compte est créé — explorez nos créations uniques en taxidermie éthique, bijoux et bougies artisanales.
+        </p>
+        <a href="${BASE()}/pieces-uniques" style="${btnStyle}">Découvrir les pièces</a>
+        <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
+          Retrouvez votre compte à tout moment sur <a href="${BASE()}/compte" style="color:#737373;">${BASE()}/compte</a>
+        </p>
+      `),
+    })
+    return true
+  } catch (err) {
+    console.error('[email] sendWelcomeEmail failed:', err)
+    return false
+  }
+}
+
 export async function sendContactEmail(data: { name: string; email: string; subject: string; message: string }): Promise<boolean> {
   try {
     await getTransporter().sendMail({
