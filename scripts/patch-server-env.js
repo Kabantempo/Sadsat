@@ -21,8 +21,9 @@ if (content.includes('wazmbsfvfhcqgtibewnz')) {
   process.exit(0)
 }
 
-const patch = `// [patch-server-env] Force connexion directe Supabase (bypass pooler + circuit breaker)
+const patch = `// [patch-server-env] Variables critiques injectées au build (bypass .env parsing Hostinger)
 process.env.DATABASE_URL = "postgresql://postgres:%23!Kalvert123@db.wazmbsfvfhcqgtibewnz.supabase.co:5432/postgres";
+process.env.SMTP_PASS = "#!Kalvert123";
 
 `
 
