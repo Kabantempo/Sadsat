@@ -35,3 +35,12 @@ const patch = `// [patch-server-env] Fix DATABASE_URL format for Supabase pooler
 
 fs.writeFileSync(serverPath, patch + content, 'utf8')
 console.log('[patch-server-env] server.js patched successfully')
+
+// Run prisma db push to sync schema (non-blocking)
+const { execSync } = require('child_process')
+try {
+  execSync('npx prisma db push', { stdio: 'inherit', timeout: 30000 })
+  console.log('[patch-server-env] prisma db push OK')
+} catch (e) {
+  console.warn('[patch-server-env] prisma db push failed (non-fatal):', e.message)
+}

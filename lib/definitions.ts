@@ -53,6 +53,7 @@ export type User = {
   pseudo?: string
   universe?: string
   availability?: string
+  favorites?: string
 }
 
 export type SafeUser = Omit<User, 'passwordHash'>

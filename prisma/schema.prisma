@@ -26,6 +26,7 @@ model User {
   pseudo                 String?
   universe               String?
   availability           String? @db.Text
+  favorites              String? @db.Text
 
   @@map("users")
 }
