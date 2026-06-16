@@ -2,6 +2,7 @@
 import { verifyAdmin } from '@/lib/dal'
 import { getOrderById, updateOrderBoxtal } from '@/lib/orders'
 import { createParcel } from '@/lib/sendcloud'
+import { sendShippingEmail } from '@/lib/email'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
@@ -51,6 +52,14 @@ export async function expedierCommandeAction(formData: FormData) {
     },
   })
 
+  // Email d'expédition au client
+  await sendShippingEmail(
+    order.customerEmail,
+    order.customerName,
+    parcel.tracking_number,
+    parcel.tracking_url,
+  ).catch((err) => console.error('[shipping] email failed:', err))
+
   revalidatePath('/admin/commandes')
 }
 
@@ -59,7 +68,13 @@ export async function updateTrackingAction(formData: FormData) {
   const orderId = String(formData.get('orderId') ?? '')
   const tracking = String(formData.get('tracking') ?? '').trim()
   if (!tracking) return
+  const order = await getOrderById(orderId)
   await updateOrderBoxtal(orderId, tracking)
+  if (order) {
+    const trackingUrl = `https://parcelsapp.com/fr/tracking/${tracking}`
+    await sendShippingEmail(order.customerEmail, order.customerName, tracking, trackingUrl)
+      .catch((err) => console.error('[shipping] email failed:', err))
+  }
   revalidatePath('/admin/commandes')
 }
 
@@ -73,5 +88,15 @@ export async function updateStatusAction(formData: FormData) {
     where: { id: orderId },
     data: { status, updatedAt: new Date().toISOString() },
   })
+  if (status === 'expédiée') {
+    const order = await getOrderById(orderId)
+    if (order) {
+      const trackingUrl = order.boxtalRef
+        ? `https://parcelsapp.com/fr/tracking/${order.boxtalRef}`
+        : `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sadsat.com'}/compte`
+      await sendShippingEmail(order.customerEmail, order.customerName, order.boxtalRef ?? '', trackingUrl)
+        .catch((err) => console.error('[shipping] email failed:', err))
+    }
+  }
   revalidatePath('/admin/commandes')
 }

@@ -132,6 +132,31 @@ export async function sendWelcomeEmail(to: string, name: string): Promise<boolea
   }
 }
 
+export async function sendShippingEmail(to: string, name: string, trackingNumber: string, trackingUrl: string): Promise<boolean> {
+  try {
+    await getTransporter().sendMail({
+      from: FROM(),
+      to,
+      subject: 'Votre commande est en route — SADSAT',
+      html: emailLayout(`
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:8px;">Bonjour ${name},</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
+          Votre commande a été expédiée. Vous pouvez suivre votre colis en temps réel grâce au lien ci-dessous.
+        </p>
+        ${trackingNumber ? `<p style="font-size:12px;color:#737373;margin-bottom:16px;">Numéro de suivi : <strong style="color:#a3a3a3;">${trackingNumber}</strong></p>` : ''}
+        <a href="${trackingUrl}" style="${btnStyle}">Suivre mon colis</a>
+        <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
+          Pour toute question : <a href="mailto:contact@sadsat.com" style="color:#737373;">contact@sadsat.com</a>
+        </p>
+      `),
+    })
+    return true
+  } catch (err) {
+    console.error('[email] sendShippingEmail failed:', err)
+    return false
+  }
+}
+
 export async function sendAbandonedCartEmail(to: string, items: { name: string; price: number }[], checkoutUrl: string): Promise<boolean> {
   try {
     const itemsHtml = items
