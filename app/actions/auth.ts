@@ -2,7 +2,7 @@
 import { redirect } from 'next/navigation'
 import bcrypt from 'bcryptjs'
 import { SignupFormSchema, LoginFormSchema, type FormState } from '@/lib/definitions'
-import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword, getUserByPasswordToken, clearPasswordToken, saveVerificationToken, getUserByVerificationToken, verifyUserEmail, savePasswordToken } from '@/lib/db'
+import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword, getUserByPasswordToken, clearPasswordToken, saveVerificationToken, getUserByVerificationToken, verifyUserEmail, savePasswordToken, deleteUser } from '@/lib/db'
 import { verifySession } from '@/lib/dal'
 import { createSession, deleteSession } from '@/lib/session'
 import { sendVerificationEmail, sendPasswordResetEmail } from '@/lib/email'
@@ -218,4 +218,11 @@ export async function setupAdmin(state: FormState, formData: FormData): Promise<
   await createUser(user)
   await createSession(user.id, 'admin', user.name, email)
   redirect('/admin')
+}
+
+export async function deleteAccountAction(): Promise<void> {
+  const session = await verifySession()
+  await deleteUser(session.userId)
+  await deleteSession()
+  redirect('/')
 }

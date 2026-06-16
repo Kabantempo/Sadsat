@@ -3,6 +3,7 @@ import { logout } from '@/app/actions/auth'
 import { getOrders } from '@/lib/orders'
 import { getReviewedProductIds } from '@/lib/reviews'
 import ChangePasswordForm from '@/components/shared/ChangePasswordForm'
+import DeleteAccountButton from '@/components/shared/DeleteAccountButton'
 import Link from 'next/link'
 import { Package, ChevronRight, Star } from 'lucide-react'
 
@@ -170,14 +171,17 @@ export default async function ComptePage() {
           <ChangePasswordForm />
         </div>
 
-        <form action={logout} className="mt-12">
-          <button
-            type="submit"
-            className="text-[0.62rem] tracking-[0.18em] uppercase text-neutral-400 hover:text-neutral-900 transition-colors underline underline-offset-4"
-          >
-            Se déconnecter
-          </button>
-        </form>
+        <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <form action={logout}>
+            <button
+              type="submit"
+              className="text-[0.62rem] tracking-[0.18em] uppercase text-neutral-400 hover:text-neutral-900 transition-colors underline underline-offset-4"
+            >
+              Se déconnecter
+            </button>
+          </form>
+          <DeleteAccountButton />
+        </div>
       </div>
     </div>
   )
