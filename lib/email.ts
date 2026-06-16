@@ -1,20 +1,23 @@
 import 'server-only'
 import nodemailer from 'nodemailer'
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST ?? 'smtp.hostinger.com',
-  port: Number(process.env.SMTP_PORT ?? 587),
-  secure: false,
-  requireTLS: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-})
+function getTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST ?? 'smtp.hostinger.com',
+    port: Number(process.env.SMTP_PORT ?? 587),
+    secure: false,
+    requireTLS: true,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  })
+}
 
-const FROM = process.env.SMTP_FROM
-  ? `SADSAT <${process.env.SMTP_FROM}>`
-  : `SADSAT <${process.env.SMTP_USER}>`
+const FROM = () =>
+  process.env.SMTP_FROM
+    ? `SADSAT <${process.env.SMTP_FROM}>`
+    : `SADSAT <${process.env.SMTP_USER}>`
 const BASE = () =>
   process.env.NEXT_PUBLIC_BASE_URL ??
   process.env.NEXT_PUBLIC_SITE_URL ??
@@ -23,8 +26,8 @@ const BASE = () =>
 export async function sendVerificationEmail(to: string, name: string, token: string): Promise<boolean> {
   const link = `${BASE()}/verify-email?token=${token}`
   try {
-    await transporter.sendMail({
-      from: FROM,
+    await getTransporter().sendMail({
+      from: FROM(),
       to,
       subject: 'Confirmez votre adresse email — SADSAT',
       html: emailLayout(`
@@ -49,8 +52,8 @@ export async function sendSetPasswordEmail(to: string, name: string, token: stri
   const link = `${BASE()}/set-password?token=${token}`
   const isCreateur = role === 'créateur'
   try {
-    await transporter.sendMail({
-      from: FROM,
+    await getTransporter().sendMail({
+      from: FROM(),
       to,
       subject: isCreateur ? 'Bienvenue dans le collectif SADSAT — Créez votre mot de passe' : 'Créez votre mot de passe — SADSAT',
       html: emailLayout(`
@@ -83,8 +86,8 @@ export async function sendSetPasswordEmail(to: string, name: string, token: stri
 export async function sendPasswordResetEmail(to: string, name: string, token: string): Promise<boolean> {
   const link = `${BASE()}/set-password?token=${token}`
   try {
-    const result = await transporter.sendMail({
-      from: FROM,
+    await getTransporter().sendMail({
+      from: FROM(),
       to,
       subject: 'Réinitialisation de votre mot de passe — SADSAT',
       html: emailLayout(`
@@ -107,8 +110,8 @@ export async function sendPasswordResetEmail(to: string, name: string, token: st
 
 export async function sendContactEmail(data: { name: string; email: string; subject: string; message: string }): Promise<boolean> {
   try {
-    await transporter.sendMail({
-      from: FROM,
+    await getTransporter().sendMail({
+      from: FROM(),
       to: 'contact@sadsat.com',
       replyTo: data.email,
       subject: `[Contact] ${data.subject} — ${data.name}`,
@@ -139,8 +142,8 @@ export async function sendOrderConfirmationEmail(data: {
     const itemsHtml = data.items
       .map(i => `<tr><td style="padding:6px 0;color:#a3a3a3;font-size:13px;">${i.name} × ${i.quantity}</td><td style="padding:6px 0;color:#a3a3a3;font-size:13px;text-align:right;">${((i.price * i.quantity) / 100).toFixed(2)} €</td></tr>`)
       .join('')
-    await transporter.sendMail({
-      from: FROM,
+    await getTransporter().sendMail({
+      from: FROM(),
       to: data.to,
       subject: `Votre commande SADSAT est confirmée`,
       html: emailLayout(`
@@ -173,8 +176,8 @@ export async function sendNewOrderAdminEmail(data: {
     const itemsHtml = data.items
       .map(i => `<tr><td style="padding:4px 0;color:#a3a3a3;font-size:13px;">${i.name} × ${i.quantity}</td><td style="padding:4px 0;color:#a3a3a3;font-size:13px;text-align:right;">${((i.price * i.quantity) / 100).toFixed(2)} €</td></tr>`)
       .join('')
-    await transporter.sendMail({
-      from: FROM,
+    await getTransporter().sendMail({
+      from: FROM(),
       to: 'contact@sadsat.com',
       subject: `[Commande] ${data.customerName} — ${(data.total / 100).toFixed(2)} €`,
       html: emailLayout(`
