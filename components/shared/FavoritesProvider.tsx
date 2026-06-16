@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { toast } from "sonner";
 
 type FavoritesContext = {
   favorites: string[];
@@ -32,9 +33,14 @@ export default function FavoritesProvider({ children, isLoggedIn = false }: { ch
   }, [favorites]);
 
   const toggle = useCallback((id: string) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
-    );
+    setFavorites((prev) => {
+      const isAdding = !prev.includes(id);
+      toast(isAdding ? 'Ajouté aux favoris' : 'Retiré des favoris', {
+        duration: 2000,
+        style: { background: '#171717', border: '1px solid #262626', color: '#a3a3a3', fontSize: '0.76rem', letterSpacing: '0.06em' },
+      });
+      return isAdding ? [...prev, id] : prev.filter((f) => f !== id);
+    });
   }, []);
 
   const isFavorite = useCallback((id: string) => favorites.includes(id), [favorites]);

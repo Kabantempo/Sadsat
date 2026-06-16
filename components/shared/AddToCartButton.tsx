@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { toast } from "sonner";
 import { useCart } from "./CartProvider";
 import { ShoppingBag, Check } from "lucide-react";
 import type { CartItem } from "./CartProvider";
@@ -13,6 +14,10 @@ export default function AddToCartButton({ disabled, ...item }: Props) {
   function handleClick() {
     addItem(item);
     setAdded(true);
+    toast.success(`${item.name} ajouté au panier`, {
+      duration: 2500,
+      style: { background: '#171717', border: '1px solid #262626', color: '#e5e5e5', fontSize: '0.78rem', letterSpacing: '0.04em' },
+    });
     setTimeout(() => setAdded(false), 1800);
   }
 

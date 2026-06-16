@@ -30,6 +30,7 @@
     "resend": "^3.5.0",
     "server-only": "^0.0.1",
     "simplex-noise": "^4.0.3",
+    "sonner": "^2.0.7",
     "stripe": "^22.1.1",
     "zod": "^4.4.3",
     "zustand": "^5.0.13"

@@ -148,7 +148,15 @@ export default async function ComptePage() {
                       {/* Livraison */}
                       {order.boxtalRef && (
                         <p className="mt-2 text-[0.62rem] tracking-[0.12em] text-neutral-400">
-                          Suivi : {order.boxtalRef}
+                          Suivi :{' '}
+                          <a
+                            href={`https://parcelsapp.com/fr/tracking/${order.boxtalRef}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline underline-offset-2 hover:text-neutral-700 transition-colors"
+                          >
+                            {order.boxtalRef}
+                          </a>
                         </p>
                       )}
                     </div>

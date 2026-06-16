@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import RandomPieceButton from "@/components/shared/RandomPieceButton";
@@ -173,6 +174,11 @@ export default async function RootLayout({
       <body className="font-sans antialiased bg-black text-neutral-200">
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={websiteJsonLd} />
+        <Toaster
+          position="bottom-right"
+          theme="dark"
+          toastOptions={{ style: { fontFamily: 'var(--font-jetbrains, monospace)' } }}
+        />
         <PageLoader />
         <FavoritesProvider isLoggedIn={!!session}>
           <CartProvider>
