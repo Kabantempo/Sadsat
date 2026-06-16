@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Vérifier les prix côté serveur — ne jamais faire confiance au client
-    const lineItems: Parameters<typeof stripe.checkout.sessions.create>[0]['line_items'] = []
+    const lineItems: { price_data: { currency: string; product_data: { name: string; images?: string[] }; unit_amount: number }; quantity: number }[] = []
     const notFound: string[] = []
 
     for (const { productId, quantity } of items) {
@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
       success_url: `${base}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${base}/checkout`,
       locale: 'fr',
+      allow_promotion_codes: true,
       ...(userSession?.email ? { customer_email: userSession.email } : {}),
       metadata: {
         cart: JSON.stringify(items.map(({ productId, quantity }) => ({ productId, quantity }))),
