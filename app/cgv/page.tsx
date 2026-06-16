@@ -10,7 +10,7 @@ export const metadata = {
 const SECTIONS = [
   {
     title: "Objet",
-    content: `Les présentes Conditions Générales de Vente (CGV) régissent les ventes de produits artisanaux réalisées sur le site sadsat.com par [Prénom NOM], auto-entrepreneur (SIRET : [À compléter]), ci-après dénommé « SADSAT ».
+    content: `Les présentes Conditions Générales de Vente (CGV) régissent les ventes de produits artisanaux réalisées sur le site sadsat.com par DOUCENDE VINCENT, entrepreneur individuel (SIRET : 989 034 061 00014), ci-après dénommé « SADSAT ».
 
 Toute commande implique l'acceptation pleine et entière des présentes CGV.`,
   },

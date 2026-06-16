@@ -132,6 +132,36 @@ export async function sendWelcomeEmail(to: string, name: string): Promise<boolea
   }
 }
 
+export async function sendAbandonedCartEmail(to: string, items: { name: string; price: number }[], checkoutUrl: string): Promise<boolean> {
+  try {
+    const itemsHtml = items
+      .map(i => `<tr><td style="padding:6px 0;color:#a3a3a3;font-size:13px;">${i.name}</td><td style="padding:6px 0;color:#a3a3a3;font-size:13px;text-align:right;">${(i.price / 100).toFixed(2)} €</td></tr>`)
+      .join('')
+    await getTransporter().sendMail({
+      from: FROM(),
+      to,
+      subject: 'Vous avez oublié quelque chose — SADSAT',
+      html: emailLayout(`
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:8px;">Votre panier vous attend.</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:24px;">
+          Vous avez laissé des pièces dans votre panier. Elles sont réservées pour vous, mais pas pour longtemps.
+        </p>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+          ${itemsHtml}
+        </table>
+        <a href="${checkoutUrl}" style="${btnStyle}">Finaliser ma commande</a>
+        <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
+          Les pièces artisanales SADSAT sont produites en très petite série — ne tardez pas.
+        </p>
+      `),
+    })
+    return true
+  } catch (err) {
+    console.error('[email] sendAbandonedCartEmail failed:', err)
+    return false
+  }
+}
+
 export async function sendContactEmail(data: { name: string; email: string; subject: string; message: string }): Promise<boolean> {
   try {
     await getTransporter().sendMail({

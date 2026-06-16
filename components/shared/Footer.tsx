@@ -19,7 +19,7 @@ const BOUTIQUE = [
 const LEGAL = [
   { label: "Mentions légales", href: "/mentions-legales" },
   { label: "CGV", href: "/cgv" },
-  { label: "Confidentialité", href: "/confidentialite" },
+  { label: "Confidentialité", href: "/politique-confidentialite" },
 ];
 
 function InstagramIcon() {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { getProductById } from '@/lib/products'
+import { getSession } from '@/lib/session'
 
 type CartItem = { productId: string; quantity: number }
 
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Vérifier les prix côté serveur — ne jamais faire confiance au client
-    const lineItems = []
+    const lineItems: Parameters<typeof stripe.checkout.sessions.create>[0]['line_items'] = []
     const notFound: string[] = []
 
     for (const { productId, quantity } of items) {
@@ -47,6 +48,7 @@ export async function POST(req: NextRequest) {
     }
 
     const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const userSession = await getSession()
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -56,6 +58,10 @@ export async function POST(req: NextRequest) {
       success_url: `${base}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${base}/checkout`,
       locale: 'fr',
+      ...(userSession?.email ? { customer_email: userSession.email } : {}),
+      metadata: {
+        cart: JSON.stringify(items.map(({ productId, quantity }) => ({ productId, quantity }))),
+      },
     })
 
     return NextResponse.json({ url: session.url })

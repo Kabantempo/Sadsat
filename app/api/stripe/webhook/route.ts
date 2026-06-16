@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createOrder } from '@/lib/orders'
-import { sendOrderConfirmationEmail, sendNewOrderAdminEmail } from '@/lib/email'
+import { sendOrderConfirmationEmail, sendNewOrderAdminEmail, sendAbandonedCartEmail } from '@/lib/email'
+import { getProductById } from '@/lib/products'
 import type Stripe from 'stripe'
 
 export const dynamic = 'force-dynamic'
@@ -114,6 +115,29 @@ export async function POST(req: NextRequest) {
     } catch (err) {
       console.error('[webhook] Erreur création commande:', err)
       // On retourne 200 à Stripe pour éviter les retries — l'erreur est loggée
+    }
+  }
+
+  if (event.type === 'checkout.session.expired') {
+    const session = event.data.object as Stripe.Checkout.Session
+    const email = session.customer_email ?? session.customer_details?.email
+    if (email) {
+      try {
+        const cartRaw = session.metadata?.cart
+        const cartItems: { productId: string; quantity: number }[] = cartRaw ? JSON.parse(cartRaw) : []
+        const products = await Promise.all(
+          cartItems.map(({ productId }) => getProductById(productId))
+        )
+        const items = cartItems.flatMap(({ productId, quantity }, i) => {
+          const p = products[i]
+          if (!p) return []
+          return [{ name: p.name, price: p.price * quantity }]
+        })
+        const base = process.env.NEXT_PUBLIC_BASE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sadsat.com'
+        await sendAbandonedCartEmail(email, items, `${base}/checkout`)
+      } catch (err) {
+        console.error('[webhook] Erreur panier abandonné:', err)
+      }
     }
   }
 

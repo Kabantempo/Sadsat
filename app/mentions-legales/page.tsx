@@ -10,15 +10,15 @@ export const metadata = {
 const SECTIONS = [
   {
     title: "Éditeur du site",
-    content: `SADSAT est édité par [Prénom NOM], auto-entrepreneur.
-Adresse : [Votre adresse complète], France
+    content: `SADSAT est édité par DOUCENDE VINCENT, entrepreneur individuel.
+Adresse : 60 Rue François Ier, 75008 Paris, France
 Email : contact@sadsat.com
-SIRET : [À compléter après immatriculation]
+SIRET : 989 034 061 00014
 Non assujetti à la TVA (article 293 B du CGI)`,
   },
   {
     title: "Directeur de la publication",
-    content: `[Prénom NOM], en qualité d'auto-entrepreneur responsable de l'activité SADSAT.`,
+    content: `DOUCENDE VINCENT, en qualité d'entrepreneur individuel responsable de l'activité SADSAT.`,
   },
   {
     title: "Hébergement",
