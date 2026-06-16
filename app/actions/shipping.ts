@@ -2,7 +2,7 @@
 import { verifyAdmin } from '@/lib/dal'
 import { getOrderById, updateOrderBoxtal } from '@/lib/orders'
 import { createParcel } from '@/lib/sendcloud'
-import { sendShippingEmail } from '@/lib/email'
+import { sendShippingEmail, sendReviewRequestEmail } from '@/lib/email'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
@@ -88,14 +88,19 @@ export async function updateStatusAction(formData: FormData) {
     where: { id: orderId },
     data: { status, updatedAt: new Date().toISOString() },
   })
-  if (status === 'expédiée') {
-    const order = await getOrderById(orderId)
-    if (order) {
+  const order = await getOrderById(orderId)
+  if (order) {
+    if (status === 'expédiée') {
       const trackingUrl = order.boxtalRef
         ? `https://parcelsapp.com/fr/tracking/${order.boxtalRef}`
         : `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sadsat.com'}/compte`
       await sendShippingEmail(order.customerEmail, order.customerName, order.boxtalRef ?? '', trackingUrl)
         .catch((err) => console.error('[shipping] email failed:', err))
+    }
+    if (status === 'livrée') {
+      const reviewItems = order.items.map((i) => ({ productId: i.productId, name: i.name }))
+      await sendReviewRequestEmail(order.customerEmail, order.customerName, reviewItems)
+        .catch((err) => console.error('[shipping] review email failed:', err))
     }
   }
   revalidatePath('/admin/commandes')

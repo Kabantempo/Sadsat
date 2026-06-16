@@ -172,6 +172,15 @@ export default async function RootLayout({
 
   return (
     <html lang="fr" className={`${cormorant.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
+      <head>
+        {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
+          <script
+            defer
+            data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+            src="https://plausible.io/js/script.js"
+          />
+        )}
+      </head>
       <body className="font-sans antialiased bg-black text-neutral-200">
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={websiteJsonLd} />

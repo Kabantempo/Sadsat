@@ -157,6 +157,35 @@ export async function sendShippingEmail(to: string, name: string, trackingNumber
   }
 }
 
+export async function sendReviewRequestEmail(to: string, name: string, items: { productId: string; name: string }[]): Promise<boolean> {
+  try {
+    const base = BASE()
+    const itemsHtml = items
+      .map(i => `<p style="margin:8px 0;"><a href="${base}/produits/${i.productId}#avis" style="color:#a3a3a3;font-size:13px;text-decoration:underline;">${i.name}</a></p>`)
+      .join('')
+    await getTransporter().sendMail({
+      from: FROM(),
+      to,
+      subject: 'Votre avis compte — SADSAT',
+      html: emailLayout(`
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:8px;">Bonjour ${name},</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:24px;">
+          Nous espérons que votre commande vous a plu. Votre avis aide les autres acheteurs et soutient nos créateurs.
+        </p>
+        <p style="font-size:12px;color:#737373;margin-bottom:12px;">Laisser un avis sur :</p>
+        ${itemsHtml}
+        <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
+          Merci pour votre confiance — l'équipe SADSAT
+        </p>
+      `),
+    })
+    return true
+  } catch (err) {
+    console.error('[email] sendReviewRequestEmail failed:', err)
+    return false
+  }
+}
+
 export async function sendAbandonedCartEmail(to: string, items: { name: string; price: number }[], checkoutUrl: string): Promise<boolean> {
   try {
     const itemsHtml = items
