@@ -17,13 +17,13 @@ export const metadata: Metadata = {
   description:
     "Pièces de taxidermie éthique, uniques, issues de mortalités naturelles. Chaque spécimen est sourcé depuis des mortalités naturelles ou confiscations douanières. Collection Crystal Pets par SADSAT.",
   keywords: ["taxidermie éthique", "Crystal Pets", "pièce unique taxidermie", "naturalisation éthique", "spécimen naturalisé", "taxidermie France"],
-  alternates: { canonical: `${BASE_URL}/taxidermie` },
+  alternates: { canonical: `${BASE_URL}/crystal-pets` },
   openGraph: {
     title: "Crystal Pets — Taxidermie éthique · SADSAT",
     description:
       "Taxidermie éthique, pièces uniques issues de mortalités naturelles. Collection Crystal Pets par SADSAT.",
     type: "website",
-    url: `${BASE_URL}/taxidermie`,
+    url: `${BASE_URL}/crystal-pets`,
     locale: "fr_FR",
     siteName: "SADSAT",
   },
@@ -96,23 +96,26 @@ export default async function TaxidermiePage() {
           }));
 
   return (
-    <div className="min-h-screen pb-24 bg-[#fafaf7] dark:bg-neutral-950 text-[#1a1a1a] dark:text-neutral-100">
+    <div className="min-h-screen pb-24 bg-[#f6fbfb] dark:bg-[#071417] text-[#0d2a2e] dark:text-neutral-100">
 
       {/* ── En-tête ── */}
-      <div className="pt-32 pb-24 max-w-3xl mx-auto px-8 text-center">
-        <ScrollReveal>
-          <div className="font-mono text-[0.7rem] tracking-[0.3em] mb-6 text-neutral-500">— 01 —</div>
-          <p className="font-mono text-[0.62rem] tracking-[0.3em] uppercase text-neutral-400 mb-3">Taxidermie</p>
-          <h1 className="font-serif font-light text-6xl md:text-7xl italic mb-6">Crystal Pets</h1>
-          <p className="text-sm tracking-[0.2em] uppercase opacity-60">Pièces uniques · Provenance éthique</p>
-        </ScrollReveal>
+      <div className="cp-hero">
+        <div className="relative z-10 pt-32 pb-24 max-w-3xl mx-auto px-8 text-center">
+          <ScrollReveal>
+            <div className="font-mono text-[0.7rem] tracking-[0.3em] mb-6 text-[#0a6f6c] dark:text-[#3fd4cf]">— 01 —</div>
+            <p className="font-mono text-[0.62rem] tracking-[0.3em] uppercase text-[#0a6f6c] dark:text-[#3fd4cf] mb-3">Taxidermie</p>
+            <h1 className="cp-title font-serif font-light text-6xl md:text-7xl italic mb-6">Crystal Pets</h1>
+            <div className="cp-bar mx-auto mb-6" />
+            <p className="text-sm tracking-[0.2em] uppercase opacity-70">Pièces uniques · Provenance éthique</p>
+          </ScrollReveal>
+        </div>
       </div>
 
       {/* ── Définition (scroll reveal) ── */}
       <div className="max-w-3xl mx-auto px-8 mb-10">
         <ScrollReveal>
           <div className="grid md:grid-cols-[auto_1fr] gap-8 items-start">
-            <div className="font-mono text-[0.6rem] tracking-[0.25em] uppercase text-neutral-400 pt-1 whitespace-nowrap">
+            <div className="font-mono text-[0.6rem] tracking-[0.25em] uppercase text-[#0a6f6c] dark:text-[#3fd4cf] pt-1 whitespace-nowrap">
               Qu'est-ce que c'est
             </div>
             <div>
@@ -130,14 +133,14 @@ export default async function TaxidermiePage() {
       {/* ── Valeurs ── */}
       <div className="max-w-3xl mx-auto px-8 mb-16">
         <ScrollReveal delay={0.1}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-neutral-200 dark:bg-neutral-800">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-[#bfe4e4] dark:bg-[#123338]">
             {[
               { label: "Provenance éthique",          detail: "Mortalités naturelles uniquement" },
               { label: "Certification CITES",          detail: "Conformité réglementaire totale"  },
               { label: "Pièces uniques",               detail: "Aucune reproduction possible"     },
             ].map(({ label, detail }) => (
-              <div key={label} className="bg-[#fafaf7] dark:bg-neutral-950 px-5 py-6 text-center">
-                <p className="font-mono text-[0.56rem] tracking-[0.18em] uppercase text-neutral-400 mb-2">{detail}</p>
+              <div key={label} className="bg-[#f6fbfb] dark:bg-[#071417] px-5 py-6 text-center">
+                <p className="font-mono text-[0.56rem] tracking-[0.18em] uppercase text-[#0a6f6c] dark:text-[#3fd4cf] mb-2">{detail}</p>
                 <p className="font-serif text-[0.88rem] italic text-neutral-700 dark:text-neutral-300">{label}</p>
               </div>
             ))}
@@ -153,7 +156,7 @@ export default async function TaxidermiePage() {
       {/* ── Carousel produits ── */}
       <div className="max-w-6xl mx-auto px-8 mb-24">
         <ScrollReveal>
-          <p className="font-mono text-[0.62rem] tracking-[0.28em] uppercase text-neutral-400 mb-10">
+          <p className="font-mono text-[0.62rem] tracking-[0.28em] uppercase text-[#0a6f6c] dark:text-[#3fd4cf] mb-10">
             Nos pièces
           </p>
           <ProductCarousel items={carouselItems} theme="dark" aspectRatio="square" />
@@ -163,19 +166,19 @@ export default async function TaxidermiePage() {
       {/* ── Grille catégories ── */}
       <div className="max-w-6xl mx-auto px-8">
         <ScrollReveal>
-          <p className="font-mono text-[0.62rem] tracking-[0.28em] uppercase text-neutral-400 mb-10">
+          <p className="font-mono text-[0.62rem] tracking-[0.28em] uppercase text-[#0a6f6c] dark:text-[#3fd4cf] mb-10">
             Explorer par catégorie
           </p>
         </ScrollReveal>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {CATEGORIES.map((cat, i) => (
             <ScrollReveal key={cat.slug} delay={i * 0.06}>
-              <Link href={`/taxidermie/${cat.slug}`} className="group block">
-                <div className="relative aspect-[3/4] overflow-hidden mb-5 bg-neutral-200">
+              <Link href={`/crystal-pets/${cat.slug}`} className="group block">
+                <div className="relative aspect-[3/4] overflow-hidden mb-5 bg-gradient-to-br from-[#dcf2f2] to-[#ece1f6] dark:from-[#0d2a2e] dark:to-[#1d1230]">
                   {cat.primaryImage ? (
                     <Image src={cat.primaryImage} alt={cat.label} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105" unoptimized />
                   ) : (
-                    <div className="w-full h-full bg-neutral-200 flex items-center justify-center text-neutral-400 text-4xl">✦</div>
+                    <div className="w-full h-full flex items-center justify-center text-[#19bdb8] text-4xl">✦</div>
                   )}
                   {cat.hoverImage && (
                   <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
@@ -188,10 +191,10 @@ export default async function TaxidermiePage() {
                 </div>
                 <div className="flex items-end justify-between">
                   <div>
-                    <div className="font-mono text-[0.58rem] tracking-[0.2em] uppercase text-neutral-400 mb-1">{cat.latin}</div>
+                    <div className="font-mono text-[0.58rem] tracking-[0.2em] uppercase text-[#0a6f6c] dark:text-[#3fd4cf] mb-1">{cat.latin}</div>
                     <h2 className="font-serif text-2xl font-light italic group-hover:opacity-60 transition-opacity duration-300">{cat.label}</h2>
                   </div>
-                  <span className="text-neutral-400 text-sm mb-1 transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  <span className="text-[#19bdb8] text-sm mb-1 transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </div>
               </Link>
             </ScrollReveal>

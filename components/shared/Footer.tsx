@@ -3,7 +3,7 @@ import { CookieSettingsLink } from "@/components/shared/CookieConsent";
 
 const UNIVERS = [
   { label: "Pièces uniques", href: "/pieces-uniques", accent: "#8b0000" },
-  { label: "Crystal Pets", href: "/taxidermie", accent: "#c9b896" },
+  { label: "Crystal Pets", href: "/crystal-pets", accent: "#19bdb8" },
   { label: "Spectrum N°3", href: "/bougies", accent: "#00ff41", comingSoon: true },
   { label: "Hackcycle", href: "/habillement", accent: "#a0a0a0" },
 ];

@@ -81,6 +81,25 @@ export const UNIVERSE_LABELS: Record<Universe, string> = {
   habillement: 'Hackcycle',
 }
 
+// Adresse visible de chaque univers. L'identifiant « taxidermie » reste celui de la base de données
+// (products.universe, brand_categories.universe) : seul le chemin dans l'adresse change.
+export const UNIVERSE_PATHS: Record<Universe, string> = {
+  taxidermie: '/crystal-pets',
+  bougies: '/bougies',
+  'pieces-uniques': '/pieces-uniques',
+  habillement: '/habillement',
+}
+
+export function universePath(universe: string): string {
+  return UNIVERSE_PATHS[universe as Universe] ?? '/' + universe
+}
+
+/** Chemin inverse : /crystal-pets renvoie l'identifiant « taxidermie » (couleurs du menu, données de la marque). */
+export function universeFromPath(path: string): string {
+  const hit = Object.entries(UNIVERSE_PATHS).find(([, p]) => p === path)
+  return hit ? hit[0] : path.replace(/^\//, '')
+}
+
 export const CATEGORIES: Record<Universe, string[]> = {
   taxidermie: ['Oiseaux', 'Mammifères', 'Insectes', 'Crânes', 'Reptiles'],
   bougies: ['Cire de soja', "Cire d'abeille", 'Piliers', 'Fondants'],
@@ -115,9 +134,10 @@ export const BRAND_PORTALS: BrandPortal[] = [
     subtitle: 'Pièces uniques · Éthique',
     cta: 'Entrer dans la galerie',
     index: '01',
-    bg: 'linear-gradient(180deg, #fafaf7 0%, #ebebe6 100%)',
-    color: '#1a1a1a',
-    accent: '#c9b896',
+    // Palette tirée des photos de @crystal_pets_ : lavis blanc translucide, turquoise, violet
+    bg: 'linear-gradient(160deg, #f8fcfc 0%, #dcf2f2 50%, #ece1f6 100%)',
+    color: '#0d2a2e',
+    accent: '#0a6f6c',
     font: 'serif',
   },
   {

@@ -9,6 +9,7 @@ import ThemeToggle from "@/components/shared/ThemeToggle";
 import SearchModal from "@/components/shared/SearchModal";
 import { useFavorites } from "@/components/shared/FavoritesProvider";
 import { useCart } from "@/components/shared/CartProvider";
+import { universeFromPath } from "@/lib/definitions";
 
 type SubItem = { label: string; href: string };
 
@@ -34,7 +35,7 @@ function buildNav(cats: NavCategories): NavItem[] {
   };
   return [
     { label: "Pièces uniques", href: "/pieces-uniques", bordeaux: true },
-    { label: "Crystal Pets",  href: "/taxidermie", dropdown: dd('taxidermie', 'taxidermie') },
+    { label: "Crystal Pets",  href: "/crystal-pets", dropdown: dd('taxidermie', 'crystal-pets') },
     { label: "Spectrum N°3",  href: "/bougies",    dropdown: dd('bougies', 'bougies') },
     { label: "Hackcycle",     href: "/habillement",dropdown: dd('habillement', 'habillement') },
     { label: "Créateurs",     href: "/createurs" },
@@ -60,7 +61,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
   const userMenuRef                     = useRef<HTMLDivElement>(null);
 
   const BRAND_ACCENTS: Record<string, { color: string; glow: string }> = {
-    taxidermie:  { color: '#c9b896', glow: 'rgba(201,184,150,0.5)' },
+    taxidermie:  { color: '#19bdb8', glow: 'rgba(25,189,184,0.5)' },
     bougies:     { color: '#00ff41', glow: 'rgba(0,255,65,0.5)'    },
     habillement: { color: '#a0a0a0', glow: 'rgba(160,160,160,0.4)' },
   };
@@ -92,7 +93,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: hidden ? 0 : 1, y: hidden ? "-100%" : 0 }}
         transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="sticky top-0 z-50 bg-black/55 backdrop-blur-2xl text-neutral-100 transition-all duration-300"
+        className="sticky top-0 z-50 bg-neutral-950/95 dark:bg-black/55 backdrop-blur-2xl text-neutral-100 transition-all duration-300"
       >
         {/* ── Bordure basse lumineuse réactive ── */}
         <motion.div
@@ -136,7 +137,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
             onMouseLeave={() => setHoveredBrand(null)}
           >
             {NAV.map((item) => {
-              const brandSlug = item.href.replace('/', '');
+              const brandSlug = universeFromPath(item.href);
               const accent = BRAND_ACCENTS[brandSlug];
               return (
               <div

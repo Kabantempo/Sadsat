@@ -14,7 +14,7 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
     priority: 1,
   },
   {
-    url: `${BASE_URL}/taxidermie`,
+    url: `${BASE_URL}/crystal-pets`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.9,

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getProductById, getProducts } from "@/lib/products";
 import { getUserById } from "@/lib/db";
-import { UNIVERSE_LABELS } from "@/lib/definitions";
+import { UNIVERSE_LABELS, universePath } from "@/lib/definitions";
 import ProductAccordion from "@/components/shared/ProductAccordion";
 import FavoriteButton from "@/components/shared/FavoriteButton";
 import PreviewBanner from "@/components/shared/PreviewBanner";
@@ -137,7 +137,7 @@ export default async function FicheProduitPage({
         <div className="flex flex-wrap items-center gap-2 mb-12 font-mono text-[0.55rem] tracking-[0.28em] uppercase text-neutral-600">
           <Link href="/" className="hover:text-neutral-300 transition-colors">Accueil</Link>
           <span>/</span>
-          <Link href={`/${product.universe}`} className="hover:text-neutral-300 transition-colors">
+          <Link href={universePath(product.universe)} className="hover:text-neutral-300 transition-colors">
             {UNIVERSE_LABELS[product.universe]}
           </Link>
           {creator && (

@@ -47,6 +47,9 @@ const nextConfig = {
   async redirects() {
     // L'univers bijoux (L0vers.cult) a été supprimé.
     return [
+      // Adresse de l'univers taxidermie renommée : /taxidermie devient /crystal-pets.
+      { source: '/taxidermie', destination: '/crystal-pets', permanent: true },
+      { source: '/taxidermie/:path*', destination: '/crystal-pets/:path*', permanent: true },
       { source: '/bijoux', destination: '/', permanent: true },
       { source: '/bijoux/:path*', destination: '/', permanent: true },
       // Doublon supprimé : une seule politique de confidentialité.

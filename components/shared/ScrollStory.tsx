@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
-import { BRAND_PORTALS, type BrandPortal } from "@/lib/definitions";
+import { BRAND_PORTALS, universePath, type BrandPortal } from "@/lib/definitions";
 
 // ── Scene 3 : carte de marque ─────────────────────────────────────────────────
 function BrandCard({ brand, scrollYProgress, index }: {
@@ -67,7 +67,7 @@ function BrandCard({ brand, scrollYProgress, index }: {
     <motion.div style={{ opacity, scale, y }}>
       {brand.cta && !brand.special ? (
         <Link
-          href={`/${brand.slug}`}
+          href={universePath(brand.slug)}
           className={`${cardClass} block pointer-events-auto hover:brightness-110 transition-all duration-300`}
           style={{ background: brand.bg }}
         >
@@ -154,26 +154,26 @@ export default function ScrollStory({
   const showInstas = instagrams && instagrams.length > 0;
 
   return (
-    <div ref={containerRef} className="relative h-[500vh] bg-neutral-950">
+    <div ref={containerRef} className="relative h-[500vh] bg-neutral-50 dark:bg-neutral-950">
       <div className="sticky top-0 h-screen overflow-hidden">
 
         {/* ── SCÈNE 1 — Grand titre, sortie en cascade ── */}
-        <div className="absolute inset-0 z-10 bg-neutral-950 flex flex-col items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 z-10 bg-neutral-50 dark:bg-neutral-950 flex flex-col items-center justify-center pointer-events-none">
           <motion.p
             style={{ y: s1LabelY, opacity: s1LabelOp }}
-            className="font-mono text-[0.58rem] tracking-[0.4em] uppercase text-neutral-400 mb-8"
+            className="font-mono text-[0.58rem] tracking-[0.4em] uppercase text-neutral-600 dark:text-neutral-400 mb-8"
           >
             SADSAT — Collectif
           </motion.p>
           <motion.h2
             style={{ y: s1TitleY, opacity: s1TitleOp }}
-            className="font-serif font-light text-[13vw] md:text-[9vw] leading-none text-neutral-100 text-center px-6"
+            className="font-serif font-light text-[13vw] md:text-[9vw] leading-none text-neutral-900 dark:text-neutral-100 text-center px-6"
           >
             Un collectif.
           </motion.h2>
           <motion.p
             style={{ y: s1SubY, opacity: s1SubOp }}
-            className="font-serif italic text-neutral-500 text-lg md:text-2xl mt-6"
+            className="font-serif italic text-neutral-600 dark:text-neutral-500 text-lg md:text-2xl mt-6"
           >
             Plusieurs univers, une vision partagée.
           </motion.p>
@@ -182,7 +182,7 @@ export default function ScrollStory({
         {/* ── SCÈNE 2 — Révélation + texte, sort vers le haut ── */}
         <motion.div
           style={{ opacity: s2Opacity }}
-          className="absolute inset-0 z-20 bg-neutral-950 pointer-events-none"
+          className="absolute inset-0 z-20 bg-neutral-50 dark:bg-neutral-950 pointer-events-none"
         >
           <motion.div
             style={{ y: s2ContentY }}
@@ -190,7 +190,7 @@ export default function ScrollStory({
           >
             {/* Gauche : visuel révélé de haut en bas */}
             <div className="hidden md:block relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-neutral-800 via-neutral-900 to-neutral-950">
+              <div className="absolute inset-0 bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-50 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-950">
                 <div
                   className="absolute inset-0 opacity-15"
                   style={{
@@ -201,7 +201,7 @@ export default function ScrollStory({
               </div>
               <motion.div
                 style={{ y: maskY }}
-                className="absolute inset-0 bg-neutral-950"
+                className="absolute inset-0 bg-neutral-50 dark:bg-neutral-950"
               />
             </div>
 
@@ -210,16 +210,16 @@ export default function ScrollStory({
               <motion.div style={{ x: textX, opacity: textOpacity }}>
                 <motion.div
                   style={{ scaleX: lineScale }}
-                  className="w-10 h-px bg-neutral-600 mb-8 origin-left"
+                  className="w-10 h-px bg-neutral-400 dark:bg-neutral-600 mb-8 origin-left"
                 />
-                <p className="font-mono text-[0.56rem] tracking-[0.28em] uppercase text-neutral-500 mb-5">
+                <p className="font-mono text-[0.56rem] tracking-[0.28em] uppercase text-neutral-600 dark:text-neutral-500 mb-5">
                   Notre histoire
                 </p>
-                <p className="font-serif italic text-2xl md:text-3xl text-neutral-100 leading-relaxed mb-6">
+                <p className="font-serif italic text-2xl md:text-3xl text-neutral-900 dark:text-neutral-100 leading-relaxed mb-6">
                   SADSAT est né d'un dialogue<br />
                   entre créateurs indépendants.
                 </p>
-                <p className="text-[0.84rem] leading-relaxed text-neutral-400 max-w-sm">
+                <p className="text-[0.84rem] leading-relaxed text-neutral-600 dark:text-neutral-400 max-w-sm">
                   Taxidermie éthique en maille métallique,
                   bougies artisanales, mode Hackcycle —
                   chaque marque garde sa voix, son univers, son identité.
@@ -233,11 +233,11 @@ export default function ScrollStory({
         {/* ── SCÈNE 3 — Grille univers / instagrams ── */}
         <motion.div
           style={{ opacity: s3Opacity }}
-          className="absolute inset-0 z-30 bg-neutral-950 flex flex-col items-center justify-center px-8 pointer-events-none"
+          className="absolute inset-0 z-30 bg-neutral-50 dark:bg-neutral-950 flex flex-col items-center justify-center px-8 pointer-events-none"
         >
           <motion.p
             style={{ opacity: s3LabelOp, y: s3LabelY }}
-            className="font-mono text-[0.52rem] tracking-[0.36em] uppercase text-neutral-600 mb-8"
+            className="font-mono text-[0.52rem] tracking-[0.36em] uppercase text-neutral-600 dark:text-neutral-500 mb-8"
           >
             {showInstas ? "Nous suivre" : "Nos univers"}
           </motion.p>
@@ -270,7 +270,7 @@ export default function ScrollStory({
         {/* Indicateur de scroll */}
         <motion.div
           style={{ opacity: arrowOpacity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[0.54rem] tracking-[0.35em] uppercase text-neutral-400 animate-bounce"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[0.54rem] tracking-[0.35em] uppercase text-neutral-600 dark:text-neutral-400 animate-bounce"
         >
           ↓ scroll
         </motion.div>
@@ -278,7 +278,7 @@ export default function ScrollStory({
         {/* Barre de progression */}
         <motion.div
           style={{ scaleX: scrollYProgress }}
-          className="absolute bottom-0 left-0 right-0 h-px bg-neutral-700 origin-left"
+          className="absolute bottom-0 left-0 right-0 h-px bg-neutral-400 dark:bg-neutral-700 origin-left"
         />
       </div>
     </div>

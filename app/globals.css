@@ -5,9 +5,9 @@
 
 /* ─── Variables CSS globales ─────────────────────────────────────────────── */
 :root {
-  --taxidermie-bg:     #fafaf7;
-  --taxidermie-fg:     #1a1a1a;
-  --taxidermie-accent: #c9b896;
+  --taxidermie-bg:     #f6fbfb;
+  --taxidermie-fg:     #0d2a2e;
+  --taxidermie-accent: #19bdb8;
 
 
   --bougies-bg:     #000000;
@@ -64,6 +64,75 @@ a { color: inherit; text-decoration: none; }
 }
 .hero-rise { animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
 @media (prefers-reduced-motion: reduce) { .hero-rise { animation: none; } }
+
+/* ─── Crystal Pets : palette tirée des photos de @crystal_pets_ (spécimens diaphanisés) ───
+   turquoise et bleu de teinture, violet, magenta, corail ; fond blanc translucide ou vert-noir profond. */
+:root {
+  --cp-turquoise: #19bdb8;
+  --cp-teal:      #0a6f6c; /* texte sur fond clair : contraste 5,8:1 */
+  --cp-violet:    #6b2fa0;
+  --cp-magenta:   #b02a72;
+  --cp-coral:     #ef5b3a;
+  --cp-ink:       #0d2a2e;
+  --cp-wash:      #f6fbfb;
+}
+.cp-hero { position: relative; overflow: hidden; }
+.cp-hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(42% 55% at 18% 30%, rgba(25, 189, 184, 0.24), transparent 70%),
+    radial-gradient(38% 50% at 82% 22%, rgba(107, 47, 160, 0.18), transparent 70%),
+    radial-gradient(34% 40% at 55% 92%, rgba(239, 91, 58, 0.12), transparent 70%);
+}
+.dark .cp-hero::before {
+  background:
+    radial-gradient(42% 55% at 18% 30%, rgba(25, 189, 184, 0.20), transparent 70%),
+    radial-gradient(38% 50% at 82% 22%, rgba(140, 80, 210, 0.22), transparent 70%),
+    radial-gradient(34% 40% at 55% 92%, rgba(239, 91, 58, 0.10), transparent 70%);
+}
+.cp-title {
+  color: var(--cp-teal);
+  background-image: linear-gradient(100deg, #0a6f6c 0%, #6b2fa0 55%, #b02a72 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.dark .cp-title { background-image: linear-gradient(100deg, #3fd4cf 0%, #b58aff 55%, #ff6fa8 100%); }
+.cp-bar { width: 96px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, #19bdb8, #6b2fa0 60%, #ef5b3a); }
+
+/* ─── Accueil : arrière-plan du haut de page ───────────────────────────────────
+   Sobre et en noir et blanc : trois lueurs blanches très douces sur fond presque noir (un seul dégradé statique,
+   sans élément animé ni calque supplémentaire : mesuré plus rapide), et des veines en caractères ASCII tramés,
+   blanches, sur les bords (AsciiField, à partir de la largeur tablette). */
+.hero-bg {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(45% 60% at 8% 0%, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03) 55%, transparent 100%),
+    radial-gradient(40% 55% at 96% 6%, rgba(255, 255, 255, 0.055), transparent 100%),
+    radial-gradient(50% 45% at 50% 108%, rgba(255, 255, 255, 0.035), transparent 100%),
+    radial-gradient(120% 90% at 50% 0%, #15161a 0%, #0a0a0b 55%, #050505 100%);
+}
+.hero-ascii { position: absolute; inset: 0; pointer-events: none; color: #1a1a1a; }
+html.dark .hero-ascii { color: #ececec; }
+/* Mode clair : lavis gris très doux, mêmes lueurs en ombre légère */
+.hero-bg {
+  background:
+    radial-gradient(45% 60% at 8% 0%, rgba(0, 0, 0, 0.05), transparent 100%),
+    radial-gradient(40% 55% at 96% 6%, rgba(0, 0, 0, 0.04), transparent 100%),
+    radial-gradient(120% 90% at 50% 0%, #ffffff 0%, #f5f5f5 55%, #ebebeb 100%);
+}
+html.dark .hero-bg {
+  background:
+    radial-gradient(45% 60% at 8% 0%, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03) 55%, transparent 100%),
+    radial-gradient(40% 55% at 96% 6%, rgba(255, 255, 255, 0.055), transparent 100%),
+    radial-gradient(50% 45% at 50% 108%, rgba(255, 255, 255, 0.035), transparent 100%),
+    radial-gradient(120% 90% at 50% 0%, #15161a 0%, #0a0a0b 55%, #050505 100%);
+}
+.hero-rule { width: 120px; height: 1px; margin: 0 auto 1.75rem;
+  background: linear-gradient(90deg, transparent, #19bdb8 22%, #00ff41 50%, #b8a882 78%, transparent); opacity: 0.8; }
+@keyframes hero-fade { from { opacity: 0; } to { opacity: 1; } }
+.hero-fade { animation: hero-fade 1.4s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-fade { animation: none; }
+}
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar        { width: 8px; height: 8px; }
