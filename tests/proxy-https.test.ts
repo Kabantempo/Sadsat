@@ -6,11 +6,11 @@ afterEach(() => { process.env = { ...env } })
 
 async function run(url: string, headers: Record<string, string>, nodeEnv: string) {
   process.env = { ...env, NODE_ENV: nodeEnv, SESSION_SECRET: 'z'.repeat(40) } as NodeJS.ProcessEnv
-  const { default: middleware } = await import('@/middleware')
-  return middleware(new NextRequest(url, { headers }))
+  const { default: proxy } = await import('@/proxy')
+  return proxy(new NextRequest(url, { headers }))
 }
 
-describe('middleware : HTTPS forcé', () => {
+describe('proxy : HTTPS forcé', () => {
   it('redirige http vers https en production', async () => {
     const res = await run('http://sadsat.com/taxidermie?x=1', { 'x-forwarded-proto': 'http' }, 'production')
     expect(res.status).toBe(308)

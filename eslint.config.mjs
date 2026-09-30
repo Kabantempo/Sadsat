@@ -1,12 +1,10 @@
-import { FlatCompat } from '@eslint/eslintrc'
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-
-const compat = new FlatCompat({ baseDirectory: dirname(fileURLToPath(import.meta.url)) })
+import coreWebVitals from 'eslint-config-next/core-web-vitals'
+import nextTypescript from 'eslint-config-next/typescript'
 
 const config = [
   { ignores: ['.next/**', 'node_modules/**', 'scripts/**', 'devops-monitor.js', 'vitest.config.ts', 'next-env.d.ts', 'public/**'] },
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  ...coreWebVitals,
+  ...nextTypescript,
   {
     rules: {
       // Règles passées en avertissement pour ne pas bloquer : à durcir petit à petit.
@@ -14,6 +12,11 @@ const config = [
       // Une variable ou un paramètre préfixé par _ est volontairement inutilisé.
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrors: 'none' }],
       'react/no-unescaped-entities': 'off',
+      // Règles « React Compiler » de Next 16 : signalent du code à revoir (état mis à jour dans un effet, mutations…), sans bug avéré.
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/purity': 'warn',
+      'react-hooks/error-boundaries': 'warn',
+      'react-hooks/immutability': 'warn',
     },
   },
   {

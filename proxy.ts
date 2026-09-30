@@ -5,7 +5,7 @@ const adminRoutes = ['/admin']
 const clientRoutes = ['/compte']
 const authRoutes = ['/connexion', '/inscription']
 
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname
 
   // HTTPS forcé en production derrière le proxy de l'hébergeur (en plus de l'en-tête HSTS).
