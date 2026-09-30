@@ -15,16 +15,6 @@ const BRANDS = [
     accent: 'bg-stone-800',
   },
   {
-    universe: 'bijoux',
-    name: 'L0vers.cult',
-    tagline: 'Bijoux en mailles métalliques',
-    bg: 'bg-rose-50',
-    border: 'border-rose-100',
-    header: 'bg-rose-100',
-    fg: 'text-rose-700',
-    accent: 'bg-rose-800',
-  },
-  {
     universe: 'bougies',
     name: 'Spectrum N°3',
     tagline: 'Bougies artisanales',

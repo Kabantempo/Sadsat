@@ -5,7 +5,7 @@ import { persist } from "zustand/middleware";
 
 export type CartItem = {
   id: string;
-  universe: "taxidermie" | "bijoux" | "bougies";
+  universe: "taxidermie" | "bougies";
   name: string;
   price: number; // en centimes
   image?: string;

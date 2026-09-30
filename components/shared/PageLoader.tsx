@@ -61,7 +61,7 @@ export default function PageLoader() {
           {/* Sous-titre discret */}
           <motion.p
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.35 }}
+            animate={{ opacity: 0.75 }}
             transition={{ duration: 0.6, delay: 1.2 }}
             className="font-mono text-[0.52rem] tracking-[0.45em] uppercase text-neutral-500 mt-6"
           >

@@ -11,7 +11,7 @@ type Props = {
   authorName: string
 }
 
-export default function ReviewForm({ productId, productName, authorName }: Props) {
+export default function ReviewForm({ productId, productName }: Props) {
   const [state, action, pending] = useActionState<ReviewActionState, FormData>(
     submitReviewAction,
     undefined

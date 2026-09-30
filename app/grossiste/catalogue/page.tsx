@@ -2,13 +2,11 @@ import { verifyGrossiste } from '@/lib/dal'
 import { getProducts } from '@/lib/products'
 import { getSetting } from '@/lib/settings'
 import { Package, Tag } from 'lucide-react'
-import type { Universe } from '@/lib/definitions'
 import AddToB2BCart from '@/components/grossiste/AddToB2BCart'
 import B2BCartBar from '@/components/grossiste/B2BCartBar'
 
 const UNIVERSE_BADGE: Record<string, { bg: string; text: string; label: string }> = {
   taxidermie:      { bg: 'bg-stone-100',  text: 'text-stone-600',  label: 'Crystal Pets' },
-  bijoux:          { bg: 'bg-rose-100',   text: 'text-rose-600',   label: 'L0vers.cult' },
   bougies:         { bg: 'bg-amber-100',  text: 'text-amber-600',  label: 'Spectrum N°3' },
   habillement:     { bg: 'bg-sky-100',    text: 'text-sky-600',    label: 'Hackcycle' },
   'pieces-uniques':{ bg: 'bg-neutral-100',text: 'text-neutral-600',label: 'Pièces uniques' },
@@ -16,7 +14,6 @@ const UNIVERSE_BADGE: Record<string, { bg: string; text: string; label: string }
 
 const UNIVERSE_LABELS: Record<string, string> = {
   taxidermie:      'Crystal Pets',
-  bijoux:          'L0vers.cult',
   bougies:         'Spectrum N°3',
   habillement:     'Hackcycle',
   'pieces-uniques':'Pièces uniques',

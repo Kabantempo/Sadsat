@@ -1,6 +1,6 @@
 'use server'
 import { redirect } from 'next/navigation'
-import { getSession } from '@/lib/session'
+import { getVerifiedSession as getSession } from '@/lib/dal'
 import { getOrders } from '@/lib/orders'
 import {
   createReview,

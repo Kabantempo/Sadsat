@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -46,7 +45,6 @@ export default function ProductCarousel({
   aspectRatio = "portrait",
 }: Props) {
   const [current, setCurrent] = useState(0);
-  const router = useRouter();
   const n = items.length;
   const dark = theme === "dark";
   const touchStartX = useRef(0);

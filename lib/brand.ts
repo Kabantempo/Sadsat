@@ -32,12 +32,6 @@ export const DEFAULT_CATEGORIES: Record<string, Omit<BrandCategory, 'id' | 'univ
     { label: 'Crânes',     slug: 'cranes',     latin: 'Crania',    description: 'Crânes préparés, blanchis et montés',       order: 3 },
     { label: 'Reptiles',   slug: 'reptiles',   latin: 'Reptilia',  description: 'Serpents, lézards, tortues',                order: 4 },
   ],
-  bijoux: [
-    { label: 'Bagues',           slug: 'bagues',   latin: null, description: null, order: 0 },
-    { label: 'Colliers',         slug: 'colliers', latin: null, description: null, order: 1 },
-    { label: 'Bracelets',        slug: 'bracelets',latin: null, description: null, order: 2 },
-    { label: "Boucles d'oreilles", slug: 'boucles',latin: null, description: null, order: 3 },
-  ],
 }
 
 export async function getBrandCategories(universe: string): Promise<BrandCategory[]> {

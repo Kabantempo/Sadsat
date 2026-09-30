@@ -11,11 +11,9 @@ import CartDrawer from "@/components/shared/CartDrawer";
 import FavoritesProvider from "@/components/shared/FavoritesProvider";
 import PageLoader from "@/components/shared/PageLoader";
 import JsonLd from "@/components/shared/JsonLd";
-import Script from "next/script";
 import { getSession } from "@/lib/session";
 import { isNewsletterEnabled } from "@/lib/settings";
 import { getBrandCategories } from "@/lib/brand";
-import { getUsers } from "@/lib/db";
 import CookieConsent from "@/components/shared/CookieConsent";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
@@ -45,18 +43,16 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "SADSAT — Taxidermie · Bijoux · Bougies · Mode",
+    default: "SADSAT — Taxidermie · Bougies · Mode",
     template: "%s | SADSAT",
   },
   description:
-    "Trois univers, une vision. Pièces uniques de taxidermie éthique, bijoux en maille métallique, bougies artisanales et mode upcycling. Créations en édition limitée, faites main en France.",
+    "Trois univers, une vision. Pièces uniques de taxidermie éthique, bougies artisanales et mode upcycling. Créations en édition limitée, faites main en France.",
   keywords: [
     "taxidermie éthique",
-    "bijoux artisanaux",
     "bougies artisanales",
     "pièces uniques",
     "Crystal Pets",
-    "L0vers.cult",
     "Spectrum N°3",
     "Hackcycle",
     "SADSAT",
@@ -71,28 +67,19 @@ export const metadata: Metadata = {
   publisher: "SADSAT",
   category: "e-commerce",
   openGraph: {
-    title: "SADSAT — Taxidermie · Bijoux · Bougies · Mode",
+    title: "SADSAT — Taxidermie · Bougies · Mode",
     description:
-      "Pièces uniques de taxidermie éthique, bijoux en maille métallique, bougies artisanales et mode upcycling. Édition limitée, fait main.",
+      "Pièces uniques de taxidermie éthique, bougies artisanales et mode upcycling. Édition limitée, fait main.",
     type: "website",
     url: BASE_URL,
     siteName: "SADSAT",
     locale: "fr_FR",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "SADSAT — Créations artisanales en édition limitée",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SADSAT — Taxidermie · Bijoux · Bougies · Mode",
+    title: "SADSAT — Taxidermie · Bougies · Mode",
     description:
-      "Pièces uniques de taxidermie éthique, bijoux en maille métallique, bougies artisanales et mode upcycling. Édition limitée, fait main.",
-    images: ["/og-image.jpg"],
+      "Pièces uniques de taxidermie éthique, bougies artisanales et mode upcycling. Édition limitée, fait main.",
   },
   alternates: {
     canonical: BASE_URL,
@@ -118,14 +105,13 @@ const organizationJsonLd = {
   url: BASE_URL,
   logo: {
     "@type": "ImageObject",
-    url: `${BASE_URL}/og-image.jpg`,
+    url: `${BASE_URL}/icons/icon-512.png`,
   },
   description:
-    "Créations artisanales en édition limitée : taxidermie éthique, bijoux en maille métallique, bougies artisanales et mode upcycling.",
+    "Créations artisanales en édition limitée : taxidermie éthique, bougies artisanales et mode upcycling.",
   sameAs: [],
   brand: [
     { "@type": "Brand", name: "Crystal Pets" },
-    { "@type": "Brand", name: "L0vers.cult" },
     { "@type": "Brand", name: "Spectrum N°3" },
     { "@type": "Brand", name: "Hackcycle" },
   ],
@@ -153,10 +139,9 @@ const websiteJsonLd = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [session, taxCats, bijouxCats, bougiesCats, habCats, newsletterEnabled] = await Promise.all([
+  const [session, taxCats, bougiesCats, habCats, newsletterEnabled] = await Promise.all([
     getSession().catch(() => null),
     getBrandCategories('taxidermie'),
-    getBrandCategories('bijoux'),
     getBrandCategories('bougies'),
     getBrandCategories('habillement'),
     isNewsletterEnabled(),
@@ -166,29 +151,12 @@ export default async function RootLayout({
   const footerInstagrams: any[] = [];
   const navCategories = {
     taxidermie:  taxCats.map(c => ({ label: c.label, slug: c.slug })),
-    bijoux:      bijouxCats.map(c => ({ label: c.label, slug: c.slug })),
     bougies:     bougiesCats.map(c => ({ label: c.label, slug: c.slug })),
     habillement: habCats.map(c => ({ label: c.label, slug: c.slug })),
   };
 
   return (
     <html lang="fr" className={`${cormorant.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
-      <head>
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga-init" strategy="afterInteractive">{`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { anonymize_ip: true });
-            `}</Script>
-          </>
-        )}
-      </head>
       <body className="font-sans antialiased bg-black text-neutral-200">
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={websiteJsonLd} />
@@ -208,7 +176,7 @@ export default async function RootLayout({
             <CartDrawer />
           </CartProvider>
         </FavoritesProvider>
-        <CookieConsent />
+        <CookieConsent gaId={process.env.NEXT_PUBLIC_GA_ID} />
       </body>
     </html>
   );

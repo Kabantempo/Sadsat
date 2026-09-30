@@ -1,13 +1,13 @@
 'use server'
 import { redirect } from 'next/navigation'
-import { getSession } from '@/lib/session'
+import { getVerifiedSession as getSession } from '@/lib/dal'
 import { getUserById } from '@/lib/db'
 import {
   createBrandSlide, deleteBrandSlide, reorderBrandSlide,
   createBrandCategory, updateBrandCategory, deleteBrandCategory,
   reorderBrandCategory, seedDefaultCategories,
 } from '@/lib/brand'
-import { uploadFile, deleteFile } from '@/lib/cloudinary'
+import { uploadFile } from '@/lib/cloudinary'
 
 async function getCreatorUniverse(): Promise<string> {
   const session = await getSession()

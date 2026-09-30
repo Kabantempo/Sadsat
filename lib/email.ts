@@ -1,6 +1,11 @@
 import 'server-only'
 import nodemailer from 'nodemailer'
 
+// Toute valeur saisie par un client doit passer par esc() avant d'être insérée dans un email HTML.
+export function esc(v: unknown): string {
+  return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+}
+
 function getTransporter() {
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST ?? 'smtp.hostinger.com',
@@ -31,7 +36,7 @@ export async function sendVerificationEmail(to: string, name: string, token: str
       to,
       subject: 'Confirmez votre adresse email — SADSAT',
       html: emailLayout(`
-        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${esc(name)},</p>
         <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
           Merci de vous être inscrit sur SADSAT. Cliquez sur le bouton ci-dessous pour confirmer votre adresse email et activer votre compte.
         </p>
@@ -57,7 +62,7 @@ export async function sendSetPasswordEmail(to: string, name: string, token: stri
       to,
       subject: isCreateur ? 'Bienvenue dans le collectif SADSAT — Créez votre mot de passe' : 'Créez votre mot de passe — SADSAT',
       html: emailLayout(`
-        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${esc(name)},</p>
         ${isCreateur ? `
         <p style="font-size:18px;font-style:italic;color:#e5e5e5;line-height:1.6;margin-bottom:16px;">
           Bienvenue dans le collectif SADSAT.
@@ -91,7 +96,7 @@ export async function sendPasswordResetEmail(to: string, name: string, token: st
       to,
       subject: 'Réinitialisation de votre mot de passe — SADSAT',
       html: emailLayout(`
-        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${esc(name)},</p>
         <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
           Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous pour en choisir un nouveau.
         </p>
@@ -115,9 +120,9 @@ export async function sendWelcomeEmail(to: string, name: string): Promise<boolea
       to,
       subject: 'Bienvenue sur SADSAT',
       html: emailLayout(`
-        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${name},</p>
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${esc(name)},</p>
         <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
-          Bienvenue dans l'univers SADSAT. Votre compte est créé — explorez nos créations uniques en taxidermie éthique, bijoux et bougies artisanales.
+          Bienvenue dans l'univers SADSAT. Votre compte est créé — explorez nos créations uniques en taxidermie éthique, bougies artisanales.
         </p>
         <a href="${BASE()}/pieces-uniques" style="${btnStyle}">Découvrir les pièces</a>
         <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
@@ -139,11 +144,11 @@ export async function sendShippingEmail(to: string, name: string, trackingNumber
       to,
       subject: 'Votre commande est en route — SADSAT',
       html: emailLayout(`
-        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:8px;">Bonjour ${name},</p>
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:8px;">Bonjour ${esc(name)},</p>
         <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
           Votre commande a été expédiée. Vous pouvez suivre votre colis en temps réel grâce au lien ci-dessous.
         </p>
-        ${trackingNumber ? `<p style="font-size:12px;color:#737373;margin-bottom:16px;">Numéro de suivi : <strong style="color:#a3a3a3;">${trackingNumber}</strong></p>` : ''}
+        ${trackingNumber ? `<p style="font-size:12px;color:#737373;margin-bottom:16px;">Numéro de suivi : <strong style="color:#a3a3a3;">${esc(trackingNumber)}</strong></p>` : ''}
         <a href="${trackingUrl}" style="${btnStyle}">Suivre mon colis</a>
         <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
           Pour toute question : <a href="mailto:contact@sadsat.com" style="color:#737373;">contact@sadsat.com</a>
@@ -161,14 +166,14 @@ export async function sendReviewRequestEmail(to: string, name: string, items: { 
   try {
     const base = BASE()
     const itemsHtml = items
-      .map(i => `<p style="margin:8px 0;"><a href="${base}/produits/${i.productId}#avis" style="color:#a3a3a3;font-size:13px;text-decoration:underline;">${i.name}</a></p>`)
+      .map(i => `<p style="margin:8px 0;"><a href="${base}/produits/${i.productId}#avis" style="color:#a3a3a3;font-size:13px;text-decoration:underline;">${esc(i.name)}</a></p>`)
       .join('')
     await getTransporter().sendMail({
       from: FROM(),
       to,
       subject: 'Votre avis compte — SADSAT',
       html: emailLayout(`
-        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:8px;">Bonjour ${name},</p>
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:8px;">Bonjour ${esc(name)},</p>
         <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:24px;">
           Nous espérons que votre commande vous a plu. Votre avis aide les autres acheteurs et soutient nos créateurs.
         </p>
@@ -189,7 +194,7 @@ export async function sendReviewRequestEmail(to: string, name: string, items: { 
 export async function sendAbandonedCartEmail(to: string, items: { name: string; price: number }[], checkoutUrl: string): Promise<boolean> {
   try {
     const itemsHtml = items
-      .map(i => `<tr><td style="padding:6px 0;color:#a3a3a3;font-size:13px;">${i.name}</td><td style="padding:6px 0;color:#a3a3a3;font-size:13px;text-align:right;">${(i.price / 100).toFixed(2)} €</td></tr>`)
+      .map(i => `<tr><td style="padding:6px 0;color:#a3a3a3;font-size:13px;">${esc(i.name)}</td><td style="padding:6px 0;color:#a3a3a3;font-size:13px;text-align:right;">${(i.price / 100).toFixed(2)} €</td></tr>`)
       .join('')
     await getTransporter().sendMail({
       from: FROM(),
@@ -224,9 +229,9 @@ export async function sendContactEmail(data: { name: string; email: string; subj
       replyTo: data.email,
       subject: `[Contact] ${data.subject} — ${data.name}`,
       html: emailLayout(`
-        <p style="font-size:14px;color:#a3a3a3;margin-bottom:8px;"><strong style="color:#d4d4d4;">De :</strong> ${data.name} (${data.email})</p>
-        <p style="font-size:14px;color:#a3a3a3;margin-bottom:24px;"><strong style="color:#d4d4d4;">Sujet :</strong> ${data.subject}</p>
-        <p style="font-size:14px;color:#a3a3a3;line-height:1.8;white-space:pre-wrap;">${data.message}</p>
+        <p style="font-size:14px;color:#a3a3a3;margin-bottom:8px;"><strong style="color:#d4d4d4;">De :</strong> ${esc(data.name)} (${esc(data.email)})</p>
+        <p style="font-size:14px;color:#a3a3a3;margin-bottom:24px;"><strong style="color:#d4d4d4;">Sujet :</strong> ${esc(data.subject)}</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.8;white-space:pre-wrap;">${esc(data.message)}</p>
       `),
     })
     return true
@@ -248,21 +253,21 @@ export async function sendOrderConfirmationEmail(data: {
 }): Promise<boolean> {
   try {
     const itemsHtml = data.items
-      .map(i => `<tr><td style="padding:6px 0;color:#a3a3a3;font-size:13px;">${i.name} × ${i.quantity}</td><td style="padding:6px 0;color:#a3a3a3;font-size:13px;text-align:right;">${((i.price * i.quantity) / 100).toFixed(2)} €</td></tr>`)
+      .map(i => `<tr><td style="padding:6px 0;color:#a3a3a3;font-size:13px;">${esc(i.name)} × ${i.quantity}</td><td style="padding:6px 0;color:#a3a3a3;font-size:13px;text-align:right;">${((i.price * i.quantity) / 100).toFixed(2)} €</td></tr>`)
       .join('')
     await getTransporter().sendMail({
       from: FROM(),
       to: data.to,
       subject: `Votre commande SADSAT est confirmée`,
       html: emailLayout(`
-        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:8px;">Bonjour ${data.customerName},</p>
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:8px;">Bonjour ${esc(data.customerName)},</p>
         <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">Votre commande a bien été reçue. Nous la préparons avec soin et vous contacterons dès l'expédition.</p>
         <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
           ${itemsHtml}
           <tr><td style="padding:6px 0;color:#737373;font-size:12px;">Livraison</td><td style="padding:6px 0;color:#737373;font-size:12px;text-align:right;">${(data.shippingCost / 100).toFixed(2)} €</td></tr>
           <tr style="border-top:1px solid #262626;"><td style="padding:10px 0;color:#e5e5e5;font-size:14px;font-weight:bold;">Total</td><td style="padding:10px 0;color:#e5e5e5;font-size:14px;font-weight:bold;text-align:right;">${(data.total / 100).toFixed(2)} €</td></tr>
         </table>
-        <p style="font-size:12px;color:#525252;margin-top:24px;">Adresse de livraison : ${data.shippingAddress}</p>
+        <p style="font-size:12px;color:#525252;margin-top:24px;">Adresse de livraison : ${esc(data.shippingAddress)}</p>
       `),
     })
     return true
@@ -282,7 +287,7 @@ export async function sendNewOrderAdminEmail(data: {
 }): Promise<boolean> {
   try {
     const itemsHtml = data.items
-      .map(i => `<tr><td style="padding:4px 0;color:#a3a3a3;font-size:13px;">${i.name} × ${i.quantity}</td><td style="padding:4px 0;color:#a3a3a3;font-size:13px;text-align:right;">${((i.price * i.quantity) / 100).toFixed(2)} €</td></tr>`)
+      .map(i => `<tr><td style="padding:4px 0;color:#a3a3a3;font-size:13px;">${esc(i.name)} × ${i.quantity}</td><td style="padding:4px 0;color:#a3a3a3;font-size:13px;text-align:right;">${((i.price * i.quantity) / 100).toFixed(2)} €</td></tr>`)
       .join('')
     await getTransporter().sendMail({
       from: FROM(),
@@ -290,9 +295,9 @@ export async function sendNewOrderAdminEmail(data: {
       subject: `[Commande] ${data.customerName} — ${(data.total / 100).toFixed(2)} €`,
       html: emailLayout(`
         <p style="font-size:15px;color:#d4d4d4;margin-bottom:16px;">Nouvelle commande reçue</p>
-        <p style="font-size:13px;color:#a3a3a3;margin-bottom:4px;"><strong style="color:#d4d4d4;">Client :</strong> ${data.customerName}</p>
-        <p style="font-size:13px;color:#a3a3a3;margin-bottom:4px;"><strong style="color:#d4d4d4;">Email :</strong> ${data.customerEmail}</p>
-        <p style="font-size:13px;color:#a3a3a3;margin-bottom:24px;"><strong style="color:#d4d4d4;">Adresse :</strong> ${data.shippingAddress}</p>
+        <p style="font-size:13px;color:#a3a3a3;margin-bottom:4px;"><strong style="color:#d4d4d4;">Client :</strong> ${esc(data.customerName)}</p>
+        <p style="font-size:13px;color:#a3a3a3;margin-bottom:4px;"><strong style="color:#d4d4d4;">Email :</strong> ${esc(data.customerEmail)}</p>
+        <p style="font-size:13px;color:#a3a3a3;margin-bottom:24px;"><strong style="color:#d4d4d4;">Adresse :</strong> ${esc(data.shippingAddress)}</p>
         <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
           ${itemsHtml}
           <tr style="border-top:1px solid #262626;"><td style="padding:10px 0;color:#e5e5e5;font-size:14px;">Total</td><td style="padding:10px 0;color:#e5e5e5;font-size:14px;text-align:right;">${(data.total / 100).toFixed(2)} €</td></tr>
@@ -315,7 +320,45 @@ function emailLayout(content: string) {
       <hr style="border:none;border-top:1px solid #262626;margin:24px 0 32px;" />
       ${content}
       <hr style="border:none;border-top:1px solid #262626;margin:40px 0;" />
-      <p style="font-size:11px;color:#404040;letter-spacing:0.1em;">SADSAT · Taxidermie · Bijoux · Bougies</p>
+      <p style="font-size:11px;color:#404040;letter-spacing:0.1em;">SADSAT · Taxidermie · Bougies</p>
     </div>
   `
+}
+
+export async function newsletterUnsubscribeUrl(email: string): Promise<string> {
+  const { signToken } = await import('./tokens')
+  return `${BASE()}/newsletter/desinscription?token=${await signToken('nl-unsub', email, '730d')}`
+}
+
+/** À placer en pied de chaque email de newsletter (obligation légale). */
+export async function newsletterFooterHtml(email: string): Promise<string> {
+  const url = await newsletterUnsubscribeUrl(email)
+  return `<p style="margin-top:32px;font-size:11px;color:#525252;line-height:1.6;">Vous recevez cet email car vous êtes inscrit(e) à la newsletter SADSAT. <a href="${url}" style="color:#737373;">Se désinscrire</a></p>`
+}
+
+export async function sendNewsletterConfirmEmail(to: string): Promise<boolean> {
+  const { signToken } = await import('./tokens')
+  const link = `${BASE()}/newsletter/confirmer?token=${await signToken('nl-confirm', to, '48h')}`
+  try {
+    await getTransporter().sendMail({
+      from: FROM(),
+      to,
+      subject: 'Confirmez votre inscription à la newsletter — SADSAT',
+      html: emailLayout(`
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour,</p>
+        <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
+          Vous avez demandé à recevoir les actualités de SADSAT (nouvelles pièces, sorties en édition limitée).
+          Cliquez sur le bouton ci-dessous pour confirmer votre inscription.
+        </p>
+        <a href="${link}" style="${btnStyle}">Confirmer mon inscription</a>
+        <p style="margin-top:32px;font-size:12px;color:#525252;line-height:1.6;">
+          Ce lien expire dans 48 heures.<br/>Si vous n'êtes pas à l'origine de cette demande, ignorez cet email : vous ne recevrez rien.
+        </p>
+      `),
+    })
+    return true
+  } catch (err) {
+    console.error('[email] sendNewsletterConfirmEmail failed:', err)
+    return false
+  }
 }

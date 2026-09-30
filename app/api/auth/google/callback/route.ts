@@ -7,7 +7,9 @@ export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get('code')
   const error = req.nextUrl.searchParams.get('error')
 
-  if (error || !code) {
+  const state = req.nextUrl.searchParams.get('state')
+  const expected = req.cookies.get('oauth_state')?.value
+  if (error || !code || !state || !expected || state !== expected) {
     return NextResponse.redirect(new URL('/connexion?erreur=google', base))
   }
 
@@ -32,7 +34,7 @@ export async function GET(req: NextRequest) {
       headers: { Authorization: `Bearer ${tokens.access_token}` },
     })
     const gUser = await userRes.json()
-    if (!gUser.email) throw new Error('no_email')
+    if (!gUser.email || gUser.verified_email !== true) throw new Error('no_email')
 
     // Trouve ou crée l'utilisateur dans notre base
     let user = await getUserByEmail(gUser.email)
@@ -51,7 +53,9 @@ export async function GET(req: NextRequest) {
 
     await createSession(user.id, user.role, user.name)
     const dest = user.role === 'admin' ? '/admin' : '/compte'
-    return NextResponse.redirect(new URL(dest, base))
+    const res = NextResponse.redirect(new URL(dest, base))
+    res.cookies.delete('oauth_state')
+    return res
   } catch {
     return NextResponse.redirect(new URL('/connexion?erreur=google', base))
   }

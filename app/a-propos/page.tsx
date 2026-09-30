@@ -4,12 +4,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 export const metadata: Metadata = {
   title: "À propos — SADSAT",
-  description: "SADSAT est un atelier artisanal né de trois pratiques : taxidermie éthique, bijoux en maille métallique et bougies artisanales. Trois univers, une seule signature.",
-  keywords: ['à propos SADSAT', 'atelier artisanal français', 'taxidermie éthique bijoux bougies', 'histoire SADSAT'],
+  description: "SADSAT est un atelier artisanal né de trois pratiques : taxidermie éthique, bougies artisanales et mode upcycling. Trois univers, une seule signature.",
+  keywords: ['à propos SADSAT', 'atelier artisanal français', 'taxidermie éthique bougies', 'histoire SADSAT'],
   alternates: { canonical: `${BASE_URL}/a-propos` },
   openGraph: {
     title: "À propos — SADSAT",
-    description: "SADSAT est un atelier artisanal né de trois pratiques : taxidermie éthique, bijoux en maille métallique et bougies artisanales. Trois univers, une seule signature.",
+    description: "SADSAT est un atelier artisanal né de trois pratiques : taxidermie éthique, bougies artisanales et mode upcycling. Trois univers, une seule signature.",
     type: "website",
     url: `${BASE_URL}/a-propos`,
     locale: 'fr_FR',
@@ -38,15 +38,6 @@ export default function AProposPage() {
               Chaque pièce est issue de découvertes naturelles ou de filières éthiques contrôlées.
               Nous ne tuons pas pour l'art ; nous prolongeons. Le respect du vivant n'est pas
               négociable, et la conformité CITES est intégrale.
-            </p>
-          </div>
-
-          <div className="border-l border-[#8b0000] pl-6 py-2">
-            <h3 className="font-sans uppercase font-bold text-2xl tracking-wider mb-3 text-neutral-100">Bijoux</h3>
-            <p>
-              Mailles tissées au fil, métaux travaillés à la main, oxydations choisies. Chaque
-              bracelet, chaque collier porte la trace d'une force et d'une fragilité — celle de
-              ceux qui les portent.
             </p>
           </div>
 
@@ -116,7 +107,7 @@ export default function AProposPage() {
             <p className="text-sm text-neutral-400 text-center">
               <span className="font-semibold text-neutral-300">SADSAT</span> est une marque indépendante.
               Pas de holding derrière, pas d'algorithmes qui décident pour nous.
-              Juste quatre univers créatifs et une plateforme qui les amplifie.
+              Juste trois univers créatifs et une plateforme qui les amplifie.
             </p>
           </div>
         </div>

@@ -1,6 +1,6 @@
 'use server'
 import { getUserById, updateUser } from '@/lib/db'
-import { getSession } from '@/lib/session'
+import { getVerifiedSession as getSession } from '@/lib/dal'
 
 function parseFavorites(raw: string | undefined | null): string[] {
   if (!raw) return []

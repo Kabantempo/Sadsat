@@ -1,4 +1,4 @@
-import { getSession } from '@/lib/session'
+import { getVerifiedSession as getSession } from '@/lib/dal'
 import { getUserById } from '@/lib/db'
 import { getBrandCategories, getBrandSlides } from '@/lib/brand'
 import Link from 'next/link'
@@ -7,7 +7,6 @@ import { redirect } from 'next/navigation'
 
 const UNIVERSE_LABELS: Record<string, string> = {
   taxidermie: 'Crystal Pets',
-  bijoux: 'L0vers.cult',
   bougies: 'Spectrum N°3',
   habillement: 'Hackcycle',
 }

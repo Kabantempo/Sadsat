@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import nodemailer from 'nodemailer'
+import { esc } from '@/lib/email'
+import { validSignature } from '@/lib/sendcloud-signature'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,7 +29,11 @@ const STATUS_MAP: Record<number, string> = {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json()
+    const raw = await req.text()
+    if (!validSignature(raw, req.headers.get('sendcloud-signature'))) {
+      return NextResponse.json({ error: 'Signature invalide' }, { status: 401 })
+    }
+    const body = JSON.parse(raw)
     const parcel = body.parcel ?? body
 
     if (!parcel) return NextResponse.json({ received: true })
@@ -88,7 +94,7 @@ async function sendShippedEmail(data: {
   })
 
   const FROM = `SADSAT <${process.env.SMTP_FROM ?? process.env.SMTP_USER}>`
-  const trackingLink = data.trackingUrl || `https://www.mondialrelay.fr/suivi-de-colis/?NumColis=${data.trackingNumber}`
+  const trackingLink = data.trackingUrl || `https://www.mondialrelay.fr/suivi-de-colis/?NumColis=${esc(data.trackingNumber)}`
 
   await transporter.sendMail({
     from: FROM,
@@ -98,17 +104,17 @@ async function sendShippedEmail(data: {
       <div style="font-family:Georgia,serif;max-width:480px;margin:0 auto;padding:48px 24px;background:#0a0a0a;color:#e5e5e5;">
         <h1 style="font-size:28px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;">SADSAT</h1>
         <hr style="border:none;border-top:1px solid #262626;margin:24px 0 32px;" />
-        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${data.customerName},</p>
+        <p style="font-size:15px;color:#d4d4d4;line-height:1.7;margin-bottom:16px;">Bonjour ${esc(data.customerName)},</p>
         <p style="font-size:14px;color:#a3a3a3;line-height:1.7;margin-bottom:32px;">
           Votre commande a été expédiée. Suivez votre colis avec le numéro ci-dessous.
         </p>
         <div style="background:#1a1a1a;border:1px solid #262626;padding:20px;margin-bottom:32px;text-align:center;">
           <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#737373;margin-bottom:8px;">Numéro de suivi</p>
-          <p style="font-family:monospace;font-size:18px;color:#e5e5e5;letter-spacing:0.1em;">${data.trackingNumber}</p>
+          <p style="font-family:monospace;font-size:18px;color:#e5e5e5;letter-spacing:0.1em;">${esc(data.trackingNumber)}</p>
         </div>
         <a href="${trackingLink}" style="display:inline-block;background:#e5e5e5;color:#0a0a0a;text-decoration:none;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;padding:14px 32px;">Suivre mon colis</a>
         <hr style="border:none;border-top:1px solid #262626;margin:40px 0;" />
-        <p style="font-size:11px;color:#404040;letter-spacing:0.1em;">SADSAT · Taxidermie · Bijoux · Bougies</p>
+        <p style="font-size:11px;color:#404040;letter-spacing:0.1em;">SADSAT · Taxidermie · Bougies</p>
       </div>
     `,
   })

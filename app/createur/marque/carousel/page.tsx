@@ -1,4 +1,4 @@
-import { getSession } from '@/lib/session'
+import { getVerifiedSession as getSession } from '@/lib/dal'
 import { getUserById } from '@/lib/db'
 import { getBrandSlides } from '@/lib/brand'
 import { addBrandSlideAction, deleteBrandSlideAction, reorderBrandSlideAction } from '@/app/actions/brand'

@@ -1,6 +1,6 @@
 import { verifySession, getCurrentUser } from '@/lib/dal'
 import { logout } from '@/app/actions/auth'
-import { getOrders } from '@/lib/orders'
+import { getOrdersByEmail } from '@/lib/orders'
 import { getReviewedProductIds } from '@/lib/reviews'
 import ChangePasswordForm from '@/components/shared/ChangePasswordForm'
 import DeleteAccountButton from '@/components/shared/DeleteAccountButton'
@@ -27,13 +27,10 @@ export default async function ComptePage() {
   await verifySession()
   const user = await getCurrentUser()
 
-  const [allOrders, reviewedIds] = await Promise.all([
-    getOrders(),
+  const [orders, reviewedIds] = await Promise.all([
+    getOrdersByEmail(user?.email ?? ''),
     getReviewedProductIds(user?.email ?? ''),
   ])
-  const orders = allOrders.filter(
-    (o) => o.customerEmail.toLowerCase() === user?.email?.toLowerCase()
-  )
 
   return (
     <div className="min-h-screen bg-white px-6 py-20">
@@ -180,8 +177,18 @@ export default async function ComptePage() {
               Se déconnecter
             </button>
           </form>
+          <a
+            href="/api/compte/export"
+            className="text-[0.62rem] tracking-[0.18em] uppercase text-neutral-400 hover:text-neutral-900 transition-colors underline underline-offset-4"
+          >
+            Télécharger mes données
+          </a>
           <DeleteAccountButton />
         </div>
+        <p className="mt-6 text-[0.62rem] leading-relaxed text-neutral-400">
+          La suppression du compte efface vos informations personnelles, vos favoris et votre inscription à la newsletter, et anonymise vos avis.
+          Les commandes déjà passées sont conservées 10 ans, comme la loi l'impose pour la comptabilité.
+        </p>
       </div>
     </div>
   )

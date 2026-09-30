@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import MatrixRain from "@/components/shared/MatrixRain";
 import { BRAND_PORTALS } from "@/lib/definitions";
-import { TaxidermieAnim, BijouxAnim, HackcycleAnim } from "@/components/shared/BrandAnimations";
+import { TaxidermieAnim, HackcycleAnim } from "@/components/shared/BrandAnimations";
 
 const COLLAPSED_PX = 150; // largeur des panneaux repliés (px)
 
@@ -22,7 +22,6 @@ function BrandPanel({
   const anim =
     brand.special === "matrix" ? <MatrixRain /> :
     brand.slug === "taxidermie" ? <TaxidermieAnim /> :
-    brand.slug === "bijoux" ? <BijouxAnim /> :
     brand.slug === "habillement" ? <HackcycleAnim /> :
     null;
 
@@ -185,14 +184,9 @@ export default function HeroSection() {
     <>
       {/* HERO */}
       <section className="h-screen flex flex-col items-center justify-center text-center bg-gradient-to-b from-neutral-900 to-black relative">
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2 }}
-          className="font-serif font-light text-5xl md:text-7xl tracking-wide text-neutral-100 mb-4"
-        >
+        <h1 className="hero-rise font-serif font-light text-5xl md:text-7xl tracking-wide text-neutral-100 mb-4">
           Un collectif, plusieurs univers.
-        </motion.h1>
+        </h1>
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
@@ -246,7 +240,6 @@ export default function HeroSection() {
             const anim =
               brand.special === "matrix" ? <MatrixRain /> :
               brand.slug === "taxidermie" ? <TaxidermieAnim /> :
-              brand.slug === "bijoux" ? <BijouxAnim /> :
               brand.slug === "habillement" ? <HackcycleAnim /> :
               null;
 

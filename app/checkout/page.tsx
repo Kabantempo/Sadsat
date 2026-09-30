@@ -14,7 +14,7 @@ export default function CheckoutPage() {
   if (!items.length) {
     return (
       <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center gap-6 text-center px-6">
-        <p className="font-mono text-[0.6rem] tracking-[0.28em] uppercase text-neutral-600">
+        <p className="font-mono text-[0.6rem] tracking-[0.28em] uppercase text-neutral-400">
           Votre panier est vide
         </p>
         <Link
@@ -55,7 +55,7 @@ export default function CheckoutPage() {
       <div className="max-w-lg mx-auto">
         <Link
           href="/"
-          className="flex items-center gap-2 text-neutral-600 hover:text-neutral-300 transition-colors mb-12 text-[0.6rem] tracking-[0.22em] uppercase"
+          className="flex items-center gap-2 text-neutral-400 hover:text-neutral-300 transition-colors mb-12 text-[0.6rem] tracking-[0.22em] uppercase"
         >
           <ArrowLeft size={12} />
           Continuer mes achats
@@ -64,7 +64,7 @@ export default function CheckoutPage() {
         <h1 className="font-serif font-light text-3xl italic text-neutral-100 mb-2">
           Récapitulatif
         </h1>
-        <p className="font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-600 mb-12">
+        <p className="font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-400 mb-12">
           {items.length} article{items.length > 1 ? 's' : ''}
         </p>
 
@@ -76,12 +76,12 @@ export default function CheckoutPage() {
                 {item.image ? (
                   <Image src={item.image} alt={item.name} fill className="object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-neutral-700 text-xl">✦</div>
+                  <div className="w-full h-full flex items-center justify-center text-neutral-400 text-xl">✦</div>
                 )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-serif italic text-[0.9rem] text-neutral-200 truncate">{item.name}</p>
-                <p className="font-mono text-[0.55rem] tracking-[0.16em] uppercase text-neutral-600 mt-0.5">
+                <p className="font-mono text-[0.55rem] tracking-[0.16em] uppercase text-neutral-400 mt-0.5">
                   {item.category} · Qté {item.quantity}
                 </p>
               </div>
@@ -98,7 +98,7 @@ export default function CheckoutPage() {
             <span className="font-mono text-[0.6rem] tracking-[0.22em] uppercase text-neutral-400">Total</span>
             <span className="font-serif text-2xl text-neutral-100">{(total / 100).toFixed(2)} €</span>
           </div>
-          <p className="text-[0.58rem] text-neutral-700 mt-2 text-right">Livraison calculée à l'étape suivante</p>
+          <p className="text-[0.58rem] text-neutral-400 mt-2 text-right">Livraison calculée à l'étape suivante</p>
         </div>
 
         {/* Erreur */}
@@ -135,7 +135,7 @@ export default function CheckoutPage() {
           )}
         </button>
 
-        <p className="mt-4 text-center text-[0.56rem] text-neutral-700 tracking-wider flex items-center justify-center gap-1.5">
+        <p className="mt-4 text-center text-[0.56rem] text-neutral-400 tracking-wider flex items-center justify-center gap-1.5">
           <Lock size={9} strokeWidth={1.5} />
           Paiement sécurisé par Stripe · Carte, Apple Pay, Google Pay
         </p>

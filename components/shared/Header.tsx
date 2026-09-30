@@ -22,7 +22,6 @@ type NavItem = {
 type NavCat = { label: string; slug: string };
 type NavCategories = {
   taxidermie: NavCat[];
-  bijoux: NavCat[];
   bougies: NavCat[];
   habillement: NavCat[];
 };
@@ -36,7 +35,6 @@ function buildNav(cats: NavCategories): NavItem[] {
   return [
     { label: "Pièces uniques", href: "/pieces-uniques", bordeaux: true },
     { label: "Crystal Pets",  href: "/taxidermie", dropdown: dd('taxidermie', 'taxidermie') },
-    { label: "L0vers.cult",   href: "/bijoux",     dropdown: dd('bijoux', 'bijoux') },
     { label: "Spectrum N°3",  href: "/bougies",    dropdown: dd('bougies', 'bougies') },
     { label: "Hackcycle",     href: "/habillement",dropdown: dd('habillement', 'habillement') },
     { label: "Créateurs",     href: "/createurs" },
@@ -49,7 +47,7 @@ type UserProp = { name: string; role: 'admin' | 'client' | 'créateur' | 'grossi
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Header({ user, navCategories }: { user?: UserProp; navCategories?: NavCategories }) {
-  const NAV = buildNav(navCategories ?? { taxidermie: [], bijoux: [], bougies: [], habillement: [] });
+  const NAV = buildNav(navCategories ?? { taxidermie: [], bougies: [], habillement: [] });
   const { count: favCount } = useFavorites();
   const { count: cartCount, openDrawer } = useCart();
   const [openMenu, setOpenMenu]         = useState<string | null>(null);
@@ -63,7 +61,6 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
 
   const BRAND_ACCENTS: Record<string, { color: string; glow: string }> = {
     taxidermie:  { color: '#c9b896', glow: 'rgba(201,184,150,0.5)' },
-    bijoux:      { color: '#8b0000', glow: 'rgba(139,0,0,0.6)'     },
     bougies:     { color: '#00ff41', glow: 'rgba(0,255,65,0.5)'    },
     habillement: { color: '#a0a0a0', glow: 'rgba(160,160,160,0.4)' },
   };
@@ -157,7 +154,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                     href={item.href}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.6rem] tracking-[0.12em] uppercase transition-all duration-200 ${
                       item.bordeaux
-                        ? "text-[#8b0000] hover:bg-[#8b0000]/8"
+                        ? "text-[#d1495b] hover:bg-[#8b0000]/10"
                         : "text-neutral-400 hover:text-neutral-100 hover:bg-white/[0.06]"
                     }`}
                     style={accent && hoveredBrand === brandSlug ? { color: accent.color } : undefined}
@@ -303,7 +300,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
               </motion.div>
             )}
 
-            <Link href="/favoris">
+            <Link href="/favoris" aria-label="Mes favoris">
               <motion.div
                 whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.15 }}
@@ -361,6 +358,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
               <>
                 <Link
                   href="/favoris"
+                  aria-label="Mes favoris"
                   className="relative p-1.5 rounded-full text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
                 >
                   <Heart size={19} strokeWidth={1.5} />
@@ -430,7 +428,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
                           href={item.href}
                           onClick={() => !item.dropdown && setMobileOpen(false)}
                           className={`flex-1 py-3.5 px-2 rounded-lg text-[0.75rem] tracking-[0.12em] uppercase font-medium transition-colors ${
-                            item.bordeaux ? "text-[#8b0000]" : "text-neutral-300 hover:text-neutral-100 hover:bg-white/[0.05]"
+                            item.bordeaux ? "text-[#d1495b]" : "text-neutral-300 hover:text-neutral-100 hover:bg-white/[0.05]"
                           }`}
                         >
                           {item.label}

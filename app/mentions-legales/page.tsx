@@ -55,13 +55,13 @@ export default function MentionsLegalesPage() {
       <div className="max-w-3xl mx-auto px-8">
 
         <div className="mb-20">
-          <div className="font-mono text-[0.65rem] tracking-[0.3em] uppercase text-neutral-400 mb-6">
+          <div className="font-mono text-[0.65rem] tracking-[0.3em] uppercase text-neutral-600 dark:text-neutral-400 mb-6">
             Informations légales
           </div>
           <h1 className="font-serif font-light text-5xl md:text-6xl italic mb-6">
             Mentions<br />légales.
           </h1>
-          <p className="text-xs tracking-[0.2em] uppercase text-neutral-500">
+          <p className="text-xs tracking-[0.2em] uppercase text-neutral-600 dark:text-neutral-400">
             Dernière mise à jour : mai 2026
           </p>
         </div>
@@ -72,7 +72,7 @@ export default function MentionsLegalesPage() {
           {SECTIONS.map((section, i) => (
             <div key={i} className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
               <div>
-                <div className="font-mono text-[0.58rem] tracking-[0.25em] uppercase text-neutral-400 mb-2">
+                <div className="font-mono text-[0.58rem] tracking-[0.25em] uppercase text-neutral-600 dark:text-neutral-400 mb-2">
                   {String(i + 1).padStart(2, "0")}
                 </div>
                 <h2 className="font-serif italic text-lg text-neutral-800 dark:text-neutral-200">{section.title}</h2>
@@ -85,7 +85,7 @@ export default function MentionsLegalesPage() {
         </div>
 
         <div className="mt-24 pt-12 border-t border-neutral-200 dark:border-neutral-800">
-          <p className="font-mono text-[0.6rem] tracking-[0.25em] uppercase text-neutral-400">
+          <p className="font-mono text-[0.6rem] tracking-[0.25em] uppercase text-neutral-600 dark:text-neutral-400">
             SADSAT · Auto-entrepreneur · France
           </p>
         </div>

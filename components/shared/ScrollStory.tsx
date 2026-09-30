@@ -161,7 +161,7 @@ export default function ScrollStory({
         <div className="absolute inset-0 z-10 bg-neutral-950 flex flex-col items-center justify-center pointer-events-none">
           <motion.p
             style={{ y: s1LabelY, opacity: s1LabelOp }}
-            className="font-mono text-[0.58rem] tracking-[0.4em] uppercase text-neutral-600 mb-8"
+            className="font-mono text-[0.58rem] tracking-[0.4em] uppercase text-neutral-400 mb-8"
           >
             SADSAT — Collectif
           </motion.p>
@@ -220,7 +220,7 @@ export default function ScrollStory({
                   entre créateurs indépendants.
                 </p>
                 <p className="text-[0.84rem] leading-relaxed text-neutral-400 max-w-sm">
-                  Taxidermie éthique, bijoux en maille métallique,
+                  Taxidermie éthique en maille métallique,
                   bougies artisanales, mode Hackcycle —
                   chaque marque garde sa voix, son univers, son identité.
                   Ensemble, elles forment un collectif singulier.
@@ -270,7 +270,7 @@ export default function ScrollStory({
         {/* Indicateur de scroll */}
         <motion.div
           style={{ opacity: arrowOpacity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[0.54rem] tracking-[0.35em] uppercase text-neutral-600 animate-bounce"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[0.54rem] tracking-[0.35em] uppercase text-neutral-400 animate-bounce"
         >
           ↓ scroll
         </motion.div>

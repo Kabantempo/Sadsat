@@ -2,12 +2,16 @@
 import { redirect } from 'next/navigation'
 import bcrypt from 'bcryptjs'
 import { SignupFormSchema, LoginFormSchema, type FormState } from '@/lib/definitions'
-import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword, getUserByPasswordToken, clearPasswordToken, saveVerificationToken, getUserByVerificationToken, verifyUserEmail, savePasswordToken, deleteUser } from '@/lib/db'
+import { createUser, getUserByEmail, getUserById, adminExists, updateUserPassword, getUserByPasswordToken, clearPasswordToken, saveVerificationToken, savePasswordToken } from '@/lib/db'
 import { verifySession } from '@/lib/dal'
 import { createSession, deleteSession } from '@/lib/session'
-import { sendVerificationEmail, sendPasswordResetEmail, sendWelcomeEmail } from '@/lib/email'
+import { deleteAccountData } from '@/lib/account'
+import { allow, TOO_MANY } from '@/lib/rate-limit'
+import { sendVerificationEmail, sendPasswordResetEmail, sendWelcomeEmail, sendNewsletterConfirmEmail } from '@/lib/email'
+import { isNewsletterEnabled } from '@/lib/settings'
 
 export async function signup(state: FormState, formData: FormData): Promise<FormState> {
+  if (!(await allow('signup', 5, 60 * 60 * 1000))) return { message: TOO_MANY }
   const validated = SignupFormSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -43,10 +47,16 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
     sendWelcomeEmail(email, name),
   ])
 
+  // Case « recevoir les nouveautés » : double opt-in, l'inscription n'est enregistrée qu'après le clic dans l'email.
+  if (formData.get('newsletter') === 'on' && (await isNewsletterEnabled())) {
+    await sendNewsletterConfirmEmail(email).catch(() => false)
+  }
+
   redirect('/inscription/confirmer')
 }
 
 export async function login(state: FormState, formData: FormData): Promise<FormState> {
+  if (!(await allow('login', 10, 15 * 60 * 1000))) return { message: TOO_MANY }
   const validated = LoginFormSchema.safeParse({
     email: formData.get('email'),
     password: formData.get('password'),
@@ -57,6 +67,7 @@ export async function login(state: FormState, formData: FormData): Promise<FormS
   }
 
   const { email, password } = validated.data
+  if (!(await allow('login-email', 8, 15 * 60 * 1000, email.toLowerCase()))) return { message: TOO_MANY }
   const user = await getUserByEmail(email)
   if (!user || !user.passwordHash) {
     return { message: 'Email ou mot de passe incorrect.' }
@@ -150,6 +161,7 @@ export async function forgotPasswordAction(
   _state: ForgotPasswordState,
   formData: FormData
 ): Promise<ForgotPasswordState> {
+  if (!(await allow('forgot', 5, 60 * 60 * 1000))) return { message: TOO_MANY }
   const email = String(formData.get('email') ?? '').trim().toLowerCase()
   if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
     return { message: 'Adresse email invalide.' }
@@ -173,6 +185,7 @@ export async function resendVerificationAction(
   _state: ResendVerificationState,
   formData: FormData
 ): Promise<ResendVerificationState> {
+  if (!(await allow('resend', 5, 60 * 60 * 1000))) return { message: TOO_MANY }
   const email = String(formData.get('email') ?? '').trim().toLowerCase()
   if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
     return { message: 'Adresse email invalide.' }
@@ -225,7 +238,7 @@ export async function setupAdmin(state: FormState, formData: FormData): Promise<
 
 export async function deleteAccountAction(): Promise<void> {
   const session = await verifySession()
-  await deleteUser(session.userId)
+  await deleteAccountData(session.userId)
   await deleteSession()
   redirect('/')
 }

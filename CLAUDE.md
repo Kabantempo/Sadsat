@@ -1,80 +1,28 @@
-# 🛒 Sadsat — Instructions Claude Code
+# Sadsat — Instructions Claude Code
 
-## 🧠 Protocole avant chaque action
+## Projet
 
-**IMPORTANT** : Avant de répondre à une demande ou d'agir :
+- Site e-commerce **SADSAT** : 3 univers — Crystal Pets (taxidermie éthique), Spectrum N°3 (bougies), Hackcycle (habillement upcycling), plus les pièces uniques.
+- Production : https://sadsat.com (Hostinger Node.js, déploiement auto depuis GitHub `main`)
+- Dev : `npm run dev` → http://localhost:3000
+- Stack : Next.js 15 (App Router), TypeScript, Tailwind, Prisma + PostgreSQL (Supabase), Stripe, Sendcloud, Cloudinary, Nodemailer (SMTP Hostinger)
+- Contrôles : `npx tsc --noEmit`, `npm test`, `npm run lint`
 
-1. **Vérifier Obsidian en premier** :
-   - `C:\Users\mini-pc-01\Documents\Obsidian Vault\Projets\Sadsat.md` — Notes détaillées du projet
-   - `C:\Users\mini-pc-01\Documents\Obsidian Vault\Memory\État des projets.md` — État global
-   - `C:\Users\mini-pc-01\Documents\Obsidian Vault\Projets\Sadsat\Fonctionnalités.md` — Fonctionnalités complètes
-   - `C:\Users\mini-pc-01\Documents\Obsidian Vault\Projets\Sadsat\Dashboard.md` — Données en temps réel
+## Secrets et accès
 
-2. **Chercher le contexte** : Existe-t-il une note pertinente à la demande ?
-   - Si oui → lire et prendre en compte
-   - Si non → continuer normalement
+**Aucun identifiant, hôte ou identifiant de projet dans ce fichier** (il est versionné).
+Toutes les valeurs sensibles sont dans `.env` / `.env.local` (jamais commités) et dans le panneau Hostinger.
+Variables attendues : `DATABASE_URL`, `SESSION_SECRET` (32 caractères minimum, obligatoire en production), `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
+`SENDCLOUD_PUBLIC_KEY`, `SENDCLOUD_SECRET_KEY` (sert aussi à vérifier la signature du webhook), `CLOUDINARY_*`, `SMTP_*`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_BASE_URL`,
+`GOOGLE_CLIENT_ID/SECRET`, `APPLE_*`, `NEXT_PUBLIC_GA_ID` (optionnel, chargé seulement après consentement),
+`SHIPPING_FLAT_CENTS` et `FREE_SHIPPING_THRESHOLD_CENTS` (frais de port, 0 = offerts), `MEDIATOR_NAME` / `MEDIATOR_URL` / `MEDIATOR_ADDRESS` (médiateur de la consommation).
 
-3. **Puis répondre/agir** avec le contexte à jour
+## Règles de code
 
----
+- Actions serveur et routes API : toujours vérifier la session via `lib/dal.ts` (`verifyAdmin`, `verifySession`, `getVerifiedSession`), qui relit le rôle en base.
+- Toute valeur saisie par un client insérée dans un email HTML passe par `esc()` (`lib/email.ts`).
+- Formulaires publics (login, inscription, contact, newsletter…) : limiter avec `allow()` de `lib/rate-limit.ts`.
+- Paiement : prix, statut et stock sont recalculés côté serveur ; le webhook Stripe est idempotent et décrémente le stock (`createOrderWithStock`).
+- Données personnelles : voir `docs/rgpd/` (registre des traitements, procédure de violation). Conservation appliquée par `npm run purge`.
 
-## 📊 Contexte Sadsat
-
-- **URL** : https://sadsat.com (production)
-- **Dev server** : `npm run dev` → http://localhost:3000
-- **Database** : PostgreSQL (Supabase) — `wazmbsfvfhcqgtibewnz.supabase.co`
-- **Framework** : Next.js 15.5.18
-- **Stack** : TypeScript, Tailwind, Prisma, Stripe live, SendCloud
-
----
-
-## ✅ Features confirmées
-
-- ✅ Auth complète (email/password + Google OAuth + Apple Sign-in)
-- ✅ Panier & checkout Stripe live
-- ✅ Table `reviews` complète (avis clients avec modération)
-- ✅ Portfolio créateur
-- ✅ Newsletter Resend + email Nodemailer
-- ✅ Global error boundary + health check
-- ✅ 3 univers (Taxidermie, Bijoux, Bougies)
-
----
-
-## 🔑 Credentials & Accès (Auto-Load)
-
-### Hostinger
-- **Domain** : sadsat.com
-- **Panel** : https://hpanel.hostinger.com
-- **SSH** : srv1746.hstgr.io
-- **Max Processes** : 78 (⚠️ Monitor si dépasse 120)
-- **GitHub Webhook** : Auto-deploy on push to main
-
-### Supabase
-- **Project ID** : wazmbsfvfhcqgtibewnz
-- **URL** : https://wazmbsfvfhcqgtibewnz.supabase.co
-- **Database** : PostgreSQL (aws-0-eu-west-1)
-- **Connection Modes** :
-  - Session mode (port 5432) : max 15 connections
-  - Transaction mode (port 6543) : max 100+ connections
-- **Current mode** : Transaction (port 6543)
-- **Pool status** : Monitor in `.env.local`
-
-### Auto-Load Instructions
-À chaque session Claude Code :
-1. Lire `.env.local` pour DATABASE_URL (Supabase)
-2. Lire `.env` pour credentials (Stripe, Sendcloud, Cloudinary)
-3. Consulter Obsidian pour l'état prod (5 fichiers clés)
-4. Vérifier https://sadsat.com status
-
----
-
-## ⚠️ Points à surveiller
-
-- Pool PostgreSQL Supabase limité à 15 clients (session mode)
-- `/api/health` peut retourner erreur pool si saturé
-- Navbar responsive améliorée (breakpoint `lg:` à 1024px)
-- **Max Processes Hostinger** : Si dépasse 120 → site bloqué 30 min
-
----
-
-## @AGENTS.md
+@AGENTS.md

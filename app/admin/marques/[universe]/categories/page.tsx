@@ -10,12 +10,11 @@ import StopPropDiv from '@/components/admin/StopPropDiv'
 
 const BRAND_NAMES: Record<string, string> = {
   taxidermie: 'Crystal Pets',
-  bijoux: 'L0vers.cult',
   bougies: 'Spectrum N°3',
   habillement: 'Hackcycle',
 }
 
-const VALID_UNIVERSES = ['taxidermie', 'bijoux', 'bougies', 'habillement']
+const VALID_UNIVERSES = ['taxidermie', 'bougies', 'habillement']
 
 type Props = { params: Promise<{ universe: string }> }
 
@@ -94,7 +93,7 @@ export default async function AdminCategoriesPage({ params }: Props) {
     redirect(`/admin/marques/${universe}/categories`)
   }
 
-  async function seedCategories(formData: FormData) {
+  async function seedCategories(_formData: FormData) {
     'use server'
     await verifyAdmin()
     await seedDefaultCategories(universe)

@@ -7,6 +7,8 @@ export const metadata = {
   robots: { index: true, follow: false },
 };
 
+import { MEDIATION_TEXT } from "@/lib/legal";
+
 const SECTIONS = [
   {
     title: "Objet",
@@ -16,7 +18,7 @@ Toute commande implique l'acceptation pleine et entière des présentes CGV.`,
   },
   {
     title: "Produits",
-    content: `Les produits proposés sont des créations artisanales faites main, en série limitée, dans les univers suivants : taxidermie, bijoux et bougies. Chaque pièce est unique ou produite en petite série ; des variations légères de teinte, de texture ou de dimensions font partie de l'authenticité de l'objet artisanal.
+    content: `Les produits proposés sont des créations artisanales faites main, en série limitée, dans les univers suivants : taxidermie, bougies. Chaque pièce est unique ou produite en petite série ; des variations légères de teinte, de texture ou de dimensions font partie de l'authenticité de l'objet artisanal.
 
 Les photographies et descriptions sont aussi fidèles que possible mais ne sont pas contractuellement garanties à l'identique.`,
   },
@@ -44,11 +46,11 @@ Les données de paiement ne sont pas stockées sur les serveurs de SADSAT ; elle
   },
   {
     title: "Livraison",
-    content: `Les commandes sont expédiées dans un délai de [X à Y jours ouvrés] après confirmation du paiement, par [Colissimo / Mondial Relay / …].
+    content: `Les commandes sont expédiées dans les meilleurs délais après confirmation du paiement. Le transporteur et le lien de suivi vous sont communiqués par email dès l'expédition.
 
 Les délais de livraison sont donnés à titre indicatif. SADSAT ne saurait être tenu responsable des retards imputables au transporteur ou à des événements de force majeure.
 
-Les frais de port sont indiqués au moment de la commande. La livraison est offerte à partir de [XX €] d'achat.`,
+Les frais de port éventuels sont affichés avant le paiement, sur la page de règlement sécurisée.`,
   },
   {
     title: "Droit de rétractation",
@@ -76,7 +78,9 @@ Pour toute demande, contactez : contact@sadsat.com`,
   },
   {
     title: "Litiges",
-    content: `En cas de litige, une solution amiable sera recherchée en priorité. En cas d'échec, le client peut recourir à la médiation de la consommation via la plateforme européenne : https://ec.europa.eu/consumers/odr
+    content: `En cas de litige, une solution amiable sera recherchée en priorité. Contactez-nous d'abord à contact@sadsat.com.
+
+${MEDIATION_TEXT}
 
 À défaut de résolution amiable, les tribunaux français seront seuls compétents. Le droit français est applicable.`,
   },
@@ -88,13 +92,13 @@ export default function CGVPage() {
       <div className="max-w-3xl mx-auto px-8">
 
         <div className="mb-20">
-          <div className="font-mono text-[0.65rem] tracking-[0.3em] uppercase text-neutral-400 mb-6">
+          <div className="font-mono text-[0.65rem] tracking-[0.3em] uppercase text-neutral-600 dark:text-neutral-400 mb-6">
             Conditions générales de vente
           </div>
           <h1 className="font-serif font-light text-5xl md:text-6xl italic mb-6">
             CGV.
           </h1>
-          <p className="text-xs tracking-[0.2em] uppercase text-neutral-500">
+          <p className="text-xs tracking-[0.2em] uppercase text-neutral-600 dark:text-neutral-400">
             Dernière mise à jour : mai 2026
           </p>
         </div>
@@ -105,7 +109,7 @@ export default function CGVPage() {
           {SECTIONS.map((section, i) => (
             <div key={i} className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
               <div>
-                <div className="font-mono text-[0.58rem] tracking-[0.25em] uppercase text-neutral-400 mb-2">
+                <div className="font-mono text-[0.58rem] tracking-[0.25em] uppercase text-neutral-600 dark:text-neutral-400 mb-2">
                   {String(i + 1).padStart(2, "0")}
                 </div>
                 <h2 className="font-serif italic text-lg text-neutral-800 dark:text-neutral-200">{section.title}</h2>
@@ -118,7 +122,7 @@ export default function CGVPage() {
         </div>
 
         <div className="mt-24 pt-12 border-t border-neutral-200 dark:border-neutral-800">
-          <p className="font-mono text-[0.6rem] tracking-[0.25em] uppercase text-neutral-400">
+          <p className="font-mono text-[0.6rem] tracking-[0.25em] uppercase text-neutral-600 dark:text-neutral-400">
             SADSAT · Auto-entrepreneur · France
           </p>
         </div>

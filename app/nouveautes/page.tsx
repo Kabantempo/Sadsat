@@ -9,12 +9,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 export const metadata: Metadata = {
   title: 'Nouveautés — SADSAT',
-  description: 'Découvrez les dernières créations SADSAT : taxidermie éthique, bijoux en maille métallique, bougies artisanales et mode upcycling. Pièces uniques faites main, ajoutées régulièrement.',
-  keywords: ['nouveautés artisanat', 'nouvelles créations SADSAT', 'pièces uniques récentes', 'taxidermie bijoux bougies nouveautés', 'artisanat français édition limitée'],
+  description: 'Découvrez les dernières créations SADSAT : taxidermie éthique, bougies artisanales et mode upcycling. Pièces uniques faites main, ajoutées régulièrement.',
+  keywords: ['nouveautés artisanat', 'nouvelles créations SADSAT', 'pièces uniques récentes', 'taxidermie bougies nouveautés', 'artisanat français édition limitée'],
   alternates: { canonical: `${BASE_URL}/nouveautes` },
   openGraph: {
     title: 'Nouveautés — SADSAT',
-    description: 'Les dernières créations SADSAT : taxidermie éthique, bijoux, bougies artisanales et mode upcycling. Nouvelles pièces ajoutées régulièrement.',
+    description: 'Les dernières créations SADSAT : taxidermie éthique, bougies artisanales et mode upcycling. Nouvelles pièces ajoutées régulièrement.',
     url: `${BASE_URL}/nouveautes`,
     type: 'website',
     locale: 'fr_FR',
@@ -29,7 +29,6 @@ export const metadata: Metadata = {
 
 const UNIVERSE_COLOR: Record<string, string> = {
   taxidermie:       'bg-stone-100 text-stone-600',
-  bijoux:           'bg-rose-100 text-rose-600',
   bougies:          'bg-amber-100 text-amber-600',
   habillement:      'bg-sky-100 text-sky-600',
   'pieces-uniques': 'bg-neutral-100 text-neutral-500',

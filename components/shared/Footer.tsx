@@ -1,9 +1,9 @@
 import Link from "next/link";
+import { CookieSettingsLink } from "@/components/shared/CookieConsent";
 
 const UNIVERS = [
   { label: "Pièces uniques", href: "/pieces-uniques", accent: "#8b0000" },
   { label: "Crystal Pets", href: "/taxidermie", accent: "#c9b896" },
-  { label: "L0vers.cult", href: "/bijoux", accent: "#8b0000" },
   { label: "Spectrum N°3", href: "/bougies", accent: "#00ff41", comingSoon: true },
   { label: "Hackcycle", href: "/habillement", accent: "#a0a0a0" },
 ];
@@ -33,7 +33,7 @@ function InstagramIcon() {
 }
 
 export default function Footer({
-  newsletterEnabled = false,
+  newsletterEnabled: _newsletterEnabled = false,
   instagrams = [],
 }: {
   newsletterEnabled?: boolean;
@@ -58,8 +58,8 @@ export default function Footer({
           >
             SADSAT
           </Link>
-          <p className="mt-3 font-mono text-[0.55rem] tracking-[0.35em] uppercase text-neutral-600">
-            Taxidermie · Bijoux · Bougies · Mode
+          <p className="mt-3 font-mono text-[0.55rem] tracking-[0.35em] uppercase text-neutral-400">
+            Taxidermie · Bougies · Mode
           </p>
         </div>
 
@@ -71,7 +71,7 @@ export default function Footer({
 
           {/* Univers */}
           <div>
-            <p className="font-mono text-[0.55rem] tracking-[0.32em] uppercase text-neutral-600 mb-5">
+            <p className="font-mono text-[0.55rem] tracking-[0.32em] uppercase text-neutral-400 mb-5">
               Univers
             </p>
             <ul className="space-y-3">
@@ -82,7 +82,7 @@ export default function Footer({
                       className="w-1 h-1 rounded-full shrink-0"
                       style={{ background: l.accent }}
                     />
-                    <span className="text-[0.62rem] tracking-[0.14em] uppercase text-neutral-700 cursor-default select-none">
+                    <span className="text-[0.62rem] tracking-[0.14em] uppercase text-neutral-400 cursor-default select-none">
                       {l.label}
                     </span>
                   </li>
@@ -94,7 +94,7 @@ export default function Footer({
                     />
                     <Link
                       href={l.href}
-                      className="text-[0.62rem] tracking-[0.14em] uppercase text-neutral-500 hover:text-neutral-100 transition-colors duration-200"
+                      className="text-[0.62rem] tracking-[0.14em] uppercase text-neutral-400 hover:text-neutral-100 transition-colors duration-200"
                     >
                       {l.label}
                     </Link>
@@ -106,7 +106,7 @@ export default function Footer({
 
           {/* Boutique */}
           <div>
-            <p className="font-mono text-[0.55rem] tracking-[0.32em] uppercase text-neutral-600 mb-5">
+            <p className="font-mono text-[0.55rem] tracking-[0.32em] uppercase text-neutral-400 mb-5">
               Boutique
             </p>
             <ul className="space-y-3">
@@ -114,7 +114,7 @@ export default function Footer({
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-[0.62rem] tracking-[0.14em] uppercase text-neutral-500 hover:text-neutral-100 transition-colors duration-200"
+                    className="text-[0.62rem] tracking-[0.14em] uppercase text-neutral-400 hover:text-neutral-100 transition-colors duration-200"
                   >
                     {l.label}
                   </Link>
@@ -125,7 +125,7 @@ export default function Footer({
 
           {/* Créateurs Instagram */}
           <div className="col-span-2">
-            <p className="font-mono text-[0.55rem] tracking-[0.32em] uppercase text-neutral-600 mb-5">
+            <p className="font-mono text-[0.55rem] tracking-[0.32em] uppercase text-neutral-400 mb-5">
               Nous suivre
             </p>
             {instagrams.length > 0 ? (
@@ -138,13 +138,13 @@ export default function Footer({
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 group w-fit"
                     >
-                      <span className="text-neutral-600 group-hover:text-neutral-200 transition-colors duration-200 shrink-0">
+                      <span className="text-neutral-400 group-hover:text-neutral-200 transition-colors duration-200 shrink-0">
                         <InstagramIcon />
                       </span>
                       <span className="text-[0.68rem] tracking-[0.1em] text-neutral-400 group-hover:text-neutral-100 transition-colors duration-200">
                         @{handle}
                       </span>
-                      <span className="font-mono text-[0.48rem] tracking-[0.18em] uppercase text-neutral-700 group-hover:text-neutral-500 transition-colors duration-200">
+                      <span className="font-mono text-[0.48rem] tracking-[0.18em] uppercase text-neutral-400 group-hover:text-neutral-500 transition-colors duration-200">
                         — {name}
                       </span>
                     </a>
@@ -152,7 +152,7 @@ export default function Footer({
                 ))}
               </ul>
             ) : (
-              <p className="text-[0.62rem] text-neutral-700">
+              <p className="text-[0.62rem] text-neutral-400">
                 Pièces uniques · Fait main · France
               </p>
             )}
@@ -165,7 +165,7 @@ export default function Footer({
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
 
           {/* Copyright */}
-          <p className="font-mono text-[0.5rem] tracking-[0.22em] uppercase text-neutral-700">
+          <p className="font-mono text-[0.5rem] tracking-[0.22em] uppercase text-neutral-400">
             © 2026 SADSAT — France · Fait main
           </p>
 
@@ -175,11 +175,12 @@ export default function Footer({
               <Link
                 key={l.href}
                 href={l.href}
-                className="font-mono text-[0.5rem] tracking-[0.18em] uppercase text-neutral-700 hover:text-neutral-400 transition-colors duration-200"
+                className="font-mono text-[0.5rem] tracking-[0.18em] uppercase text-neutral-400 hover:text-neutral-400 transition-colors duration-200"
               >
                 {l.label}
               </Link>
             ))}
+            <CookieSettingsLink className="font-mono text-[0.5rem] tracking-[0.18em] uppercase text-neutral-400 hover:text-neutral-400 transition-colors duration-200" />
           </div>
 
         </div>
