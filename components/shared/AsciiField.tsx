@@ -38,6 +38,11 @@ export default function AsciiField() {
     let raf = 0;
     let last = 0;
     let W = 0, H = 0, cell = 11, cols = 0, rows = 0;
+    let rgb = "236,236,236";
+    const readColor = () => {
+      const m = getComputedStyle(canvas).color.match(/d+/g);
+      if (m) rgb = m.slice(0, 3).join(",");
+    };
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -72,7 +77,7 @@ export default function AsciiField() {
           if (s < (BAYER[(i & 3) + ((j & 3) << 2)] / 16) * 0.85) continue;
           const ch = RAMP[Math.min(RAMP.length - 1, Math.floor(s * RAMP.length * 1.15))];
           const alpha = (0.12 + s * 0.55) * strengthScale;
-          ctx.fillStyle = `rgba(236,236,236,${alpha.toFixed(3)})`;
+          ctx.fillStyle = `rgba(${rgb},${alpha.toFixed(3)})`;
           ctx.fillText(ch, i * cell + cell / 2, j * cell * 1.25 + cell / 2);
         }
       }
@@ -88,7 +93,10 @@ export default function AsciiField() {
     const ro = new ResizeObserver(resize);
     let timer = 0;
     let idle = 0;
+    const themeObs = new MutationObserver(() => { readColor(); draw(performance.now()); });
+    themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     const start = () => {
+      readColor();
       ro.observe(parent);
       resize();
       if (!reduced) raf = requestAnimationFrame(loop);
@@ -105,6 +113,7 @@ export default function AsciiField() {
       clearTimeout(timer);
       cancelAnimationFrame(raf);
       ro.disconnect();
+      themeObs.disconnect();
     };
   }, []);
 

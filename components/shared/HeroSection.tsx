@@ -195,11 +195,11 @@ export default function HeroSection() {
   return (
     <>
       {/* HERO */}
-      <section className="h-screen flex flex-col items-center justify-center text-center bg-black relative overflow-hidden">
+      <section className="h-screen flex flex-col items-center justify-center text-center bg-neutral-50 dark:bg-black relative overflow-hidden">
         <div className="hero-bg" aria-hidden="true">
           {showAscii && <AsciiField />}
         </div>
-        <h1 className="hero-rise relative z-10 px-6 font-serif font-light text-5xl md:text-7xl tracking-wide text-neutral-100 mb-6">
+        <h1 className="hero-rise relative z-10 px-6 font-serif font-light text-5xl md:text-7xl tracking-wide text-neutral-900 dark:text-neutral-100 mb-6">
           Un collectif, plusieurs univers.
         </h1>
         <div className="hero-rule relative z-10" aria-hidden="true" />
@@ -212,7 +212,7 @@ export default function HeroSection() {
             <Link
               key={b.slug}
               href={universePath(b.slug)}
-              className="inline-flex items-center gap-2.5 text-xs tracking-[0.3em] uppercase text-neutral-300 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2.5 text-xs tracking-[0.3em] uppercase text-neutral-700 hover:text-black dark:text-neutral-300 dark:hover:text-white transition-colors"
             >
               <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: HERO_DOTS[b.slug] ?? "#a3a3a3" }} />
               {b.label}
@@ -220,7 +220,7 @@ export default function HeroSection() {
           ))}
         </nav>
         <div
-          className="hero-fade absolute bottom-8 z-10 text-[0.65rem] tracking-[0.4em] uppercase text-neutral-400"
+          className="hero-fade absolute bottom-8 z-10 text-[0.65rem] tracking-[0.4em] uppercase text-neutral-600 dark:text-neutral-400"
           style={{ animationDelay: "1.2s" }}
         >
           ↓ Découvrir

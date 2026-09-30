@@ -157,7 +157,7 @@ export default async function RootLayout({
 
   return (
     <html lang="fr" className={`${cormorant.variable} ${spaceGrotesk.variable} ${jetbrains.variable}`}>
-      <body className="font-sans antialiased bg-black text-neutral-200">
+      <body className="font-sans antialiased bg-neutral-50 text-neutral-800 dark:bg-black dark:text-neutral-200">
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={websiteJsonLd} />
         <Toaster
