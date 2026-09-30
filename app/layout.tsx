@@ -105,7 +105,7 @@ const organizationJsonLd = {
   url: BASE_URL,
   logo: {
     "@type": "ImageObject",
-    url: `${BASE_URL}/apple-icon`,
+    url: `${BASE_URL}/icons/icon-512.png`,
   },
   description:
     "Créations artisanales en édition limitée : taxidermie éthique, bougies artisanales et mode upcycling.",
