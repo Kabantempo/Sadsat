@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-import type { Product, Dimensions } from "@/lib/definitions";
+import type { Product } from "@/lib/definitions";
 import { UNIVERSE_LABELS } from "@/lib/definitions";
 
 type Creator = {

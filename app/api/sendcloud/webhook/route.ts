@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import nodemailer from 'nodemailer'
 import { esc } from '@/lib/email'
-import { createHmac, timingSafeEqual } from 'crypto'
+import { validSignature } from '@/lib/sendcloud-signature'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,16 +25,6 @@ const STATUS_MAP: Record<number, string> = {
   99:   'annulée',
   1000: 'payée',
   1002: 'payée',
-}
-
-// Sendcloud signe le corps brut en HMAC-SHA256 (en-tête Sendcloud-Signature) avec la clé secrète de l'intégration.
-function validSignature(raw: string, signature: string | null): boolean {
-  const secret = process.env.SENDCLOUD_WEBHOOK_SECRET ?? process.env.SENDCLOUD_SECRET_KEY
-  if (!secret || !signature) return false
-  const expected = createHmac('sha256', secret).update(raw).digest('hex')
-  const a = Buffer.from(expected)
-  const b = Buffer.from(signature)
-  return a.length === b.length && timingSafeEqual(a, b)
 }
 
 export async function POST(req: NextRequest) {

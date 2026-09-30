@@ -7,7 +7,7 @@ import {
   createBrandCategory, updateBrandCategory, deleteBrandCategory,
   reorderBrandCategory, seedDefaultCategories,
 } from '@/lib/brand'
-import { uploadFile, deleteFile } from '@/lib/cloudinary'
+import { uploadFile } from '@/lib/cloudinary'
 
 async function getCreatorUniverse(): Promise<string> {
   const session = await getSession()

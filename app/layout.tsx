@@ -14,7 +14,6 @@ import JsonLd from "@/components/shared/JsonLd";
 import { getSession } from "@/lib/session";
 import { isNewsletterEnabled } from "@/lib/settings";
 import { getBrandCategories } from "@/lib/brand";
-import { getUsers } from "@/lib/db";
 import CookieConsent from "@/components/shared/CookieConsent";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'

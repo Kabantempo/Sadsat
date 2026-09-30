@@ -2,7 +2,6 @@ import { verifyGrossiste } from '@/lib/dal'
 import { getProducts } from '@/lib/products'
 import { getSetting } from '@/lib/settings'
 import { Package, Tag } from 'lucide-react'
-import type { Universe } from '@/lib/definitions'
 import AddToB2BCart from '@/components/grossiste/AddToB2BCart'
 import B2BCartBar from '@/components/grossiste/B2BCartBar'
 

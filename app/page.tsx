@@ -2,12 +2,8 @@ export const revalidate = 30;
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getUsers } from "@/lib/db";
-import { getProducts } from "@/lib/products";
 import HeroSection from "@/components/shared/HeroSection";
 import ScrollStory from "@/components/shared/ScrollStory";
-import CreateurCarousel, { type CreateurCard } from "@/components/shared/CreateurCarousel";
-import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
