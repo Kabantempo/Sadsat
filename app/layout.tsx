@@ -74,21 +74,12 @@ export const metadata: Metadata = {
     url: BASE_URL,
     siteName: "SADSAT",
     locale: "fr_FR",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "SADSAT — Créations artisanales en édition limitée",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "SADSAT — Taxidermie · Bougies · Mode",
     description:
       "Pièces uniques de taxidermie éthique, bougies artisanales et mode upcycling. Édition limitée, fait main.",
-    images: ["/og-image.jpg"],
   },
   alternates: {
     canonical: BASE_URL,
@@ -114,7 +105,7 @@ const organizationJsonLd = {
   url: BASE_URL,
   logo: {
     "@type": "ImageObject",
-    url: `${BASE_URL}/og-image.jpg`,
+    url: `${BASE_URL}/apple-icon`,
   },
   description:
     "Créations artisanales en édition limitée : taxidermie éthique, bougies artisanales et mode upcycling.",

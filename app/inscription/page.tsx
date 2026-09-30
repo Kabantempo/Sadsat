@@ -307,7 +307,7 @@ export default function InscriptionPage() {
                   J'accepte les{' '}
                   <Link href="/cgv" className="underline underline-offset-2 hover:text-neutral-800 transition-colors">CGV</Link>
                   {' '}et la{' '}
-                  <Link href="/confidentialite" className="underline underline-offset-2 hover:text-neutral-800 transition-colors">politique de confidentialité</Link>
+                  <Link href="/politique-confidentialite" className="underline underline-offset-2 hover:text-neutral-800 transition-colors">politique de confidentialité</Link>
                 </span>
               </label>
 

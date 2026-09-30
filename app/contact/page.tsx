@@ -61,6 +61,11 @@ export default function ContactPage() {
 
           {/* Formulaire */}
           <form action={action} className="space-y-6">
+            {/* Piège à robots : champ invisible que seuls les scripts remplissent. */}
+            <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+              <label htmlFor="website">Ne pas remplir</label>
+              <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
             {state?.message && (
               <p className="text-[0.72rem] text-red-400 tracking-wide">{state.message}</p>
             )}
