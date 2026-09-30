@@ -128,9 +128,10 @@ export const BRAND_PORTALS: BrandPortal[] = [
     subtitle: 'Pièces uniques · Éthique',
     cta: 'Entrer dans la galerie',
     index: '01',
-    bg: 'linear-gradient(180deg, #fafaf7 0%, #ebebe6 100%)',
-    color: '#1a1a1a',
-    accent: '#c9b896',
+    // Palette tirée des photos de @crystal_pets_ : lavis blanc translucide, turquoise, violet
+    bg: 'linear-gradient(160deg, #f8fcfc 0%, #dcf2f2 50%, #ece1f6 100%)',
+    color: '#0d2a2e',
+    accent: '#0a6f6c',
     font: 'serif',
   },
   {

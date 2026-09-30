@@ -22,7 +22,7 @@ export default async function CategoriePage({ params }: Props) {
   );
 
   return (
-    <div style={{ background: "#fafaf7", color: "#1a1a1a" }} className="min-h-screen pt-32 pb-24">
+    <div style={{ background: "#f6fbfb", color: "#0d2a2e" }} className="min-h-screen pt-32 pb-24">
       <div className="max-w-6xl mx-auto px-8">
 
         <div className="flex items-center gap-3 font-mono text-[0.65rem] tracking-[0.2em] uppercase text-neutral-400 mb-16">

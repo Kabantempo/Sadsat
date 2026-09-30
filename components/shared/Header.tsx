@@ -60,7 +60,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
   const userMenuRef                     = useRef<HTMLDivElement>(null);
 
   const BRAND_ACCENTS: Record<string, { color: string; glow: string }> = {
-    taxidermie:  { color: '#c9b896', glow: 'rgba(201,184,150,0.5)' },
+    taxidermie:  { color: '#19bdb8', glow: 'rgba(25,189,184,0.5)' },
     bougies:     { color: '#00ff41', glow: 'rgba(0,255,65,0.5)'    },
     habillement: { color: '#a0a0a0', glow: 'rgba(160,160,160,0.4)' },
   };

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 
-// ── Taxidermie — poussière flottante ──────────────────────────────────────────
+// ── Crystal Pets — bulles de liquide de conservation, teintures turquoise / violet / corail ──────────────────────────────────────────
 export function TaxidermieAnim() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -11,7 +11,7 @@ export function TaxidermieAnim() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    type Particle = { x: number; y: number; r: number; vx: number; vy: number; opacity: number; phase: number };
+    type Particle = { x: number; y: number; r: number; vx: number; vy: number; opacity: number; phase: number; rgb: string };
     let particles: Particle[] = [];
     let raf: number;
 
@@ -20,13 +20,15 @@ export function TaxidermieAnim() {
       if (!p) return;
       canvas.width = p.offsetWidth;
       canvas.height = p.offsetHeight;
-      particles = Array.from({ length: 55 }, () => ({
+      const TEINTES = ["25, 189, 184", "25, 189, 184", "107, 47, 160", "176, 42, 114", "239, 91, 58"];
+      particles = Array.from({ length: 48 }, () => ({
+        rgb: TEINTES[Math.floor(Math.random() * TEINTES.length)],
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: Math.random() * 2 + 0.5,
+        r: Math.random() * 3 + 0.8,
         vx: (Math.random() - 0.5) * 0.3,
         vy: -(Math.random() * 0.4 + 0.15),
-        opacity: Math.random() * 0.35 + 0.05,
+        opacity: Math.random() * 0.4 + 0.1,
         phase: Math.random() * Math.PI * 2,
       }));
     };
@@ -44,8 +46,11 @@ export function TaxidermieAnim() {
         if (p.y < -4) { p.y = canvas.height + 4; p.x = Math.random() * canvas.width; }
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(140, 115, 75, ${p.opacity})`;
+        ctx.fillStyle = `rgba(${p.rgb}, ${p.opacity})`;
         ctx.fill();
+        ctx.lineWidth = 0.6;
+        ctx.strokeStyle = `rgba(${p.rgb}, ${Math.min(p.opacity + 0.15, 0.6)})`;
+        ctx.stroke();
       });
       raf = requestAnimationFrame(draw);
     };
