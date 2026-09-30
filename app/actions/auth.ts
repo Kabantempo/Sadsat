@@ -7,7 +7,8 @@ import { verifySession } from '@/lib/dal'
 import { createSession, deleteSession } from '@/lib/session'
 import { deleteAccountData } from '@/lib/account'
 import { allow, TOO_MANY } from '@/lib/rate-limit'
-import { sendVerificationEmail, sendPasswordResetEmail, sendWelcomeEmail } from '@/lib/email'
+import { sendVerificationEmail, sendPasswordResetEmail, sendWelcomeEmail, sendNewsletterConfirmEmail } from '@/lib/email'
+import { isNewsletterEnabled } from '@/lib/settings'
 
 export async function signup(state: FormState, formData: FormData): Promise<FormState> {
   if (!(await allow('signup', 5, 60 * 60 * 1000))) return { message: TOO_MANY }
@@ -45,6 +46,11 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
     sendVerificationEmail(email, name, token),
     sendWelcomeEmail(email, name),
   ])
+
+  // Case « recevoir les nouveautés » : double opt-in, l'inscription n'est enregistrée qu'après le clic dans l'email.
+  if (formData.get('newsletter') === 'on' && (await isNewsletterEnabled())) {
+    await sendNewsletterConfirmEmail(email).catch(() => false)
+  }
 
   redirect('/inscription/confirmer')
 }

@@ -285,10 +285,12 @@ export default function InscriptionPage() {
             )}
 
             {/* Checkboxes */}
+            <input type="hidden" name="newsletter" value={newsletter ? 'on' : ''} />
             <div className="space-y-4 pt-1">
               <label className="flex items-start gap-3 cursor-pointer">
                 <div
                   role="checkbox"
+                  aria-label="Accepter les CGV et la politique de confidentialité"
                   aria-checked={cgv}
                   tabIndex={0}
                   onClick={() => setCgv((v) => !v)}
@@ -314,6 +316,7 @@ export default function InscriptionPage() {
               <label className="flex items-start gap-3 cursor-pointer">
                 <div
                   role="checkbox"
+                  aria-label="Recevoir les nouveautés par email"
                   aria-checked={newsletter}
                   tabIndex={0}
                   onClick={() => setNewsletter((v) => !v)}
@@ -330,7 +333,7 @@ export default function InscriptionPage() {
                 </div>
                 <span className="text-[0.7rem] text-neutral-500 leading-relaxed font-sans">
                   Recevoir les nouveautés par email{' '}
-                  <span className="text-neutral-400">(optionnel)</span>
+                  <span className="text-neutral-500">(optionnel : un email de confirmation vous sera envoyé)</span>
                 </span>
               </label>
             </div>

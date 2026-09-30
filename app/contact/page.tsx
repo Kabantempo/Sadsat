@@ -26,7 +26,7 @@ export default function ContactPage() {
           <h1 className="font-serif font-light text-3xl italic text-neutral-100 mb-3">
             Message envoyé
           </h1>
-          <p className="text-[0.82rem] text-neutral-500 leading-relaxed mb-8">
+          <p className="text-[0.82rem] text-neutral-400 leading-relaxed mb-8">
             Nous avons bien reçu votre message et vous répondrons dans les plus brefs délais.
           </p>
           <Link
@@ -46,13 +46,13 @@ export default function ContactPage() {
 
         {/* En-tête */}
         <div className="mb-14">
-          <p className="font-mono text-[0.55rem] tracking-[0.28em] uppercase text-neutral-600 mb-3">
+          <p className="font-mono text-[0.55rem] tracking-[0.28em] uppercase text-neutral-400 mb-3">
             SADSAT
           </p>
           <h1 className="font-serif font-light text-5xl italic text-neutral-100 mb-4">
             Contact
           </h1>
-          <p className="text-[0.85rem] text-neutral-500 leading-relaxed">
+          <p className="text-[0.85rem] text-neutral-400 leading-relaxed">
             Pour toute question, commande sur mesure ou collaboration, nous vous répondons personnellement.
           </p>
         </div>
@@ -73,7 +73,7 @@ export default function ContactPage() {
             {/* Nom + Email */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-600 mb-2">
+                <label className="block font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-400 mb-2">
                   Nom
                 </label>
                 <input
@@ -88,7 +88,7 @@ export default function ContactPage() {
                 )}
               </div>
               <div>
-                <label className="block font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-600 mb-2">
+                <label className="block font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-400 mb-2">
                   Email
                 </label>
                 <input
@@ -106,10 +106,11 @@ export default function ContactPage() {
 
             {/* Sujet */}
             <div>
-              <label className="block font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-600 mb-2">
+              <label htmlFor="subject" className="block font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-400 mb-2">
                 Sujet
               </label>
               <select
+                id="subject"
                 name="subject"
                 required
                 className="w-full bg-neutral-900 border border-neutral-800 px-4 py-3 text-[0.85rem] text-neutral-100 outline-none focus:border-neutral-500 transition-colors appearance-none"
@@ -126,7 +127,7 @@ export default function ContactPage() {
 
             {/* Message */}
             <div>
-              <label className="block font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-600 mb-2">
+              <label className="block font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-400 mb-2">
                 Message
               </label>
               <textarea
@@ -157,8 +158,8 @@ export default function ContactPage() {
             {/* Email */}
             <div>
               <div className="flex items-center gap-3 mb-3">
-                <Mail size={13} strokeWidth={1.5} className="text-neutral-600" />
-                <p className="font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-600">Email</p>
+                <Mail size={13} strokeWidth={1.5} className="text-neutral-400" />
+                <p className="font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-400">Email</p>
               </div>
               <a
                 href="mailto:contact@sadsat.com"
@@ -173,12 +174,12 @@ export default function ContactPage() {
             {/* Instagram */}
             <div>
               <div className="flex items-center gap-3 mb-3">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-600">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-400">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
                   <circle cx="12" cy="12" r="4"/>
                   <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
                 </svg>
-                <p className="font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-600">Instagram</p>
+                <p className="font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-400">Instagram</p>
               </div>
               <a
                 href="https://instagram.com/sadsat.co"
@@ -195,8 +196,8 @@ export default function ContactPage() {
             {/* Localisation */}
             <div>
               <div className="flex items-center gap-3 mb-3">
-                <MapPin size={13} strokeWidth={1.5} className="text-neutral-600" />
-                <p className="font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-600">Localisation</p>
+                <MapPin size={13} strokeWidth={1.5} className="text-neutral-400" />
+                <p className="font-mono text-[0.55rem] tracking-[0.22em] uppercase text-neutral-400">Localisation</p>
               </div>
               <p className="text-[0.88rem] text-neutral-300 leading-relaxed">
                 France
@@ -207,7 +208,7 @@ export default function ContactPage() {
 
             {/* Délai réponse */}
             <div className="bg-neutral-900 border border-neutral-800 p-5">
-              <p className="font-mono text-[0.52rem] tracking-[0.2em] uppercase text-neutral-600 mb-2">Délai de réponse</p>
+              <p className="font-mono text-[0.52rem] tracking-[0.2em] uppercase text-neutral-400 mb-2">Délai de réponse</p>
               <p className="text-[0.82rem] text-neutral-400 leading-relaxed">
                 Nous répondons généralement sous <span className="text-neutral-200">48h</span>, du lundi au vendredi.
               </p>
