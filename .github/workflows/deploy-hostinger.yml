@@ -1,0 +1,130 @@
+name: Deploy to Hostinger
+
+# Le site est compilé ICI (GitHub Actions) puis envoyé sur Hostinger : le serveur n'a pas assez de ressources
+# pour compiler lui-même (erreurs 503). Même méthode que Nexart. Voir docs/deploiement.md.
+#
+# Pour l'instant : déclenchement MANUEL seulement (onglet Actions > Deploy to Hostinger > Run workflow,
+# ou « gh workflow run deploy-hostinger.yml »). Pour déployer à chaque fusion dans main, ajouter :
+#   push:
+#     branches: [main]
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-sadsat
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  APP_DIR: /home/u142938038/domains/sadsat.com/nodejs
+  BACKUP_DIR: /home/u142938038/backups/sadsat
+  SSH_TARGET: u142938038@147.79.103.73
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Types et tests
+        run: |
+          npx tsc --noEmit
+          npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+          # Valeurs de compilation uniquement : les vrais secrets restent dans hPanel, jamais dans ce fichier.
+          NEXT_PUBLIC_SITE_URL: https://sadsat.com
+          NEXT_PUBLIC_BASE_URL: https://sadsat.com
+          DATABASE_URL: postgresql://build:build@localhost:5432/build
+          SESSION_SECRET: build-only-secret-build-only-secret-0000
+
+      - name: Prepare standalone bundle
+        run: |
+          mkdir -p .next/standalone/.next/static .next/standalone/public
+          cp -r .next/static/. .next/standalone/.next/static/
+          cp -r public/. .next/standalone/public/
+          echo "Moteurs Prisma embarqués :"
+          find .next/standalone -name "libquery_engine-*" | sed 's#.next/standalone/##'
+          test -n "$(find .next/standalone -name 'libquery_engine-debian-openssl-1.1.x*')" || { echo "Moteur debian-openssl-1.1.x manquant : arrêt"; exit 1; }
+
+      - name: Setup SSH
+        env:
+          DEPLOY_KEY: ${{ secrets.HOSTINGER_DEPLOY_KEY }}
+        run: |
+          test -n "$DEPLOY_KEY" || { echo "Secret HOSTINGER_DEPLOY_KEY absent : voir docs/deploiement.md"; exit 1; }
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/hostinger_deploy
+          chmod 600 ~/.ssh/hostinger_deploy
+          ssh-keyscan -p 65002 147.79.103.73 >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Sauvegarde de la version en ligne
+        run: |
+          ssh -p 65002 -i ~/.ssh/hostinger_deploy "$SSH_TARGET" "
+            set -e
+            mkdir -p '$BACKUP_DIR'
+            F=nodejs-\$(date +%Y%m%d-%H%M%S)-${GITHUB_SHA::7}.tgz
+            tar -czf '$BACKUP_DIR'/\$F -C '$APP_DIR' --exclude=console.log --exclude=stderr.log --exclude=tmp .
+            echo \$F > '$BACKUP_DIR'/LAST
+            ls -1t '$BACKUP_DIR'/nodejs-*.tgz | tail -n +4 | xargs -r rm -f
+            echo \"Sauvegarde : \$F\"
+          "
+
+      - name: Deploy standalone
+        id: sync
+        run: |
+          rsync -az --delete \
+            --exclude=tmp --exclude=console.log --exclude=stderr.log --exclude=.env --exclude=.env.local \
+            -e "ssh -p 65002 -i ~/.ssh/hostinger_deploy" \
+            .next/standalone/ \
+            "$SSH_TARGET:$APP_DIR/"
+
+      - name: Restart Passenger
+        run: |
+          ssh -p 65002 -i ~/.ssh/hostinger_deploy "$SSH_TARGET" \
+            "mkdir -p '$APP_DIR/tmp' && touch '$APP_DIR/tmp/restart.txt'"
+
+      - name: Health check
+        run: |
+          for i in 1 2 3 4 5 6 7 8; do
+            sleep 10
+            BODY=$(curl -s -m 20 https://sadsat.com/api/health || true)
+            echo "Essai $i : $BODY"
+            echo "$BODY" | grep -q '"ok":true' && { echo "Site en bonne santé"; exit 0; }
+          done
+          echo "Le site ne répond pas correctement après le déploiement"
+          exit 1
+
+      # Seulement si l'envoi a commencé (donc si la sauvegarde a réussi) : sinon on n'y touche pas.
+      - name: Retour arrière automatique
+        if: failure() && steps.sync.outcome != 'skipped'
+        run: |
+          ssh -p 65002 -i ~/.ssh/hostinger_deploy "$SSH_TARGET" "
+            set -e
+            cd '$APP_DIR'
+            [ \"\$(pwd)\" = '$APP_DIR' ] || exit 1
+            F=\$(cat '$BACKUP_DIR'/LAST)
+            [ -f '$BACKUP_DIR'/\$F ] || { echo 'Aucune sauvegarde à restaurer'; exit 1; }
+            find . -mindepth 1 -maxdepth 1 ! -name tmp ! -name console.log ! -name stderr.log -exec rm -rf {} +
+            tar -xzf '$BACKUP_DIR'/\$F -C .
+            mkdir -p tmp && touch tmp/restart.txt
+            echo \"Version précédente restaurée : \$F\"
+          "
+
+      - name: Déploiement réussi
+        run: echo "https://sadsat.com est à jour — commit ${{ github.sha }}"

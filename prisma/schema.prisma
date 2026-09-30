@@ -1,6 +1,10 @@
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "library"
+  provider      = "prisma-client-js"
+  engineType    = "library"
+  // Le site est compilé sur GitHub (Ubuntu) puis exécuté sur Hostinger. Le moteur de requêtes qui tourne en production
+  // aujourd'hui est debian-openssl-1.1.x (relevé sur le serveur) ; rhel-openssl-3.0.x sert de secours si l'hébergeur
+  // change de système. Sans le bon fichier, Prisma ne trouve pas son moteur et la base ne répond plus.
+  binaryTargets = ["native", "debian-openssl-1.1.x", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
