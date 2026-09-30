@@ -8,13 +8,6 @@ const authRoutes = ['/connexion', '/inscription']
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname
 
-  // HTTPS forcé en production derrière le proxy de l'hébergeur (en plus de l'en-tête HSTS).
-  if (process.env.NODE_ENV === 'production' && req.headers.get('x-forwarded-proto') === 'http') {
-    const url = req.nextUrl.clone()
-    url.protocol = 'https:'
-    url.port = ''
-    return NextResponse.redirect(url, 308)
-  }
   const cookie = req.cookies.get('session')?.value
   const session = await decrypt(cookie)
 
