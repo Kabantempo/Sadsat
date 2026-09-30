@@ -9,7 +9,9 @@ const { checkEnv, onHostinger } = require('../scripts/postbuild.js') as {
 
 const HOST = '/home/u123/domains/sadsat.com/public_html'
 const LOCAL = 'C:/Users/x/Desktop/Sadsat'
-const good = { DATABASE_URL: 'postgresql://postgres:Abc123@db.example.supabase.co:5432/postgres', SESSION_SECRET: 'x'.repeat(40) }
+const POOLER = 'postgresql://postgres.abcdefgh:Abc123@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true'
+const DIRECT = 'postgresql://postgres:Abc123@db.abcdefgh.supabase.co:5432/postgres'
+const good = { DATABASE_URL: POOLER, SESSION_SECRET: 'x'.repeat(40) }
 
 describe('contrôle des variables après build', () => {
   it('reconnaît le chemin Hostinger', () => {
@@ -37,9 +39,21 @@ describe('contrôle des variables après build', () => {
     expect(checkEnv(good, HOST).errors).toEqual([])
   })
 
+  it('sur Hostinger, la connexion directe Supabase (IPv6 uniquement) bloque le build', () => {
+    const r = checkEnv({ ...good, DATABASE_URL: DIRECT }, HOST)
+    expect(r.errors.join(' ')).toContain('connexion directe Supabase')
+    expect(r.errors.join(' ')).not.toContain('Abc123')
+  })
+
+  it('en local, la connexion directe donne seulement un avertissement', () => {
+    const r = checkEnv({ ...good, DATABASE_URL: DIRECT }, LOCAL)
+    expect(r.errors).toEqual([])
+    expect(r.warnings.join(' ')).toContain('connexion directe Supabase')
+  })
+
   it('signale une adresse de base illisible (caractère spécial non encodé) sans afficher sa valeur', () => {
     const secret = 'MotDePasseSecret#!123'
-    const r = checkEnv({ ...good, DATABASE_URL: `postgresql://postgres:${secret}@db.x.supabase.co:5432/postgres` }, HOST)
+    const r = checkEnv({ ...good, DATABASE_URL: `postgresql://postgres.abcdefgh:${secret}@aws-0-eu-west-1.pooler.supabase.com:6543/postgres` }, HOST)
     expect(r.errors).toEqual([])
     // Une valeur avec # non encodé reste lisible par URL(), l'important est qu'aucun message ne contienne le mot de passe.
     expect([...r.errors, ...r.warnings].join(' ')).not.toContain(secret)

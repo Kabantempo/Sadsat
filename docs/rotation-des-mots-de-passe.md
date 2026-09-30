@@ -17,7 +17,8 @@ Le site en ligne a l'ancien mot de passe écrit dans son propre build. Si le mot
    Un pour la base, un pour la boîte mail. Un mot de passe différent pour chacun, et différent de tous vos autres comptes.
 
 2. **Préparer les variables dans hPanel** (site sadsat.com, variables d'environnement), sans encore les activer si possible :
-   - `DATABASE_URL` = `postgresql://postgres:<nouveau-mot-de-passe-base>@db.<référence-du-projet>.supabase.co:5432/postgres`
+   - `DATABASE_URL` = `postgresql://postgres.<référence-du-projet>:<nouveau-mot-de-passe-base>@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true`
+     **Adresse du pooler, pas la connexion directe** : la connexion directe (`db.<projet>.supabase.co`) n'existe qu'en IPv6 et Hostinger ne joint que de l'IPv4 (erreur déjà rencontrée en juin). L'identifiant est `postgres.<référence-du-projet>` (avec la référence), le port `6543`, et `?pgbouncer=true` à la fin. Dans Supabase : bouton « Connect », onglet « Transaction pooler ». Le nouveau mot de passe doit être uniquement en lettres et chiffres.
    - `SMTP_PASS` = `<nouveau-mot-de-passe-mail>`
    - `SESSION_SECRET` = une valeur de 32 caractères minimum (`node -p "require('crypto').randomBytes(32).toString('hex')"`)
    - `STRIPE_WEBHOOK_SECRET`, `SHIPPING_FLAT_CENTS`, `MEDIATOR_*` : voir `.env.example`.
