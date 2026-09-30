@@ -17,13 +17,13 @@ export const metadata: Metadata = {
   description:
     "Pièces de taxidermie éthique, uniques, issues de mortalités naturelles. Chaque spécimen est sourcé depuis des mortalités naturelles ou confiscations douanières. Collection Crystal Pets par SADSAT.",
   keywords: ["taxidermie éthique", "Crystal Pets", "pièce unique taxidermie", "naturalisation éthique", "spécimen naturalisé", "taxidermie France"],
-  alternates: { canonical: `${BASE_URL}/taxidermie` },
+  alternates: { canonical: `${BASE_URL}/crystal-pets` },
   openGraph: {
     title: "Crystal Pets — Taxidermie éthique · SADSAT",
     description:
       "Taxidermie éthique, pièces uniques issues de mortalités naturelles. Collection Crystal Pets par SADSAT.",
     type: "website",
-    url: `${BASE_URL}/taxidermie`,
+    url: `${BASE_URL}/crystal-pets`,
     locale: "fr_FR",
     siteName: "SADSAT",
   },
@@ -170,7 +170,7 @@ export default async function TaxidermiePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {CATEGORIES.map((cat, i) => (
             <ScrollReveal key={cat.slug} delay={i * 0.06}>
-              <Link href={`/taxidermie/${cat.slug}`} className="group block">
+              <Link href={`/crystal-pets/${cat.slug}`} className="group block">
                 <div className="relative aspect-[3/4] overflow-hidden mb-5 bg-neutral-200">
                   {cat.primaryImage ? (
                     <Image src={cat.primaryImage} alt={cat.label} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105" unoptimized />

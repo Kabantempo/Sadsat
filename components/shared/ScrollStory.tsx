@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
-import { BRAND_PORTALS, type BrandPortal } from "@/lib/definitions";
+import { BRAND_PORTALS, universePath, type BrandPortal } from "@/lib/definitions";
 
 // ── Scene 3 : carte de marque ─────────────────────────────────────────────────
 function BrandCard({ brand, scrollYProgress, index }: {
@@ -67,7 +67,7 @@ function BrandCard({ brand, scrollYProgress, index }: {
     <motion.div style={{ opacity, scale, y }}>
       {brand.cta && !brand.special ? (
         <Link
-          href={`/${brand.slug}`}
+          href={universePath(brand.slug)}
           className={`${cardClass} block pointer-events-auto hover:brightness-110 transition-all duration-300`}
           style={{ background: brand.bg }}
         >

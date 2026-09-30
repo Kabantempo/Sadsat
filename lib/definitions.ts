@@ -81,6 +81,19 @@ export const UNIVERSE_LABELS: Record<Universe, string> = {
   habillement: 'Hackcycle',
 }
 
+// Adresse visible de chaque univers. L'identifiant « taxidermie » reste celui de la base de données
+// (products.universe, brand_categories.universe) : seul le chemin dans l'adresse change.
+export const UNIVERSE_PATHS: Record<Universe, string> = {
+  taxidermie: '/crystal-pets',
+  bougies: '/bougies',
+  'pieces-uniques': '/pieces-uniques',
+  habillement: '/habillement',
+}
+
+export function universePath(universe: string): string {
+  return UNIVERSE_PATHS[universe as Universe] ?? '/' + universe
+}
+
 export const CATEGORIES: Record<Universe, string[]> = {
   taxidermie: ['Oiseaux', 'Mammifères', 'Insectes', 'Crânes', 'Reptiles'],
   bougies: ['Cire de soja', "Cire d'abeille", 'Piliers', 'Fondants'],

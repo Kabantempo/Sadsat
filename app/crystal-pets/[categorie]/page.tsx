@@ -26,7 +26,7 @@ export default async function CategoriePage({ params }: Props) {
       <div className="max-w-6xl mx-auto px-8">
 
         <div className="flex items-center gap-3 font-mono text-[0.65rem] tracking-[0.2em] uppercase text-neutral-400 mb-16">
-          <Link href="/taxidermie" className="hover:text-neutral-700 transition-colors">Taxidermie</Link>
+          <Link href="/crystal-pets" className="hover:text-neutral-700 transition-colors">Taxidermie</Link>
           <span>›</span>
           <span className="text-neutral-700">{cat.label}</span>
         </div>

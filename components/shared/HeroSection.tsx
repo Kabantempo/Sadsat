@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import MatrixRain from "@/components/shared/MatrixRain";
-import { BRAND_PORTALS } from "@/lib/definitions";
+import { BRAND_PORTALS, universePath } from "@/lib/definitions";
 import { TaxidermieAnim, HackcycleAnim } from "@/components/shared/BrandAnimations";
 
 const COLLAPSED_PX = 150; // largeur des panneaux repliés (px)
@@ -129,7 +129,7 @@ function BrandPanel({
   if (brand.cta && !brand.special) {
     return (
       <Link
-        href={`/${brand.slug}`}
+        href={universePath(brand.slug)}
         className={sharedClass}
         style={sharedStyle}
         onMouseEnter={onEnter}
@@ -289,7 +289,7 @@ export default function HeroSection() {
 
             if (brand.cta && !brand.special) {
               return (
-                <Link key={brand.slug} href={`/${brand.slug}`} className={cardClass} style={cardStyle}>
+                <Link key={brand.slug} href={universePath(brand.slug)} className={cardClass} style={cardStyle}>
                   {anim}
                   {inner}
                 </Link>

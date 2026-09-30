@@ -34,7 +34,7 @@ function buildNav(cats: NavCategories): NavItem[] {
   };
   return [
     { label: "Pièces uniques", href: "/pieces-uniques", bordeaux: true },
-    { label: "Crystal Pets",  href: "/taxidermie", dropdown: dd('taxidermie', 'taxidermie') },
+    { label: "Crystal Pets",  href: "/crystal-pets", dropdown: dd('taxidermie', 'crystal-pets') },
     { label: "Spectrum N°3",  href: "/bougies",    dropdown: dd('bougies', 'bougies') },
     { label: "Hackcycle",     href: "/habillement",dropdown: dd('habillement', 'habillement') },
     { label: "Créateurs",     href: "/createurs" },
