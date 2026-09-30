@@ -93,7 +93,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: hidden ? 0 : 1, y: hidden ? "-100%" : 0 }}
         transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="sticky top-0 z-50 bg-black/55 backdrop-blur-2xl text-neutral-100 transition-all duration-300"
+        className="sticky top-0 z-50 bg-neutral-950/95 dark:bg-black/55 backdrop-blur-2xl text-neutral-100 transition-all duration-300"
       >
         {/* ── Bordure basse lumineuse réactive ── */}
         <motion.div
