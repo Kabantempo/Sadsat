@@ -37,6 +37,11 @@ function checkEnv(env, cwd = process.cwd()) {
     try {
       const url = new URL(env.DATABASE_URL)
       if (!/^postgres(ql)?:$/.test(url.protocol)) warnings.push('DATABASE_URL ne commence pas par postgresql://')
+      // La connexion directe (db.<projet>.supabase.co) est en IPv6 uniquement : Hostinger n'a que de l'IPv4.
+      // Il faut l'adresse du pooler (aws-0-eu-west-1.pooler.supabase.com, port 6543, ?pgbouncer=true).
+      if (/^db..+.supabase.co$/.test(url.hostname)) {
+        issues.push("DATABASE_URL utilise la connexion directe Supabase (IPv6 uniquement, injoignable depuis Hostinger) : utiliser l'adresse du pooler aws-0-eu-west-1.pooler.supabase.com")
+      }
       if (url.hostname.endsWith('.pooler.supabase.com') && !url.username.includes('.')) {
         warnings.push("DATABASE_URL passe par le pooler Supabase : l'identifiant doit être postgres.<référence-du-projet>")
       }
