@@ -9,6 +9,7 @@ import ThemeToggle from "@/components/shared/ThemeToggle";
 import SearchModal from "@/components/shared/SearchModal";
 import { useFavorites } from "@/components/shared/FavoritesProvider";
 import { useCart } from "@/components/shared/CartProvider";
+import { universeFromPath } from "@/lib/definitions";
 
 type SubItem = { label: string; href: string };
 
@@ -136,7 +137,7 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
             onMouseLeave={() => setHoveredBrand(null)}
           >
             {NAV.map((item) => {
-              const brandSlug = item.href.replace('/', '');
+              const brandSlug = universeFromPath(item.href);
               const accent = BRAND_ACCENTS[brandSlug];
               return (
               <div

@@ -94,6 +94,12 @@ export function universePath(universe: string): string {
   return UNIVERSE_PATHS[universe as Universe] ?? '/' + universe
 }
 
+/** Chemin inverse : /crystal-pets renvoie l'identifiant « taxidermie » (couleurs du menu, données de la marque). */
+export function universeFromPath(path: string): string {
+  const hit = Object.entries(UNIVERSE_PATHS).find(([, p]) => p === path)
+  return hit ? hit[0] : path.replace(/^\//, '')
+}
+
 export const CATEGORIES: Record<Universe, string[]> = {
   taxidermie: ['Oiseaux', 'Mammifères', 'Insectes', 'Crânes', 'Reptiles'],
   bougies: ['Cire de soja', "Cire d'abeille", 'Piliers', 'Fondants'],

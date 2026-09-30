@@ -98,6 +98,38 @@ a { color: inherit; text-decoration: none; }
 .dark .cp-title { background-image: linear-gradient(100deg, #3fd4cf 0%, #b58aff 55%, #ff6fa8 100%); }
 .cp-bar { width: 96px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, #19bdb8, #6b2fa0 60%, #ef5b3a); }
 
+/* ─── Accueil : arrière-plan du haut de page ───────────────────────────────────
+   Sobre et en noir et blanc : trois lueurs blanches très douces sur fond presque noir, et des veines en
+   caractères ASCII tramés, blanches, sur les bords (AsciiField).
+   Tout est en CSS : visible sans JavaScript (le titre reste l'élément LCP), aucun filtre de flou coûteux. */
+.hero-bg {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+  background: radial-gradient(120% 90% at 50% 0%, #15161a 0%, #0a0a0b 55%, #050505 100%);
+}
+.hero-ascii { position: absolute; inset: 0; pointer-events: none; }
+.hero-orb {
+  position: absolute; width: 62vmax; height: 62vmax; border-radius: 50%; will-change: transform;
+  animation: hero-drift 38s ease-in-out infinite alternate;
+}
+.hero-orb--cp { left: -20vmax; top: -16vmax;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03) 55%, transparent 76%); }
+.hero-orb--sp { left: 26vw; bottom: -34vmax; animation-duration: 46s; animation-delay: -12s;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.035), transparent 74%); }
+.hero-orb--hc { right: -22vmax; top: -8vmax; animation-duration: 42s; animation-delay: -22s;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.055), transparent 74%); }
+@keyframes hero-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(3vmax, 2vmax, 0) scale(1.08); }
+}
+.hero-rule { width: 120px; height: 1px; margin: 0 auto 1.75rem;
+  background: linear-gradient(90deg, transparent, #19bdb8 22%, #00ff41 50%, #b8a882 78%, transparent); opacity: 0.8; }
+@keyframes hero-fade { from { opacity: 0; } to { opacity: 1; } }
+.hero-fade { animation: hero-fade 1.4s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb { animation: none; }
+  .hero-fade { animation: none; }
+}
+
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar        { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track  { background: #0a0a0a; }
