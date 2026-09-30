@@ -33,7 +33,7 @@ function InstagramIcon() {
 }
 
 export default function Footer({
-  newsletterEnabled = false,
+  newsletterEnabled: _newsletterEnabled = false,
   instagrams = [],
 }: {
   newsletterEnabled?: boolean;

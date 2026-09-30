@@ -93,7 +93,7 @@ export default async function AdminCategoriesPage({ params }: Props) {
     redirect(`/admin/marques/${universe}/categories`)
   }
 
-  async function seedCategories(formData: FormData) {
+  async function seedCategories(_formData: FormData) {
     'use server'
     await verifyAdmin()
     await seedDefaultCategories(universe)
