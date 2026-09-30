@@ -184,14 +184,9 @@ export default function HeroSection() {
     <>
       {/* HERO */}
       <section className="h-screen flex flex-col items-center justify-center text-center bg-gradient-to-b from-neutral-900 to-black relative">
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2 }}
-          className="font-serif font-light text-5xl md:text-7xl tracking-wide text-neutral-100 mb-4"
-        >
+        <h1 className="hero-rise font-serif font-light text-5xl md:text-7xl tracking-wide text-neutral-100 mb-4">
           Un collectif, plusieurs univers.
-        </motion.h1>
+        </h1>
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
