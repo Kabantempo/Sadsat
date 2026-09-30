@@ -197,9 +197,6 @@ export default function HeroSection() {
       {/* HERO */}
       <section className="h-screen flex flex-col items-center justify-center text-center bg-black relative overflow-hidden">
         <div className="hero-bg" aria-hidden="true">
-          <span className="hero-orb hero-orb--cp" />
-          <span className="hero-orb hero-orb--sp" />
-          <span className="hero-orb hero-orb--hc" />
           {showAscii && <AsciiField />}
         </div>
         <h1 className="hero-rise relative z-10 px-6 font-serif font-light text-5xl md:text-7xl tracking-wide text-neutral-100 mb-6">
