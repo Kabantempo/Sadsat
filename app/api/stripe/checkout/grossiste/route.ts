@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { getProductById } from '@/lib/products'
-import { getSession } from '@/lib/session'
+import { getVerifiedSession as getSession } from '@/lib/dal'
 import { getSetting } from '@/lib/settings'
+import { parseItems } from '@/lib/checkout-items'
 
 const MIN_B2B_CENTS = 50000 // 500 €
-
-type CartItem = { productId: string; quantity: number }
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,9 +14,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Accès réservé aux grossistes.' }, { status: 403 })
     }
 
-    const { items }: { items: CartItem[] } = await req.json()
-    if (!items || items.length === 0) {
-      return NextResponse.json({ error: 'Panier vide.' }, { status: 400 })
+    const body = await req.json().catch(() => null)
+    const items = parseItems(body?.items)
+    if (!items) {
+      return NextResponse.json({ error: 'Panier invalide.' }, { status: 400 })
     }
 
     const discountRaw = await getSetting('grossiste_discount')
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
 
     for (const { productId, quantity } of items) {
       const product = await getProductById(productId)
-      if (!product || product.status === 'masqué' || product.status === 'vendu') continue
+      if (!product || product.status !== 'disponible' || product.stock < quantity) continue
 
       const b2bPrice = Math.round(product.price * (1 - discountPct / 100))
       subtotal += b2bPrice * quantity
@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
           currency: 'eur',
           product_data: {
             name: `${product.name} (B2B −${discountPct} %)`,
+            metadata: { productId: product.id },
             ...(product.images[0]?.startsWith('https://') ? { images: [product.images[0]] } : {}),
           },
           unit_amount: b2bPrice,

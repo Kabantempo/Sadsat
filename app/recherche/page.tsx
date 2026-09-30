@@ -6,13 +6,12 @@ import type { Universe } from '@/lib/definitions'
 
 export const metadata = {
   title: 'Recherche — SADSAT',
-  description: 'Recherchez parmi les créations artisanales SADSAT : taxidermie éthique, bijoux, bougies et mode upcycling.',
+  description: 'Recherchez parmi les créations artisanales SADSAT : taxidermie éthique, bougies et mode upcycling.',
   robots: { index: false, follow: false },
 }
 
 const UNIVERSE_BADGE: Record<Universe, { bg: string; text: string }> = {
   taxidermie:       { bg: 'bg-stone-800',   text: 'text-stone-300' },
-  bijoux:           { bg: 'bg-rose-900',    text: 'text-rose-300' },
   bougies:          { bg: 'bg-amber-900',   text: 'text-amber-300' },
   habillement:      { bg: 'bg-sky-900',     text: 'text-sky-300' },
   'pieces-uniques': { bg: 'bg-neutral-800', text: 'text-neutral-300' },

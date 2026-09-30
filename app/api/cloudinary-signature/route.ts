@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary'
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
+import { getVerifiedSession as getSession } from '@/lib/dal'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

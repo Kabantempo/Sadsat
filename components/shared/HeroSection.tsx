@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import MatrixRain from "@/components/shared/MatrixRain";
 import { BRAND_PORTALS } from "@/lib/definitions";
-import { TaxidermieAnim, BijouxAnim, HackcycleAnim } from "@/components/shared/BrandAnimations";
+import { TaxidermieAnim, HackcycleAnim } from "@/components/shared/BrandAnimations";
 
 const COLLAPSED_PX = 150; // largeur des panneaux repliés (px)
 
@@ -22,7 +22,6 @@ function BrandPanel({
   const anim =
     brand.special === "matrix" ? <MatrixRain /> :
     brand.slug === "taxidermie" ? <TaxidermieAnim /> :
-    brand.slug === "bijoux" ? <BijouxAnim /> :
     brand.slug === "habillement" ? <HackcycleAnim /> :
     null;
 
@@ -246,7 +245,6 @@ export default function HeroSection() {
             const anim =
               brand.special === "matrix" ? <MatrixRain /> :
               brand.slug === "taxidermie" ? <TaxidermieAnim /> :
-              brand.slug === "bijoux" ? <BijouxAnim /> :
               brand.slug === "habillement" ? <HackcycleAnim /> :
               null;
 

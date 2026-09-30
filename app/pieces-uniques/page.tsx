@@ -6,8 +6,8 @@ import { getProducts } from "@/lib/products";
 export const metadata: Metadata = {
   title: "Pièces uniques — SADSAT",
   description:
-    "Toutes les créations uniques SADSAT réunies : taxidermie éthique, bijoux en maille, bougies artisanales et mode upcycling. Chaque pièce est faite main, en série très limitée.",
-  keywords: ["pièces uniques", "artisanat français", "édition limitée", "taxidermie", "bijoux", "bougies"],
+    "Toutes les créations uniques SADSAT réunies : taxidermie éthique, bougies artisanales et mode upcycling. Chaque pièce est faite main, en série très limitée.",
+  keywords: ["pièces uniques", "artisanat français", "édition limitée", "taxidermie", "bougies"],
   alternates: { canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'}/pieces-uniques` },
   openGraph: {
     title: "Pièces uniques — SADSAT",
@@ -35,7 +35,7 @@ export default async function PiecesUniquesPage() {
             Pièces uniques
           </h1>
           <p className="text-sm tracking-[0.2em] uppercase text-neutral-400">
-            Crystal Pets · L0vers.cult · Spectrum N°3 · Hackcycle
+            Crystal Pets · Spectrum N°3 · Hackcycle
           </p>
         </div>
 

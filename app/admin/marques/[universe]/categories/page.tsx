@@ -10,12 +10,11 @@ import StopPropDiv from '@/components/admin/StopPropDiv'
 
 const BRAND_NAMES: Record<string, string> = {
   taxidermie: 'Crystal Pets',
-  bijoux: 'L0vers.cult',
   bougies: 'Spectrum N°3',
   habillement: 'Hackcycle',
 }
 
-const VALID_UNIVERSES = ['taxidermie', 'bijoux', 'bougies', 'habillement']
+const VALID_UNIVERSES = ['taxidermie', 'bougies', 'habillement']
 
 type Props = { params: Promise<{ universe: string }> }
 

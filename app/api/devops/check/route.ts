@@ -1,4 +1,10 @@
 import { NextResponse } from 'next/server';
+import { getVerifiedSession as getSession } from '@/lib/dal';
+
+async function isAdmin() {
+  const session = await getSession();
+  return session?.role === 'admin';
+}
 
 // Mock data — à remplacer par des vraies données Hostinger/Supabase
 let mockData = {
@@ -7,6 +13,7 @@ let mockData = {
 };
 
 export async function GET() {
+  if (!(await isAdmin())) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   try {
     // TODO: Connecter à Hostinger API pour récupérer Max Processes réels
     // TODO: Connecter à Supabase pour récupérer le nombre de connections
@@ -48,6 +55,7 @@ function generateAnalysis(maxProcesses: number): string {
 }
 
 export async function POST(req: Request) {
+  if (!(await isAdmin())) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   try {
     const { maxProcesses, supabaseConnections } = await req.json();
 

@@ -22,3 +22,11 @@ export async function getNewsletterSubscribers() {
 export async function deleteSubscriber(id: string) {
   await prisma.newsletterSubscriber.delete({ where: { id } })
 }
+
+export async function unsubscribeByEmail(email: string): Promise<void> {
+  await prisma.newsletterSubscriber.deleteMany({ where: { email } })
+}
+
+export async function isSubscribed(email: string): Promise<boolean> {
+  return !!(await prisma.newsletterSubscriber.findUnique({ where: { email } }))
+}

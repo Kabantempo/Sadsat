@@ -6,7 +6,6 @@ import { Package, Plus, Users, ShieldCheck, TrendingUp, ArrowRight } from 'lucid
 
 const UNIVERSE_COLORS: Record<string, { fg: string; label: string }> = {
   taxidermie:  { fg: 'text-stone-600',  label: 'Crystal Pets' },
-  bijoux:      { fg: 'text-rose-600',   label: 'L0vers.cult' },
   bougies:     { fg: 'text-amber-600',  label: 'Spectrum N°3' },
   habillement: { fg: 'text-sky-600',    label: 'Hackcycle' },
 }

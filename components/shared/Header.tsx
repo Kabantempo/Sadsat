@@ -22,7 +22,6 @@ type NavItem = {
 type NavCat = { label: string; slug: string };
 type NavCategories = {
   taxidermie: NavCat[];
-  bijoux: NavCat[];
   bougies: NavCat[];
   habillement: NavCat[];
 };
@@ -36,7 +35,6 @@ function buildNav(cats: NavCategories): NavItem[] {
   return [
     { label: "Pièces uniques", href: "/pieces-uniques", bordeaux: true },
     { label: "Crystal Pets",  href: "/taxidermie", dropdown: dd('taxidermie', 'taxidermie') },
-    { label: "L0vers.cult",   href: "/bijoux",     dropdown: dd('bijoux', 'bijoux') },
     { label: "Spectrum N°3",  href: "/bougies",    dropdown: dd('bougies', 'bougies') },
     { label: "Hackcycle",     href: "/habillement",dropdown: dd('habillement', 'habillement') },
     { label: "Créateurs",     href: "/createurs" },
@@ -49,7 +47,7 @@ type UserProp = { name: string; role: 'admin' | 'client' | 'créateur' | 'grossi
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Header({ user, navCategories }: { user?: UserProp; navCategories?: NavCategories }) {
-  const NAV = buildNav(navCategories ?? { taxidermie: [], bijoux: [], bougies: [], habillement: [] });
+  const NAV = buildNav(navCategories ?? { taxidermie: [], bougies: [], habillement: [] });
   const { count: favCount } = useFavorites();
   const { count: cartCount, openDrawer } = useCart();
   const [openMenu, setOpenMenu]         = useState<string | null>(null);
@@ -63,7 +61,6 @@ export default function Header({ user, navCategories }: { user?: UserProp; navCa
 
   const BRAND_ACCENTS: Record<string, { color: string; glow: string }> = {
     taxidermie:  { color: '#c9b896', glow: 'rgba(201,184,150,0.5)' },
-    bijoux:      { color: '#8b0000', glow: 'rgba(139,0,0,0.6)'     },
     bougies:     { color: '#00ff41', glow: 'rgba(0,255,65,0.5)'    },
     habillement: { color: '#a0a0a0', glow: 'rgba(160,160,160,0.4)' },
   };

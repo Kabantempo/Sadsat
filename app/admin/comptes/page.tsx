@@ -7,7 +7,6 @@ import Link from 'next/link'
 
 const UNIVERSE_LABELS: Record<string, string> = {
   taxidermie: 'Crystal Pets',
-  bijoux: 'L0vers.cult',
   bougies: 'Spectrum N°3',
   habillement: 'Hackcycle',
 }
@@ -198,7 +197,6 @@ export default async function AdminComptesPage() {
                         className="text-[0.65rem] border border-neutral-200 rounded-lg px-2.5 py-1.5 text-neutral-600 bg-white outline-none focus:border-neutral-400 transition-colors">
                         <option value="">— aucune marque —</option>
                         <option value="taxidermie">Crystal Pets</option>
-                        <option value="bijoux">L0vers.cult</option>
                         <option value="bougies">Spectrum N°3</option>
                         <option value="habillement">Hackcycle</option>
                       </select>

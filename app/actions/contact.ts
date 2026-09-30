@@ -1,6 +1,7 @@
 'use server'
 import { z } from 'zod'
 import { sendContactEmail } from '@/lib/email'
+import { allow, TOO_MANY } from '@/lib/rate-limit'
 
 const ContactSchema = z.object({
   name: z.string().min(2, 'Le nom est requis.').trim(),
@@ -17,6 +18,7 @@ export async function sendContactAction(
   _state: ContactState,
   formData: FormData
 ): Promise<ContactState> {
+  if (!(await allow('contact', 5, 60 * 60 * 1000))) return { message: TOO_MANY }
   const validated = ContactSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),

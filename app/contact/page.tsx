@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useActionState } from "react";
 import { sendContactAction, type ContactState } from "@/app/actions/contact";
 import { CheckCircle, Send, Mail, MapPin } from "lucide-react";
@@ -28,12 +29,12 @@ export default function ContactPage() {
           <p className="text-[0.82rem] text-neutral-500 leading-relaxed mb-8">
             Nous avons bien reçu votre message et vous répondrons dans les plus brefs délais.
           </p>
-          <a
+          <Link
             href="/"
             className="text-[0.6rem] tracking-[0.2em] uppercase text-neutral-400 hover:text-neutral-100 transition-colors border-b border-neutral-700 hover:border-neutral-400 pb-0.5"
           >
             ← Retour à l'accueil
-          </a>
+          </Link>
         </div>
       </div>
     );

@@ -29,7 +29,10 @@ export async function POST(req: NextRequest) {
     const idToken = form.get('id_token') as string | null
     const userJson = form.get('user') as string | null // seulement au 1er login
 
+    const state = form.get('state') as string | null
+    const expected = req.cookies.get('oauth_state')?.value
     if (!code || !idToken) throw new Error('missing_params')
+    if (!state || !expected || state !== expected) throw new Error('bad_state')
 
     // Vérifie l'id_token Apple
     const { payload } = await jwtVerify(idToken, APPLE_JWKS, {
@@ -38,7 +41,8 @@ export async function POST(req: NextRequest) {
     })
 
     const email = payload.email as string | undefined
-    if (!email) throw new Error('no_email')
+    const verified = payload.email_verified === true || payload.email_verified === 'true'
+    if (!email || !verified) throw new Error('no_email')
 
     // Nom renvoyé uniquement au premier login
     let name = email.split('@')[0]
@@ -53,7 +57,7 @@ export async function POST(req: NextRequest) {
 
     // Échange le code (validation côté serveur)
     const clientSecret = await buildAppleClientSecret()
-    await fetch('https://appleid.apple.com/auth/token', {
+    const tokenRes = await fetch('https://appleid.apple.com/auth/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
@@ -64,6 +68,8 @@ export async function POST(req: NextRequest) {
         grant_type: 'authorization_code',
       }),
     })
+
+    if (!tokenRes.ok) throw new Error('token_exchange_failed')
 
     // Trouve ou crée l'utilisateur
     let user = await getUserByEmail(email)
@@ -82,7 +88,9 @@ export async function POST(req: NextRequest) {
 
     await createSession(user.id, user.role, user.name)
     const dest = user.role === 'admin' ? '/admin' : '/compte'
-    return NextResponse.redirect(new URL(dest, base))
+    const res = NextResponse.redirect(new URL(dest, base), 303)
+    res.cookies.delete('oauth_state')
+    return res
   } catch {
     return NextResponse.redirect(new URL('/connexion?erreur=apple', base))
   }

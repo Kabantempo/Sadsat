@@ -1,9 +1,9 @@
 import Link from "next/link";
+import { CookieSettingsLink } from "@/components/shared/CookieConsent";
 
 const UNIVERS = [
   { label: "Pièces uniques", href: "/pieces-uniques", accent: "#8b0000" },
   { label: "Crystal Pets", href: "/taxidermie", accent: "#c9b896" },
-  { label: "L0vers.cult", href: "/bijoux", accent: "#8b0000" },
   { label: "Spectrum N°3", href: "/bougies", accent: "#00ff41", comingSoon: true },
   { label: "Hackcycle", href: "/habillement", accent: "#a0a0a0" },
 ];
@@ -59,7 +59,7 @@ export default function Footer({
             SADSAT
           </Link>
           <p className="mt-3 font-mono text-[0.55rem] tracking-[0.35em] uppercase text-neutral-600">
-            Taxidermie · Bijoux · Bougies · Mode
+            Taxidermie · Bougies · Mode
           </p>
         </div>
 
@@ -180,6 +180,7 @@ export default function Footer({
                 {l.label}
               </Link>
             ))}
+            <CookieSettingsLink className="font-mono text-[0.5rem] tracking-[0.18em] uppercase text-neutral-700 hover:text-neutral-400 transition-colors duration-200" />
           </div>
 
         </div>

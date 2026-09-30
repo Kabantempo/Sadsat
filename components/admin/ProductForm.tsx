@@ -21,7 +21,6 @@ type Props = {
 
 const UNIVERSE_COLOR: Record<string, { bg: string; text: string; ring: string; dot: string }> = {
   taxidermie:       { bg: 'bg-stone-50',   text: 'text-stone-600',   ring: 'ring-stone-200',   dot: 'bg-stone-400'   },
-  bijoux:           { bg: 'bg-rose-50',    text: 'text-rose-600',    ring: 'ring-rose-200',    dot: 'bg-rose-400'    },
   bougies:          { bg: 'bg-amber-50',   text: 'text-amber-600',   ring: 'ring-amber-200',   dot: 'bg-amber-400'   },
   habillement:      { bg: 'bg-sky-50',     text: 'text-sky-600',     ring: 'ring-sky-200',     dot: 'bg-sky-400'     },
   'pieces-uniques': { bg: 'bg-neutral-50', text: 'text-neutral-600', ring: 'ring-neutral-200', dot: 'bg-neutral-400' },

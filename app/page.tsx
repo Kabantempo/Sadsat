@@ -12,13 +12,12 @@ import { UNIVERSES, UNIVERSE_LABELS } from "@/lib/definitions";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 export const metadata: Metadata = {
-  title: "SADSAT — Taxidermie éthique, Bijoux, Bougies & Mode artisanale",
+  title: "SADSAT — Taxidermie éthique, Bougies & Mode artisanale",
   description:
-    "SADSAT réunit quatre univers créatifs : Crystal Pets (taxidermie éthique), L0vers.cult (bijoux maille), Spectrum N°3 (bougies artisanales) et Hackcycle (mode upcycling). Pièces uniques, faites main en France.",
+    "SADSAT réunit trois univers créatifs : Crystal Pets (taxidermie éthique), Spectrum N°3 (bougies artisanales) et Hackcycle (mode upcycling). Pièces uniques, faites main en France.",
   keywords: [
     "SADSAT",
     "taxidermie éthique France",
-    "bijoux maille métallique",
     "bougies artisanales cire végétale",
     "mode upcycling France",
     "pièces uniques artisanat",
@@ -26,9 +25,9 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: BASE_URL },
   openGraph: {
-    title: "SADSAT — Quatre univers, une vision",
+    title: "SADSAT — Trois univers, une vision",
     description:
-      "Taxidermie éthique · Bijoux en maille · Bougies artisanales · Mode upcycling. Édition limitée, fait main en France.",
+      "Taxidermie éthique · Bougies artisanales · Mode upcycling. Édition limitée, fait main en France.",
     url: BASE_URL,
     type: "website",
     locale: "fr_FR",
@@ -36,8 +35,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SADSAT — Quatre univers, une vision",
-    description: "Taxidermie éthique · Bijoux en maille · Bougies artisanales · Mode upcycling.",
+    title: "SADSAT — Trois univers, une vision",
+    description: "Taxidermie éthique · Bougies artisanales · Mode upcycling.",
   },
 }
 

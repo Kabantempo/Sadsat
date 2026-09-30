@@ -1,6 +1,6 @@
 'use server'
 import { redirect } from 'next/navigation'
-import { getSession } from '@/lib/session'
+import { getVerifiedSession as getSession } from '@/lib/dal'
 import { getUserById } from '@/lib/db'
 import {
   createBrandSlide, deleteBrandSlide, reorderBrandSlide,

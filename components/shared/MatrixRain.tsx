@@ -14,7 +14,6 @@ export default function MatrixRain() {
     const chars = "アァカサタナハマヤラワ0123456789ABCDEF";
     const fontSize = 14;
     let drops: number[] = [];
-    let intervalId: ReturnType<typeof setInterval>;
 
     const resize = () => {
       const parent = canvas.parentElement;
@@ -45,7 +44,7 @@ export default function MatrixRain() {
       }
     };
 
-    intervalId = setInterval(draw, 55);
+    const intervalId = setInterval(draw, 55);
 
     return () => {
       clearInterval(intervalId);

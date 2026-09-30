@@ -7,7 +7,6 @@ import { UNIVERSE_LABELS } from '@/lib/definitions'
 
 const UNIVERSE_COLORS: Record<string, string> = {
   taxidermie:  'bg-stone-100 text-stone-600',
-  bijoux:      'bg-rose-100 text-rose-600',
   bougies:     'bg-amber-100 text-amber-600',
   habillement: 'bg-sky-100 text-sky-600',
 }

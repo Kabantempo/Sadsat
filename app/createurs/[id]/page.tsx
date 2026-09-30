@@ -258,7 +258,7 @@ export default async function CreateurPublicPage({
                   {String(uIdx + 1).padStart(2, "0")}
                 </p>
                 <h2 className={`font-serif font-light text-4xl md:text-5xl italic ${
-                  u === "bijoux" ? "text-[#8b0000]/80" : u === "bougies" ? "text-[#00ff41]/60" : "text-neutral-100"
+                  u === "bougies" ? "text-[#00ff41]/60" : "text-neutral-100"
                 }`}>
                   {UNIVERSE_LABELS[u]}
                 </h2>

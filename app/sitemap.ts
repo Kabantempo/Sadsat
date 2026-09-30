@@ -20,12 +20,6 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
     priority: 0.9,
   },
   {
-    url: `${BASE_URL}/bijoux`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.9,
-  },
-  {
     url: `${BASE_URL}/bougies`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
@@ -86,7 +80,7 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
     priority: 0.2,
   },
   {
-    url: `${BASE_URL}/confidentialite`,
+    url: `${BASE_URL}/politique-confidentialite`,
     lastModified: new Date(),
     changeFrequency: 'yearly',
     priority: 0.2,

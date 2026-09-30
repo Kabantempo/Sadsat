@@ -14,38 +14,49 @@ const SECTIONS = [
   },
   {
     title: "Données collectées",
-    content: `Lors de la création de compte : nom, adresse email, mot de passe chiffré.
-Lors d'une commande : nom, prénom, adresse postale, email, données de paiement (traitées par Stripe, non stockées chez SADSAT).
-Navigation : cookies de session (strictement nécessaires) ; aucun cookie publicitaire sans consentement.`,
+    content: `Lors de la création de compte : nom, adresse email, mot de passe (stocké sous forme chiffrée). Si vous vous connectez avec Google ou Apple : nom et adresse email fournis par ce service.
+Lors d'une commande : nom, adresse de livraison, email, téléphone, contenu de la commande. Les données de paiement sont saisies chez Stripe et ne sont jamais stockées chez SADSAT.
+Lors d'un message via le formulaire de contact : nom, email et contenu du message (reçus par email, non enregistrés sur le site).
+Si vous laissez un avis : votre nom, votre email (non affiché) et votre commentaire.
+Navigation : cookies indispensables (session, panier). Avec votre accord seulement : cookie de mesure d'audience Google Analytics.`,
   },
   {
     title: "Finalités et bases légales",
     content: `• Gestion du compte client — exécution du contrat (art. 6.1.b RGPD)
-• Traitement des commandes — exécution du contrat
-• Envoi d'emails transactionnels (confirmation, livraison) — exécution du contrat
-• Newsletter — consentement (art. 6.1.a RGPD), révocable à tout moment
-• Amélioration du service — intérêt légitime (art. 6.1.f RGPD)`,
+• Traitement, paiement et livraison des commandes — exécution du contrat
+• Emails liés à votre compte et à vos commandes (confirmation, expédition, mot de passe) — exécution du contrat
+• Facturation et comptabilité — obligation légale (art. 6.1.c)
+• Newsletter — votre consentement (art. 6.1.a), donné en cochant la case puis en confirmant par email ; retrait possible à tout moment par le lien présent dans chaque email
+• Relance de panier abandonné — votre consentement, uniquement si vous avez coché la case « recevoir nos offres » lors du paiement
+• Mesure d'audience (Google Analytics) — votre consentement, recueilli par le bandeau cookies
+• Sécurité du site (limitation des tentatives de connexion) — intérêt légitime (art. 6.1.f)`,
   },
   {
-    title: "Destinataires des données",
-    content: `Vos données sont traitées par SADSAT et ses sous-traitants techniques :
-• Supabase (hébergement base de données) — Union Européenne
-• Hostinger (hébergement serveur) — Union Européenne
-• Stripe (paiement) — conforme PCI-DSS
-• Resend/Nodemailer (emails transactionnels)
+    title: "Destinataires et sous-traitants",
+    content: `Vos données sont traitées par SADSAT et par ces prestataires, uniquement pour les finalités ci-dessus :
+• Supabase — base de données (région Irlande, Union européenne)
+• Hostinger — hébergement du site et envoi des emails (Union européenne)
+• Stripe — paiement en ligne (Stripe Payments Europe ; possibles transferts vers les États-Unis encadrés par des clauses contractuelles types)
+• Sendcloud — préparation des étiquettes et suivi des colis (Pays-Bas)
+• Cloudinary — hébergement des photos et vidéos des produits (aucune donnée client)
+• Google — connexion « Se connecter avec Google » et, avec votre accord, Google Analytics (Google Ireland ; transferts possibles vers les États-Unis encadrés par le Data Privacy Framework)
+• Apple — connexion « Se connecter avec Apple »
 
-Aucune donnée n'est vendue ni cédée à des tiers à des fins commerciales.`,
+Aucune donnée n'est vendue. Les transporteurs reçoivent les informations nécessaires à la livraison.`,
   },
   {
     title: "Durée de conservation",
-    content: `• Données de compte : jusqu'à suppression du compte + 3 ans (obligations légales)
-• Données de commandes : 10 ans (obligations comptables)
-• Données de navigation (cookies) : 13 mois maximum`,
+    content: `• Compte client : jusqu'à la suppression du compte par vos soins ; un compte dont l'email n'a jamais été confirmé est supprimé après 30 jours
+• Commandes et factures : 10 ans à compter de la commande (obligation comptable), même après suppression du compte
+• Newsletter : jusqu'à votre désinscription
+• Avis : tant que le produit est en vente ; anonymisés à la suppression du compte
+• Messages de contact : 3 ans maximum dans la boîte email de SADSAT
+• Cookie Google Analytics : 13 mois maximum ; votre choix est redemandé tous les 6 mois`,
   },
   {
     title: "Vos droits",
     content: `Conformément au RGPD, vous disposez des droits suivants :
-• Accès à vos données
+• Accès et portabilité : bouton « Télécharger mes données » dans votre espace client (fichier JSON)
 • Rectification de vos données
 • Suppression de votre compte (depuis votre espace client)
 • Opposition au traitement
@@ -57,11 +68,15 @@ Vous pouvez également introduire une réclamation auprès de la CNIL : www.cnil
   },
   {
     title: "Cookies",
-    content: `Cookies strictement nécessaires (aucun consentement requis) :
-• session — authentification utilisateur
-• panier — mémorisation du panier
+    content: `Cookies indispensables (aucun consentement requis) :
+• session — connexion à votre compte
+• panier — mémorisation de votre panier
+• choix cookies — mémorisation de votre réponse au bandeau
 
-Nous n'utilisons pas de cookies publicitaires, de tracking tiers ou de réseaux sociaux intégrés sans votre consentement explicite.`,
+Cookies soumis à votre accord :
+• Google Analytics (_ga) — statistiques d'audience anonymisées
+
+Vous pouvez modifier votre choix à tout moment avec le lien « Gérer les cookies » en bas de chaque page. Aucun cookie publicitaire n'est utilisé.`,
   },
   {
     title: "Sécurité",
@@ -82,7 +97,7 @@ export default function PolitiqueConfidentialitePage() {
             Politique de<br />confidentialité.
           </h1>
           <p className="text-xs tracking-[0.2em] uppercase text-neutral-500">
-            Dernière mise à jour : juin 2026
+            Dernière mise à jour : septembre 2026
           </p>
         </div>
 
