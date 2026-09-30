@@ -161,6 +161,9 @@ function BrandPanel({
 export default function HeroSection() {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  // La trame ASCII est décorative et coûte du temps de calcul : seulement à partir de la largeur tablette,
+  // pour garder la page d'accueil rapide sur téléphone.
+  const [showAscii, setShowAscii] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const total = BRAND_PORTALS.length;
 
@@ -170,6 +173,10 @@ export default function HeroSection() {
     el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
     setActiveIndex(i);
   }
+
+  useEffect(() => {
+    setShowAscii(window.matchMedia("(min-width: 768px)").matches);
+  }, []);
 
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * BRAND_PORTALS.length);
@@ -193,7 +200,7 @@ export default function HeroSection() {
           <span className="hero-orb hero-orb--cp" />
           <span className="hero-orb hero-orb--sp" />
           <span className="hero-orb hero-orb--hc" />
-          <AsciiField />
+          {showAscii && <AsciiField />}
         </div>
         <h1 className="hero-rise relative z-10 px-6 font-serif font-light text-5xl md:text-7xl tracking-wide text-neutral-100 mb-6">
           Un collectif, plusieurs univers.
