@@ -39,9 +39,10 @@ export default function AsciiField() {
     let last = 0;
     let W = 0, H = 0, cell = 11, cols = 0, rows = 0;
     let rgb = "236,236,236";
+    let gain = 1; // plus opaque en mode clair : des points sombres sur fond clair ressortent moins
     const readColor = () => {
-      const m = getComputedStyle(canvas).color.match(/d+/g);
-      if (m) rgb = m.slice(0, 3).join(",");
+      const m = getComputedStyle(canvas).color.match(/\d+/g);
+      if (m) { rgb = m.slice(0, 3).join(","); gain = Number(m[0]) < 128 ? 2.4 : 1; }
     };
 
     const resize = () => {
@@ -57,7 +58,7 @@ export default function AsciiField() {
 
     const draw = (now: number) => {
       ctx.clearRect(0, 0, W, H);
-      ctx.font = `${cell}px ui-monospace, "JetBrains Mono", monospace`;
+      ctx.font = `${gain > 1 ? "600 " : ""}${cell}px ui-monospace, "JetBrains Mono", monospace`;
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       const t = reduced ? 3 : now * 0.00004;
       const strengthScale = W < 640 ? 0.55 : 1;
@@ -76,7 +77,7 @@ export default function AsciiField() {
           // trame ordonnée (Bayer) : donne l'aspect « dither »
           if (s < (BAYER[(i & 3) + ((j & 3) << 2)] / 16) * 0.85) continue;
           const ch = RAMP[Math.min(RAMP.length - 1, Math.floor(s * RAMP.length * 1.15))];
-          const alpha = (0.12 + s * 0.55) * strengthScale;
+          const alpha = Math.min(1, (0.12 + s * 0.55) * strengthScale * gain);
           ctx.fillStyle = `rgba(${rgb},${alpha.toFixed(3)})`;
           ctx.fillText(ch, i * cell + cell / 2, j * cell * 1.25 + cell / 2);
         }
