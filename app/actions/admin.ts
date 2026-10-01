@@ -1,9 +1,11 @@
 'use server'
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
-import { createUser, getUserByEmail, deleteUser, clearUsersExcept, updateUserUniverse, updateUser } from '@/lib/db'
+import { createUser, getUserByEmail, clearUsersExcept, updateUserUniverse, updateUser } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
+import { deleteAccountData } from '@/lib/account'
 import { clearAllProducts } from '@/lib/products'
 import { verifyAdmin } from '@/lib/dal'
 import { sendSetPasswordEmail } from '@/lib/email'
@@ -112,16 +114,23 @@ export async function createGrossisteAccountAction(
   return createAccountAction(formData, 'grossiste')
 }
 
-export async function deleteUserAction(formData: FormData): Promise<void> {
+// Même procédure que la suppression par le client (RGPD art. 17) : compte et newsletter supprimés,
+// avis anonymisés, commandes conservées. Renvoie l'erreur au lieu de l'avaler.
+export async function deleteUserAction(formData: FormData): Promise<{ ok: boolean; error?: string }> {
   const session = await verifyAdmin()
   const id = String(formData.get('userId') ?? '')
 
-  if (session.userId === id) {
-    throw new Error('Vous ne pouvez pas supprimer votre propre compte.')
-  }
+  if (session.userId === id) return { ok: false, error: 'Vous ne pouvez pas supprimer votre propre compte.' }
 
-  await deleteUser(id)
-  redirect('/admin/comptes')
+  try {
+    const done = await deleteAccountData(id)
+    if (!done) return { ok: false, error: 'Compte introuvable (déjà supprimé ?).' }
+  } catch (e) {
+    console.error('deleteUserAction', e)
+    return { ok: false, error: 'La suppression a échoué (erreur de base de données). Réessayez.' }
+  }
+  revalidatePath('/admin/comptes')
+  return { ok: true }
 }
 
 export async function updateUserInfoAction(formData: FormData): Promise<void> {

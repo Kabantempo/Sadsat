@@ -10,7 +10,10 @@ export default function DeleteUserButton({ id, name }: { id: string; name: strin
     if (!confirm(`Supprimer le compte de « ${name} » ? Cette action est irréversible.`)) return
     const fd = new FormData()
     fd.set('userId', id)
-    startTransition(async () => { await deleteUserAction(fd) })
+    startTransition(async () => {
+      const res = await deleteUserAction(fd)
+      if (!res.ok) alert(res.error ?? 'La suppression a échoué.')
+    })
   }
 
   return (
