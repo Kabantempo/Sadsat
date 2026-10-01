@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import HeroSection from "@/components/shared/HeroSection";
 import ScrollStory from "@/components/shared/ScrollStory";
+import NewArrivals from "@/components/shared/NewArrivals";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
@@ -40,6 +41,7 @@ export default async function Home() {
   return (
     <>
       <HeroSection />
+      <NewArrivals />
       <ScrollStory instagrams={[]} />
 
       {/* QUI SOMMES NOUS */}
