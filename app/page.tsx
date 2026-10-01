@@ -3,7 +3,6 @@ export const revalidate = 30;
 import type { Metadata } from "next";
 import Link from "next/link";
 import HeroSection from "@/components/shared/HeroSection";
-import ScrollStory from "@/components/shared/ScrollStory";
 import NewArrivals from "@/components/shared/NewArrivals";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
@@ -42,7 +41,6 @@ export default async function Home() {
     <>
       <HeroSection />
       <NewArrivals />
-      <ScrollStory instagrams={[]} />
 
       {/* QUI SOMMES NOUS */}
       <div className="bg-neutral-50 dark:bg-transparent">
@@ -51,12 +49,12 @@ export default async function Home() {
           Qui sommes-nous
         </h3>
         <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed font-light mb-6 max-w-2xl mx-auto">
-          SADSAT est né d'un dialogue entre trois langages : la délicatesse du vivant figé,
-          la brutalité du métal travaillé, et la chaleur silencieuse de la cire. Chaque pièce
-          est faite main, en série limitée, dans un même atelier — par les mêmes mains.
+          SADSAT est né d'un dialogue entre créateurs indépendants : la transparence du vivant
+          diaphanisé (Crystal Pets), la chaleur silencieuse de la cire (Spectrum N°3) et la liberté
+          du textile recyclé (Hackcycle). Chaque marque garde sa voix, son univers, son identité.
         </p>
         <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed font-light mb-10">
-          Trois mondes, mais une seule signature.
+          Plusieurs univers, une vision partagée.
         </p>
         <Link
           href="/a-propos"
