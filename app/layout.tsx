@@ -20,23 +20,20 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sadsat.com'
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
+  style: ["normal", "italic"], // police variable (300-700) : un fichier par style au lieu de 8
   variable: "--font-cormorant",
   display: "swap",
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-inter",
+  variable: "--font-inter", // police variable (300-700) : un seul fichier
   display: "swap",
 });
 
 const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["300", "400", "700"],
-  variable: "--font-jetbrains",
+  variable: "--font-jetbrains", // police variable (100-800) : un seul fichier
   display: "swap",
 });
 
