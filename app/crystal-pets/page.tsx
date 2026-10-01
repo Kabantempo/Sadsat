@@ -103,7 +103,7 @@ export default async function TaxidermiePage() {
         <div className="relative z-10 pt-32 pb-24 max-w-3xl mx-auto px-8 text-center">
           <ScrollReveal>
             <div className="font-mono text-[0.7rem] tracking-[0.3em] mb-6 text-[#0a6f6c] dark:text-[#3fd4cf]">— 01 —</div>
-            <p className="font-mono text-[0.62rem] tracking-[0.3em] uppercase text-[#0a6f6c] dark:text-[#3fd4cf] mb-3">Taxidermie</p>
+            <p className="font-mono text-[0.62rem] tracking-[0.3em] uppercase text-[#0a6f6c] dark:text-[#3fd4cf] mb-3">Diaphanisation</p>
             <h1 className="cp-title font-serif font-light text-6xl md:text-7xl italic mb-6">Crystal Pets</h1>
             <div className="cp-bar mx-auto mb-6" />
             <p className="text-sm tracking-[0.2em] uppercase opacity-70">Pièces uniques · Provenance éthique</p>
@@ -120,10 +120,10 @@ export default async function TaxidermiePage() {
             </div>
             <div>
               <p className="font-serif text-xl md:text-2xl font-light italic leading-relaxed text-neutral-800 dark:text-neutral-200 mb-5">
-                La taxidermie est l'art de conserver et de présenter la dépouille d'un animal dans une apparence naturelle et vivante.
+                La diaphanisation rend transparents les tissus d'un petit animal et colore son squelette : on lit le vivant de l'intérieur, os teintés, formes suspendues dans la lumière.
               </p>
               <p className="text-[0.84rem] leading-[1.85] text-neutral-600 dark:text-neutral-300">
-                Pratiquée depuis des siècles dans les cabinets de curiosités et les musées d'histoire naturelle, elle est aujourd'hui un médium artistique à part entière. Chez SADSAT, chaque pièce est une ode à la beauté du vivant — réalisée avec respect, patience, et une exigence absolue sur la provenance des spécimens.
+                Technique de laboratoire devenue médium artistique, elle demande des semaines de patience et une grande rigueur. Chez SADSAT, chaque pièce est une ode à la beauté du vivant — réalisée avec respect, et une exigence absolue sur la provenance des spécimens.
               </p>
             </div>
           </div>

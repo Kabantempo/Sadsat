@@ -103,8 +103,13 @@ jobs:
         run: |
           for i in 1 2 3 4 5 6 7 8; do
             sleep 10
+            # Test depuis le serveur lui-même : l'anti-robot de Hostinger renvoie sa page « Checking your browser »
+            # aux adresses de GitHub, ce qui donnait de fausses alertes (30/09/26). On retombe sur le test public si besoin.
+            BODY=$(ssh -p 65002 -i ~/.ssh/hostinger_deploy "$SSH_TARGET" "curl -s -m 20 https://sadsat.com/api/health" || true)
+            echo "Essai $i (serveur) : ${BODY:0:120}"
+            echo "$BODY" | grep -q '"ok":true' && { echo "Site en bonne santé"; exit 0; }
             BODY=$(curl -s -m 20 https://sadsat.com/api/health || true)
-            echo "Essai $i : $BODY"
+            echo "Essai $i (public) : ${BODY:0:120}"
             echo "$BODY" | grep -q '"ok":true' && { echo "Site en bonne santé"; exit 0; }
           done
           echo "Le site ne répond pas correctement après le déploiement"
